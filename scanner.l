@@ -12,179 +12,179 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 %%
 
 
-{int} {
+"int"	{
 	return INT_LIT;
 }
 
-{char} {
+"char"	{
 	return CHAR_LIT;
 }
 
-{float} {
+"float"	{
 	return FLOAT_LIT;
 }
 
-{void} {
+"void"	{
 	return VOID_LIT;
 }
 
-{\‘} {
+"\‘"	{
 	return SINGLE_QUOTE;
 }
 
-{\n} {
+"\n"	{
 	return NEW_LINE;
 }
 
-{\0} {
-	return NULL_CHAR
+"\0"	{
+	return NULL_CHAR;
 }
 
-{++} {
+"++"	{
 	return PLUS_PLUS;
 }
 
-{+}	{
+"+"	{
 	return PLUS;
 }
 
-{--} {
+"--"	{
 	return MINUS_MINUS;
 }
 
-{-} {
+"-"	{
 	return MINUS;
 }
 
-{*} {
+"*"	{
 	return STAR;
 }
 
-{/} {
+"\/"	{
 	return SLASH;
 }
 
-{%} {
+"%"	{
 	return MODULUS;
 }
 
-{==} {
+"=="	{
 	return EQUALITY;
 }
 
-{!=} {
+"!="	{
 	return INEQUALITY;
 }
 
-{<} {
+"<"	{
 	return LESS_THAN;
 }
 
-{>} {
+">"	{
 	return GREATER_THAN;
 }
 
-{<=} {
+"<="	{
 	return LESS_THAN_OR_EQUAL_TO;
 }
 
-{>=} {
+">="	{
 	return GREATER_THAN_OR_EQUAL_TO;
 }
 
-{&&} {
+"&&"	{
 	return LOGICAL_AND;
 }
 
-{||} {
+"||"	{
 	return LOGICAL_OR;
 }
 
-{!} {
+"!"	{
 	return NOT;
 }
 
-{=} {
+"="	{
 	return ASSIGNMENT;
 }
 
-{sizeof} {	
+"sizeof"	{	
 	return SIZE_OF;
 }
 
-{if} {
+"if"	{
 	return IF;
 }
 
-{else} {
+"else"	{
 	return ELSE;
 }
 
-{for} {
+"for"	{
 	return FOR;
 }
 
-{return} {
+"return"	{
 	return RETURN;
 }
 
-{while} {
+"while"	{
 	return WHILE;
 }
 
-{/\*} {	
+"/\*"	{	
 	return COMMENT_OPEN;
 }
 
-{\*/} {	
+"\*/"	{	
 	return COMMENT_CLOSE;
 }
 
-{\(} {
+"\("	{
 	return BRACKET_OPEN;
 }
 
-{\)} {
+"\)"	{
 	return BRACKET_CLOSE;
 }
 
-{\[} {
+"\["	{
 	return PARENTHESIS_OPEN;
 }
 
-{\]} {
+"\]"	{
 	return PARANTHESIS_CLOSE;
 }
 
-{\;} {
+"\;"	{
 	return SEMICOLON;
 }	
 
-{\{} {
+"\{"	{
 		return CONTROL_BLOCK_OPEN;
 }
 
-{\}} {
+"\}"	{
 	return CONTROL_BLOCK_CLOSE;
+}
+
+"typedef"	{
+	return TYPEDEF;
+}
+
+"struct"	{
+	return STRUCT;
 }
 
 {LETTER}({LETTER}|{DIGIT})*	{
 	return IDENTIFIER;
 }
 
-{INT} {
+{INT}	{
 	return INT;
 }
 
 {FLOAT}	{
 	return FLOAT;
-}
-
-{typedef} {
-	return TYPEDEF;
-}
-
-{struct} {
-	return STRUCT;
 }
 %%

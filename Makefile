@@ -1,5 +1,5 @@
 #Variables 
-CFLAGS = -Wall -ansi
+CFLAGS = 
 CPPFLAGS = -Iinclude
 
 vpath %.c src
@@ -22,4 +22,5 @@ run: all
 
 clean: 
 	rm -f *.o
+	rm -f lex.yy.c
 	rm -f cflatc
