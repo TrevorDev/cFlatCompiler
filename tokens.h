@@ -43,4 +43,4 @@ enum SCANNER_TOKEN {
 	FLOAT,
 	TYPEDEF,
 	STRUCT
-}
+};

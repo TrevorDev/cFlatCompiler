@@ -9,7 +9,7 @@ vpath %.h include
 all: cflatc 
 
 cflatc: lex.yy.o
-	$(CC) $^ -o $@ 
+	$(CC) $^ -o $@ -lfl
 
 lex.yy.c: scanner.l
 	lex scanner.l
