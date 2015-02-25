@@ -1,10 +1,7 @@
-/* Reverse polish notation calculator. */
-
 %{
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
 
 #include "scanner.h"
 #include "nodes.h"
@@ -23,7 +20,6 @@ int yylex();
 	char *sval;
 	float fval;
 }
-
 
 %token INT_LIT
 %token CHAR_LIT
@@ -75,7 +71,7 @@ int yylex();
 
 stmt_list:	stmt
 			{
-				$$ = createStmtListNode(null, $1);
+				$$ = createStmtListNode(NULL, $1);
 			}
 			|
 			stmt_list stmt
@@ -100,7 +96,8 @@ stmt:	INT
 		}
 ;
 %%
-int main(){
+int main(int argc, char *argv[])
+{
 	int x;
 	/*
 	while((x = yylex()) != END_OF_FILE){
