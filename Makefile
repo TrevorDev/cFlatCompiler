@@ -4,10 +4,10 @@ CPPFLAGS = -Iinclude
 UNAME := $(shell uname)
 
 ifeq ($(UNAME), Linux)
-LIBS = -lfl
+LIBS = -lfl -lm
 endif
 ifeq ($(UNAME), Darwin)
-LIBS = -ll
+LIBS = -ll -lm
 endif
 
 vpath %.c src
