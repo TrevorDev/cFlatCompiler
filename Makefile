@@ -14,7 +14,7 @@ endif
 #Rules
 all: cflatc 
 
-cflatc: lex.yy.o parser.o
+cflatc: parser.o lex.yy.o
 	$(CC) $^ -o $@ $(LIBS)
 
 parser.o: y.tab.c y.tab.h
@@ -26,7 +26,7 @@ lex.yy.c: scanner.l
 	flex --header-file=scanner.h scanner.l
 
 %.o: %.c %.h
-	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+	$(CC) -g -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 run: all
 
