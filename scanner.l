@@ -11,24 +11,7 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 
 %%
 
-
-"int"	{
-	return INT_LIT;
-}
-
-"char"	{
-	return CHAR_LIT;
-}
-
-"float"	{
-	return FLOAT_LIT;
-}
-
-"void"	{
-	return VOID_LIT;
-}
-
-"\‘"	{
+'	{
 	return SINGLE_QUOTE;
 }
 
@@ -176,10 +159,6 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 	return STRUCT;
 }
 
-{LETTER}({LETTER}|{DIGIT})*	{
-	return IDENTIFIER;
-}
-
 {INT}	{
 	return INT;
 }
@@ -187,4 +166,42 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 {FLOAT}	{
 	return FLOAT;
 }
+
+<<EOF>>	{
+	return END_OF_FILE;
+}
+
+"int"	{
+	return INT_LIT;
+}
+
+"float"	{
+	return FLOAT_LIT;
+}
+
+"void"	{
+	return VOID_LIT;
+}
+
+"char"	{
+	return CHAR_LIT;
+}
+
+{LETTER}({LETTER}|{DIGIT})*	{
+	return IDENTIFIER;
+}
+
+[\t\s ]	{
+
+}
+
 %%
+int main(){
+	int x;
+	while((x = yylex()) != END_OF_FILE){
+		printf("%s ", yytext);
+
+		printf("%s\n", SCANNER_VALS[x]);
+	}
+	
+}
