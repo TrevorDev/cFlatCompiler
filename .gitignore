@@ -29,3 +29,5 @@
 *.hex
 
 lex.yy.c
+cflatc
+y.tab.h
