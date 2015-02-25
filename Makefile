@@ -1,17 +1,15 @@
 #Variables 
 CFLAGS = 
-CPPFLAGS = -Iinclude
-UNAME := $(shell uname)
+CPPFLAGS = 
 
+# Mac OS X needs -ll; Linux needs -lfl
+UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)
 LIBS = -lfl -lm
 endif
 ifeq ($(UNAME), Darwin)
 LIBS = -ll -lm
 endif
-
-vpath %.c src
-vpath %.h include
 
 #Rules
 all: cflatc 
