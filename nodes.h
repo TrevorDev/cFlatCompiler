@@ -12,7 +12,7 @@ enum ValType {
 	FLOATVAL
 };
 
-typedef struct{
+typedef struct StmtNode{
     int nodeType;
     int valType;
     union{
@@ -22,12 +22,13 @@ typedef struct{
 	}val;
 }StmtNode;
 
-typedef struct _StmtListNode{
+typedef struct StmtListNode{
     int nodeType;
     StmtNode* stmt;
-    struct _StmtListNode* stmtList;
+    struct StmtListNode* stmtList;
 }StmtListNode;
 
-
+StmtListNode *createStmtListNode(StmtListNode *list, StmtNode *stmt);
+StmtNode *createStmtNode(void *val, int type);
 
 #endif

@@ -1,5 +1,7 @@
 %{
+         #include "nodes.h"
          #include "y.tab.h"
+
 %}
 %option yylineno
 DIGIT		[0-9]

@@ -3,13 +3,14 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "scanner.h"
 #include "nodes.h"
+#include "scanner.h"
+
 
 void yyerror(const char* msg) {
       fprintf(stderr, "%s on line %d\n", msg, yylineno);
 }
-
+StmtListNode * rootNode;
 int yylex();
 
 %}
@@ -19,6 +20,8 @@ int yylex();
 	int ival;
 	char *sval;
 	float fval;
+	StmtListNode * stmtList;
+	StmtNode * stmt;
 }
 
 %token INT_LIT
@@ -67,7 +70,18 @@ int yylex();
 %token STRUCT
 %token END_OF_FILE
 
+%type <stmtList> stmt_list
+%type <stmt> stmt
+
 %% /* Grammar rules and actions follow */
+
+program:	stmt_list
+			{
+				printf("Done!\n");
+				rootNode = $1;
+				return;
+			}
+;
 
 stmt_list:	stmt
 			{
@@ -82,30 +96,41 @@ stmt_list:	stmt
 
 stmt:	INT
 		{
-			$$ = createStmttNode($1, INTVAL);
+			printf("int\n");
+			$$ = createStmtNode((void*)&$1, INTVAL);
 		}
 		|
 		FLOAT
 		{
-			$$ = createStmttNode($1, FLOATVAL);
+			printf("float\n");
+			$$ = createStmtNode((void*)&$1, FLOATVAL);
 		}
 		|
 		IDENTIFIER
 		{
-			$$ = createStmttNode($1, STRVAL);
+			printf("sstr\n");
+			$$ = createStmtNode((void*)$1, STRVAL);
 		}
 ;
 %%
 int main(int argc, char *argv[])
 {
 	int x;
-	/*
-	while((x = yylex()) != END_OF_FILE){
-		//printf("%s ", yytext);
-		//printf("%s\n", yytname[x-258+3]);//SCANNER_VALS[x]);
-	}
-	*/
+	
+	// while((x = yylex()) != END_OF_FILE){
+	// 	printf("%s ", yytext);
+	// 	printf("%s\n", yytname[x-258+3]);//SCANNER_VALS[x]);
+	// }
+	
 	while(!feof(stdin)){
 		yyparse();
 	}
+
+	StmtListNode * curPos = rootNode;
+	int c = 0;
+	while(curPos != NULL){
+		c++;
+		curPos = curPos->stmtList;
+	}
+	printf("%d\n", c);
 }

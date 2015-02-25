@@ -23,6 +23,14 @@ StmtNode *createStmtNode(void *val, int type)
 	}
 	ret->nodeType = StmtNodeT;
 	ret->valType = type;
-	ret->val.ival = *val;
+
+	if(type == INTVAL){
+		ret->val.ival = *((int*)val);
+	}else if(type == FLOATVAL){
+		ret->val.fval = *((float*)val);
+	}else if(type == STRVAL){
+		ret->val.sval = ((char*)val);
+	}
+	
 	return ret;
 }
