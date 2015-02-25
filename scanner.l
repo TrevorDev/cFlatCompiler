@@ -33,9 +33,17 @@ void	return VOID_LIT;
 !		return NOT;
 =		return ASSIGNMENT;
 sizeof	return SIZE_OF;
-if		return IF;
-else	return ELSE;
-for		return FOR;
+{if} {
+	return IF;
+}
+
+{else} {
+	return ELSE;
+}
+
+{for} {
+	return FOR;
+}
 return	return RETURN;
 while	return WHILE;
 /\*		return COMMENT_OPEN;
@@ -45,14 +53,32 @@ while	return WHILE;
 \[		return PARENTHESIS_OPEN;
 \]		return PARANTHESIS_CLOSE;
 \;		return SEMICOLON;
-{		return CONTROL_BLOCK_OPEN;
-}		return CONTROL_BLOCK_CLOSE;
-{LETTER}({LETTER}|{DIGIT})*		{
-			return IDENTIFIER;
-		}
-{INT}	return INT;
-{FLOAT}	return FLOAT;
-typedef	return TYPEDEF;
-struct	return STRUCT;
 
+{\{} {
+		return CONTROL_BLOCK_OPEN;
+}
+
+{\}} {
+	return CONTROL_BLOCK_CLOSE;
+}
+
+{LETTER}({LETTER}|{DIGIT})*	{
+	return IDENTIFIER;
+}
+
+{INT} {
+	return INT;
+}
+
+{FLOAT}	{
+	return FLOAT;
+}
+
+{typedef} {
+	return TYPEDEF;
+}
+
+{struct} {
+	return STRUCT;
+}
 %%
