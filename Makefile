@@ -29,6 +29,7 @@ lex.yy.c: scanner.l
 	$(CC) -g -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 run: all
+	./cflatc < testFiles/ints.txt
 
 clean: 
 	rm -f *.o

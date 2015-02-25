@@ -16,6 +16,14 @@ int yylex();
 
 %}
 %token-table
+
+%union {
+	int ival;
+	char *sval;
+	float fval;
+}
+
+
 %token INT_LIT
 %token CHAR_LIT
 %token FLOAT_LIT
@@ -55,9 +63,9 @@ int yylex();
 %token SEMICOLON
 %token CONTROL_BLOCK_OPEN
 %token CONTROL_BLOCK_CLOSE
-%token IDENTIFIER
-%token INT
-%token FLOAT
+%token <sval> IDENTIFIER
+%token <ival> INT
+%token <fval> FLOAT
 %token TYPEDEF
 %token STRUCT
 %token END_OF_FILE
@@ -77,16 +85,30 @@ stmt_list:	stmt
 
 stmt:	INT
 		{
-			printf("wow guys\n");
+			printf("Found int (%d)\n", $1);
+		}
+		|
+		FLOAT
+		{
+			printf("found float (%f)\n", $1);
+		}
+		|
+		IDENTIFIER
+		{
+			printf("found identifier (%s)\n", $1);
+			free($1);
+			$1 = NULL;
 		}
 ;
 %%
 int main(){
 	int x;
-	/*while((x = yylex()) != END_OF_FILE){
+	/*
+	while((x = yylex()) != END_OF_FILE){
 		//printf("%s ", yytext);
 		//printf("%s\n", yytname[x-258+3]);//SCANNER_VALS[x]);
-	}*/
+	}
+	*/
 	while(!feof(stdin)){
 		yyparse();
 	}

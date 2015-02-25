@@ -160,10 +160,12 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 }
 
 {INT}	{
+	sscanf(yytext, "%d", &yylval.ival);
 	return INT;
 }
 
 {FLOAT}	{
+	sscanf(yytext, "%f", &yylval.fval);
 	return FLOAT;
 }
 
@@ -188,6 +190,7 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 }
 
 {LETTER}({LETTER}|{DIGIT})*	{
+	yylval.sval = strdup(yytext);
 	return IDENTIFIER;
 }
 
