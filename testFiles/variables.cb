@@ -1,0 +1,9 @@
+void main() {
+	int i = 0;
+	int xi = 0;
+	float jack = -1.34E-10;
+	char df = -'c';
+	char dfk = 'c';
+	int _new = xi + i++;
+	sizeof(i);
+}
