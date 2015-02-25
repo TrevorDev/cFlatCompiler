@@ -196,12 +196,3 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 }
 
 %%
-int main(){
-	int x;
-	while((x = yylex()) != END_OF_FILE){
-		printf("%s ", yytext);
-
-		printf("%s\n", SCANNER_VALS[x]);
-	}
-	
-}
