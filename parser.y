@@ -7,6 +7,7 @@
 
 
 #include "scanner.h"
+#include "nodes.h"
 
 void yyerror(const char* msg) {
       fprintf(stderr, "%s on line %d\n", msg, yylineno);
@@ -74,30 +75,28 @@ int yylex();
 
 stmt_list:	stmt
 			{
-
+				$$ = createStmtListNode(null, $1);
 			}
 			|
 			stmt_list stmt
 			{
-
+				$$ = createStmtListNode($1, $2);
 			}
 ;
 
 stmt:	INT
 		{
-			printf("Found int (%d)\n", $1);
+			$$ = createStmttNode($1, INTVAL);
 		}
 		|
 		FLOAT
 		{
-			printf("found float (%f)\n", $1);
+			$$ = createStmttNode($1, FLOATVAL);
 		}
 		|
 		IDENTIFIER
 		{
-			printf("found identifier (%s)\n", $1);
-			free($1);
-			$1 = NULL;
+			$$ = createStmttNode($1, STRVAL);
 		}
 ;
 %%

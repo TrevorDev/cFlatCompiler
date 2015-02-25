@@ -1,17 +1,33 @@
 #ifndef NODES_H
-# define NODES_H
+#define NODES_H
 
-struct Node {
-    int nodeType;          /* WORD or operator token like AND, OR */
-    node* leftOperand;
-    node* rightOperand;    /* will be null if the node is a term */
-}
+enum NodeType {
+	StmtListNodeT,
+	StmtNodeT
+};
 
-%union 
-{
-    int number;
-    char *string;
-    Node *node;
-}
+enum ValType {
+	INTVAL,
+	STRVAL,
+	FLOATVAL
+};
+
+typedef struct{
+    int nodeType;
+    int valType;
+    union{
+		int ival;
+		char *sval;
+		float fval;
+	}val;
+}StmtNode;
+
+typedef struct _StmtListNode{
+    int nodeType;
+    StmtNode* stmt;
+    struct _StmtListNode* stmtList;
+}StmtListNode;
+
+
 
 #endif
