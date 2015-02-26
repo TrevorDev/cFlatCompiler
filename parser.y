@@ -264,11 +264,11 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	if (argc == 2) { // validate the second argument if one exists
-		if (strlen(argv[2]) > 2) {
+		if (strlen(argv[1]) > 2) {
 			fprintf(stderr, "Usage: cflatc -[asic]\n");
 			return 1;
 		}
-		switch (argv[2][1]) {
+		switch (argv[1][1]) {
 			case 'a':
 				syntaxAnalysisOutput = 1;
 				break;
