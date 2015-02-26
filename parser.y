@@ -15,7 +15,6 @@ int yylex();
 
 // global variables set by command line arguments
 int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
-syntaxAnalysisOutput = symbolTableOutput = intermediateOutput = asmOutput = 0;
 
 %}
 %token-table
@@ -83,7 +82,7 @@ program:	stmt_list
 			{
 				printf("Done!\n");
 				rootNode = $1;
-				return;
+				return rootNode;
 			}
 ;
 
@@ -121,6 +120,11 @@ stmt:	INT
 int main(int argc, char *argv[])
 {
 	int x;
+
+	syntaxAnalysisOutput = 0;
+	symbolTableOutput = 0;
+	intermediateOutput = 0;
+	asmOutput = 0;
 
 	if (argc > 2) { // only one command line argument permitted
 		fprintf(stderr, "Usage: cflatc -[asic]\n");
