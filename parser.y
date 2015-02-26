@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "Usage: cflatc -[asic]\n");
 			return 1;
 		}
-		switch (argv[2][2]) {
+		switch (argv[2][1]) {
 			case 'a':
 				syntaxAnalysisOutput = 1;
 				break;
