@@ -9,6 +9,8 @@ typedef struct {
 	int x;
 } x[3];
 
+int x;
+
 typedef struct {
 	int x;
 	int ddfds;

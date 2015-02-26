@@ -80,25 +80,30 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 
 %% /* Grammar rules and actions follow */
 
-program:	type_decl_list// global_var_list function_def_list
+program:	type_decl_list global_var_list END_OF_FILE // function_def_list
 			{
 				return 0;
 			}
 ;
 
+global_var_list: var_list
+				{
+					printf("global var list\n");
+				}
+
 type_decl_list: type_decl_list type_decl
 				{
-					printf("bad\n");
+					printf("typedec list\n");
 				}
 				|
 				type_decl
 				{
-					printf("bad1\n");
+					printf("single typedec\n");
 				}
 				|
 				/*Empty*/
 				{
-					printf("ba2\n");
+					printf("empty typedec\n");
 				}
 ;
 type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
@@ -164,17 +169,17 @@ struct_def_alone: struct_def SEMICOLON
 
 var_list: var_list var_decl
 			{
-
+				printf("var dec list\n");
 			}
 			|
 			var_decl
 			{
-
+				printf("var dec single\n");
 			}
 			|
 			/*Empty*/
 			{
-
+				printf("empty var dec\n");
 			}
 ;
 
