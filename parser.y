@@ -3,13 +3,14 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "scanner.h"
 #include "nodes.h"
+#include "scanner.h"
+
 
 void yyerror(const char* msg) {
       fprintf(stderr, "%s on line %d\n", msg, yylineno);
 }
-
+StmtListNode * rootNode;
 int yylex();
 
 // global variables set by command line arguments
@@ -23,6 +24,8 @@ syntaxAnalysisOutput = symbolTableOutput = intermediateOutput = asmOutput = 0;
 	int ival;
 	char *sval;
 	float fval;
+	StmtListNode * stmtList;
+	StmtNode * stmt;
 }
 
 %token INT_LIT
@@ -71,7 +74,18 @@ syntaxAnalysisOutput = symbolTableOutput = intermediateOutput = asmOutput = 0;
 %token STRUCT
 %token END_OF_FILE
 
+%type <stmtList> stmt_list
+%type <stmt> stmt
+
 %% /* Grammar rules and actions follow */
+
+program:	stmt_list
+			{
+				printf("Done!\n");
+				rootNode = $1;
+				return;
+			}
+;
 
 stmt_list:	stmt
 			{
@@ -86,17 +100,20 @@ stmt_list:	stmt
 
 stmt:	INT
 		{
-			$$ = createStmttNode($1, INTVAL);
+			printf("int\n");
+			$$ = createStmtNode((void*)&$1, INTVAL);
 		}
 		|
 		FLOAT
 		{
-			$$ = createStmttNode($1, FLOATVAL);
+			printf("float\n");
+			$$ = createStmtNode((void*)&$1, FLOATVAL);
 		}
 		|
 		IDENTIFIER
 		{
-			$$ = createStmttNode($1, STRVAL);
+			printf("sstr\n");
+			$$ = createStmtNode((void*)$1, STRVAL);
 		}
 ;
 %%
@@ -104,6 +121,7 @@ stmt:	INT
 int main(int argc, char *argv[])
 {
 	int x;
+
 	if (argc > 2) { // only one command line argument permitted
 		fprintf(stderr, "Usage: cflatc -[asic]\n");
 		return 1;
