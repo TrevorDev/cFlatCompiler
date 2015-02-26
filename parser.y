@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "graph.h"
 #include "nodes.h"
 #include "scanner.h"
+
 
 
 void yyerror(const char* msg) {
@@ -170,5 +172,9 @@ int main(int argc, char *argv[])
 		c++;
 	}
 	printf("%d\n", c);
+
+	if (syntaxAnalysisOutput)
+		printGraphString(rootNode);
+
 	return 0;
 }
