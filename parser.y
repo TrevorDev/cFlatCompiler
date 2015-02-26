@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "graph.h"
 #include "nodes.h"
 #include "scanner.h"
+
 
 
 void yyerror(const char* msg) {
@@ -245,12 +247,18 @@ int main(int argc, char *argv[])
 		yyparse();
 	}
 
-	// Node * curPos = rootNode;
-	// int c = 0;
-	// while(curPos != NULL){
-	// 	curPos = curPos->children[1];
-	// 	c++;
-	// }
-	// printf("%d\n", c);
+
+	Node * curPos = rootNode;
+	int c = 0;
+	while(curPos != NULL){
+		curPos = curPos->children[1];
+		c++;
+	}
+	printf("%d\n", c);
+
+	if (syntaxAnalysisOutput){
+		printGraphString(rootNode);
+	}
+
 	return 0;
 }

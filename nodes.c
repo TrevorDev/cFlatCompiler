@@ -5,6 +5,7 @@
 
 #define maxNumChild 10
 
+
 Node *createNode(){
 	Node *ret = malloc(sizeof(*ret));
 	ret->children = calloc(sizeof(Node*), maxNumChild);
