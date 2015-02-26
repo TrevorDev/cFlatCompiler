@@ -12,6 +12,10 @@ void yyerror(const char* msg) {
 
 int yylex();
 
+// global variables set by command line arguments
+int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
+syntaxAnalysisOutput = symbolTableOutput = intermediateOutput = asmOutput = 0;
+
 %}
 %token-table
 
@@ -96,9 +100,38 @@ stmt:	INT
 		}
 ;
 %%
+
 int main(int argc, char *argv[])
 {
 	int x;
+	if (argc > 2) { // only one command line argument permitted
+		fprintf(stderr, "Usage: cflatc -[asic]\n");
+		return 1;
+	}
+	if (argc == 2) { // validate the second argument if one exists
+		if (strlen(argv[2]) > 2) {
+			fprintf(stderr, "Usage: cflatc -[asic]\n");
+			return 1;
+		}
+		switch (argv[2][2]) {
+			case 'a':
+				syntaxAnalysisOutput = 1;
+				break;
+			case 's':
+				symbolTableOutput = 1;
+				break;
+			case 'i':
+				intermediateOutput = 1;
+				break;
+			case 'c':
+				asmOutput = 1;
+				break;
+			default:
+				fprintf(stderr, "Usage: cflatc -[asic]\n");
+				return 1;
+				break;
+		}
+	}
 	/*
 	while((x = yylex()) != END_OF_FILE){
 		//printf("%s ", yytext);
@@ -108,4 +141,5 @@ int main(int argc, char *argv[])
 	while(!feof(stdin)){
 		yyparse();
 	}
+	return 0;
 }
