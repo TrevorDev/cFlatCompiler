@@ -165,8 +165,8 @@ int main(int argc, char *argv[])
 
 	Node * curPos = rootNode;
 	int c = 0;
-	while(curPos != NULL && curPos->children[0]!=NULL){
-		curPos = curPos->children[0];
+	while(curPos != NULL){
+		curPos = curPos->children[1];
 		c++;
 	}
 	printf("%d\n", c);
