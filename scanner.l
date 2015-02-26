@@ -18,7 +18,8 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 }
 
 "\n"	{
-	return NEW_LINE;
+	//EAT NEWLINES AND USE yylineno
+	//return NEW_LINE;
 }
 
 "\0"	{
@@ -134,11 +135,11 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 }
 
 "\["	{
-	return PARENTHESIS_OPEN;
+	return SQUARE_OPEN;
 }
 
 "\]"	{
-	return PARANTHESIS_CLOSE;
+	return SQUARE_CLOSE;
 }
 
 "\;"	{
@@ -156,6 +157,11 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 "typedef"	{
 	return TYPEDEF;
 }
+
+","	{
+	return COMMA;
+}
+
 
 "struct"	{
 	return STRUCT;

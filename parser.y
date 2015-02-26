@@ -60,8 +60,8 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %token COMMENT_CLOSE
 %token BRACKET_OPEN
 %token BRACKET_CLOSE
-%token PARENTHESIS_OPEN
-%token PARANTHESIS_CLOSE
+%token SQUARE_OPEN
+%token SQUARE_CLOSE
 %token SEMICOLON
 %token CONTROL_BLOCK_OPEN
 %token CONTROL_BLOCK_CLOSE
@@ -69,50 +69,132 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %token <ival> INT
 %token <fval> FLOAT
 %token TYPEDEF
+%token COMMA
 %token STRUCT
 %token END_OF_FILE
 
-%type <node> stmt_list
-%type <node> stmt
+/*%type <node> stmt_list
+%type <node> stmt*/
 
 %% /* Grammar rules and actions follow */
 
-program:	stmt_list
+program:	type_decl_list// global_var_list function_def_list
 			{
-				printf("Done!\n");
-				rootNode = $1;
-				return 1;
+				return 0;
 			}
 ;
 
-stmt_list:	stmt
+type_decl_list: type_decl_list type_decl
+				{
+					printf("bad\n");
+				}
+				|
+				type_decl
+				{
+					printf("bad1\n");
+				}
+				|
+				/*Empty*/
+				{
+					printf("ba2\n");
+				}
+;
+type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
 			{
-				$$ = createStmtListNode(NULL, $1);
+				printf("decl found\n");
+			}
+;
+
+var_name_iden: IDENTIFIER
+				{
+
+				}
+				|
+				IDENTIFIER array_decl
+				{
+
+				}
+;
+
+array_decl: SQUARE_OPEN INT SQUARE_CLOSE
+			{
+
+			}
+;
+
+base_type_lit: INT_LIT | FLOAT_LIT | CHAR_LIT
+				{
+
+				}
+
+type_iden: 	IDENTIFIER
+			{
+
 			}
 			|
-			stmt_list stmt
+			struct_def
 			{
-				$$ = createStmtListNode($1, $2);
+
+			}
+			|
+			base_type_lit
+			{
+
 			}
 ;
 
-stmt:	INT
-		{
-			printf("int\n");
-			$$ = createStmtNode((void*)&$1, INTVAL);
-		}
-		|
-		FLOAT
-		{
-			printf("float\n");
-			$$ = createStmtNode((void*)&$1, FLOATVAL);
-		}
-		|
-		IDENTIFIER
-		{
-			printf("sstr\n");
-			$$ = createStmtNode((void*)$1, STRVAL);
-		}
+struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
+			{
+
+			}
+			|
+			STRUCT CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
+			{
+
+			}
+;
+
+struct_def_alone: struct_def SEMICOLON
+				{
+
+				}
+;
+
+var_list: var_list var_decl
+			{
+
+			}
+			|
+			var_decl
+			{
+
+			}
+			|
+			/*Empty*/
+			{
+
+			}
+;
+
+var_decl: type_iden comma_iden_list SEMICOLON
+			{
+
+			}
+			|
+			struct_def_alone
+			{
+				
+			}
+;
+comma_iden_list: var_name_iden COMMA comma_iden_list 
+				{
+
+				}
+				|
+				var_name_iden
+				{
+
+				}
 ;
 %%
 
@@ -163,12 +245,12 @@ int main(int argc, char *argv[])
 		yyparse();
 	}
 
-	Node * curPos = rootNode;
-	int c = 0;
-	while(curPos != NULL){
-		curPos = curPos->children[1];
-		c++;
-	}
-	printf("%d\n", c);
+	// Node * curPos = rootNode;
+	// int c = 0;
+	// while(curPos != NULL){
+	// 	curPos = curPos->children[1];
+	// 	c++;
+	// }
+	// printf("%d\n", c);
 	return 0;
 }

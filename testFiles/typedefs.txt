@@ -1,0 +1,18 @@
+typedef int x;
+typedef int x;
+typedef int x;
+typedef int x;
+typedef int x[3];
+typedef blah x[3];
+typedef struct {} x[3];
+typedef struct {
+	int x;
+} x[3];
+
+typedef struct {
+	int x;
+	int ddfds;
+	float g;
+	struct {int g;};
+	struct test{int g;struct test{int g;};};
+} x[3];
