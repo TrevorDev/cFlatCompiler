@@ -19,17 +19,22 @@ cflatc: parser.o lex.yy.o nodes.o graph.o
 
 parser.o: y.tab.c y.tab.h
 
+
 y.tab.c: parser.y
 	yacc -d -y parser.y
-
-lex.yy.c: scanner.l
 	flex --header-file=scanner.h scanner.l
 
 %.o: %.c %.h
 	$(CC) -g -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
+
 run: all
 	./cflatc < testFiles/ints.txt
+
+
+graph: run
+	./cflatc < testFiles/ints.txt
+	dot -Tpng graph.txt -o graph.png
 
 clean: 
 	rm -f *.o

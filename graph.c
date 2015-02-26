@@ -4,6 +4,7 @@
 #include "nodes.h"
 
 int nodeId = 0;
+FILE *fp;
 
 void printTree(Node *root, int parentId){
 	int type = root->nodeType;
@@ -11,9 +12,9 @@ void printTree(Node *root, int parentId){
 	int myNodeID = nodeId;
 
 	if(type == StmtListNodeT){
-		printf("\t%d [label=\"stmt_list\", shape=box];\n", myNodeID);
+		fprintf(fp, "\t%d [label=\"stmt_list\", shape=box];\n", myNodeID);
 		if (parentId != 0)
-			printf("\t%d -> %d;\n", parentId, myNodeID);
+			fprintf(fp, "\t%d -> %d;\n", parentId, myNodeID);
 		if (root->children){
 			printTree(root->children[0], myNodeID);
 
@@ -24,23 +25,26 @@ void printTree(Node *root, int parentId){
 	}
 	else if(type == StmtNodeT){
 		type = root->valType;
-		printf("\t%d -> %d;\n", parentId, myNodeID);
+		fprintf(fp, "\t%d -> %d;\n", parentId, myNodeID);
 
 		if(type == INTVAL){
-			printf("\t%d [label=\"%d\", shape=box];\n", myNodeID, root->val.ival);
+			fprintf(fp, "\t%d [label=\"%d\", shape=box];\n", myNodeID, root->val.ival);
 		}
 		else if(type == FLOATVAL){
-			printf("\t%d [label=\"%f\", shape=box];\n", myNodeID, root->val.fval);
+			fprintf(fp, "\t%d [label=\"%f\", shape=box];\n", myNodeID, root->val.fval);
 		}
 		else if(type == STRVAL){
-			printf("\t%d [label=\"%s\", shape=box];\n", myNodeID, root->val.sval);
+			fprintf(fp, "\t%d [label=\"%s\", shape=box];\n", myNodeID, root->val.sval);
 		}
 	}
 	return;
 }
 
 void printGraphString(Node * root){
-	printf("digraph G {\n");
+	fp = fopen("graph.txt", "w");
+	fprintf(fp, "digraph G {\n");
 	printTree(root, nodeId);
-	printf("}\n");
+	fprintf(fp, "}\n");
+	fflush(fp);
+	fclose(fp);
 }
