@@ -10,7 +10,7 @@
 void yyerror(const char* msg) {
       fprintf(stderr, "%s on line %d\n", msg, yylineno);
 }
-StmtListNode * rootNode;
+Node * rootNode;
 int yylex();
 
 // global variables set by command line arguments
@@ -23,8 +23,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 	int ival;
 	char *sval;
 	float fval;
-	StmtListNode * stmtList;
-	StmtNode * stmt;
+	Node * node;
 }
 
 %token INT_LIT
@@ -73,8 +72,8 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %token STRUCT
 %token END_OF_FILE
 
-%type <stmtList> stmt_list
-%type <stmt> stmt
+%type <node> stmt_list
+%type <node> stmt
 
 %% /* Grammar rules and actions follow */
 
@@ -82,7 +81,7 @@ program:	stmt_list
 			{
 				printf("Done!\n");
 				rootNode = $1;
-				return rootNode;
+				return 1;
 			}
 ;
 
@@ -163,5 +162,13 @@ int main(int argc, char *argv[])
 	while(!feof(stdin)){
 		yyparse();
 	}
+
+	Node * curPos = rootNode;
+	int c = 0;
+	while(curPos != NULL && curPos->children[0]!=NULL){
+		curPos = curPos->children[0];
+		c++;
+	}
+	printf("%d\n", c);
 	return 0;
 }

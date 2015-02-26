@@ -6,13 +6,19 @@ enum NodeType {
 	StmtNodeT
 };
 
+enum StmtListNodeC {
+	stmtC,
+	stmtListC,
+	StmtListNodeCount
+};
+
 enum ValType {
 	INTVAL,
 	STRVAL,
 	FLOATVAL
 };
 
-typedef struct StmtNode{
+typedef struct Node{
     int nodeType;
     int valType;
     union{
@@ -20,15 +26,11 @@ typedef struct StmtNode{
 		char *sval;
 		float fval;
 	}val;
-}StmtNode;
+	struct Node ** children;
+}Node;
 
-typedef struct StmtListNode{
-    int nodeType;
-    StmtNode* stmt;
-    struct StmtListNode* stmtList;
-}StmtListNode;
-
-StmtListNode *createStmtListNode(StmtListNode *list, StmtNode *stmt);
-StmtNode *createStmtNode(void *val, int type);
+Node *createNode();
+Node *createStmtListNode(Node *list, Node *stmt);
+Node *createStmtNode(void *val, int type);
 
 #endif

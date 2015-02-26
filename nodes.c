@@ -3,27 +3,29 @@
 
 #include "nodes.h"
 
-StmtListNode *createStmtListNode(StmtListNode *list, StmtNode *stmt)
-{
-	StmtListNode *ret = malloc(sizeof(*ret));
-	if (!ret) {
-		return NULL;
-	}
-	ret->nodeType = StmtListNodeT;
-	ret->stmtList = list;
-	ret->stmt = stmt;
+#define maxNumChild 10
+
+Node *createNode(){
+	Node *ret = malloc(sizeof(*ret));
+	ret->children = calloc(sizeof(Node*), maxNumChild);
+	int i = 0;
 	return ret;
 }
 
-StmtNode *createStmtNode(void *val, int type)
+Node *createStmtListNode(Node *list, Node *stmt)
 {
-	StmtNode *ret = malloc(sizeof(*ret));
-	if (!ret) {
-		return NULL;
-	}
+	Node *ret = createNode();
+	ret->nodeType = StmtListNodeT;
+	ret->children[stmtC] = stmt;
+	ret->children[stmtListC] = list;
+	return ret;
+}
+
+Node *createStmtNode(void *val, int type)
+{
+	Node *ret = createNode();
 	ret->nodeType = StmtNodeT;
 	ret->valType = type;
-
 	if(type == INTVAL){
 		ret->val.ival = *((int*)val);
 	}else if(type == FLOATVAL){
@@ -31,6 +33,5 @@ StmtNode *createStmtNode(void *val, int type)
 	}else if(type == STRVAL){
 		ret->val.sval = ((char*)val);
 	}
-	
 	return ret;
 }
