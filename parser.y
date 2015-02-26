@@ -81,12 +81,12 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %% /* Grammar rules and actions follow */
 
 program:	type_decl_list global_var_list END_OF_FILE // function_def_list
-			{
-				return 0;
-			}
+				{
+					return 0;
+				}
 ;
 
-global_var_list: var_list
+global_var_list: assign_var_list
 				{
 					printf("global var list\n");
 				}
@@ -107,9 +107,9 @@ type_decl_list: type_decl_list type_decl
 				}
 ;
 type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
-			{
-				printf("decl found\n");
-			}
+				{
+					printf("decl found\n");
+				}
 ;
 
 var_name_iden: IDENTIFIER
@@ -124,9 +124,9 @@ var_name_iden: IDENTIFIER
 ;
 
 array_decl: SQUARE_OPEN INT SQUARE_CLOSE
-			{
+				{
 
-			}
+				}
 ;
 
 base_type_lit: INT_LIT | FLOAT_LIT | CHAR_LIT
@@ -135,30 +135,30 @@ base_type_lit: INT_LIT | FLOAT_LIT | CHAR_LIT
 				}
 
 type_iden: 	IDENTIFIER
-			{
+				{
 
-			}
-			|
-			struct_def
-			{
+				}
+				|
+				struct_def
+				{
 
-			}
-			|
-			base_type_lit
-			{
+				}
+				|
+				base_type_lit
+				{
 
-			}
+				}
 ;
 
 struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
-			{
+				{
 
-			}
-			|
-			STRUCT CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
-			{
+				}
+				|
+				STRUCT CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
+				{
 
-			}
+				}
 ;
 
 struct_def_alone: struct_def SEMICOLON
@@ -167,31 +167,76 @@ struct_def_alone: struct_def SEMICOLON
 				}
 ;
 
+assign_var_list: assign_var_list assign_var_decl
+				{
+
+				}
+				|
+				assign_var_decl
+				{
+
+				}
+;
+
+assign_var_decl: type_iden comma_iden_assign_list SEMICOLON
+				{
+
+				}
+				|
+				/*Empty*/
+				{
+					printf("empty var dec\n");
+				}
+;
+
+comma_iden_assign_list: assign_var_name_iden COMMA comma_iden_assign_list 
+				{
+
+				}
+				|
+				assign_var_name_iden
+				{
+
+				}
+;
+
+assign_var_name_iden: var_name_iden | var_name_iden ASSIGNMENT expr
+				{
+
+				}
+;
+
+expr: INT
+	{
+		//TODO FIX EXPR
+	}
+;
+
 var_list: var_list var_decl
-			{
-				printf("var dec list\n");
-			}
-			|
-			var_decl
-			{
-				printf("var dec single\n");
-			}
-			|
-			/*Empty*/
-			{
-				printf("empty var dec\n");
-			}
+				{
+					printf("var dec list\n");
+				}
+				|
+				var_decl
+				{
+					printf("var dec single\n");
+				}
+				|
+				/*Empty*/
+				{
+					printf("empty var dec\n");
+				}
 ;
 
 var_decl: type_iden comma_iden_list SEMICOLON
-			{
+				{
 
-			}
-			|
-			struct_def_alone
-			{
-				
-			}
+				}
+				|
+				struct_def_alone
+				{
+					
+				}
 ;
 comma_iden_list: var_name_iden COMMA comma_iden_list 
 				{
