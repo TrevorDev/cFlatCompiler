@@ -6,53 +6,47 @@
 #define maxNumChild 10
 
 
-Node *createNode(){
+Node *createNode(enum NodeType t){
 	Node *ret = malloc(sizeof(*ret));
+	ret->nodeType = t;
 	return ret;
 }
 
 Node *createProgram(Node * type_decl_list){
-	Node *ret = createNode();
-	ret->nodeType = Program_t;
+	Node *ret = createNode(Program_t);
 	ret->children.Program.type_decl_list = type_decl_list;
 	return ret;
 }
 
 Node *createTypeDecl(Node * type_iden, Node * var_name_iden){
-	Node *ret = createNode();
-	ret->nodeType = TypeDecl_t;
+	Node *ret = createNode(TypeDecl_t);
 	ret->children.TypeDecl.type_iden = type_iden;
 	ret->children.TypeDecl.var_name_iden = var_name_iden;
 	return ret;
 }
 
 Node *createTypeDeclList(Node * type_decl_list, Node *type_decl) {
-	Node *ret = createNode();
-	ret->nodeType = TypeDeclList_t;
+	Node *ret = createNode(TypeDeclList_t);
 	ret->children.TypeDeclList.type_decl_list = type_decl_list;
 	ret->children.TypeDeclList.type_decl = type_decl;
 	return ret;
 }
 
 Node *createVarNameIden(char *identifier, int array_size) {
-	Node *ret = createNode();
-	ret->nodeType = VarNameIden_t;
+	Node *ret = createNode(VarNameIden_t);
 	ret->children.VarNameIden.identifier = identifier;
 	ret->children.VarNameIden.array_size = array_size;
 	return ret;
 }
 
 Node *createArrayDecl(int array_size) {
-	Node *ret = createNode();
-	ret->nodeType = ArrayDecl_t;
+	Node *ret = createNode(ArrayDecl_t);
 	ret->children.ArrayDecl.array_size = array_size;
 	return ret;
 }
 
 Node *createBaseTypeLit(int type){
-	Node *ret = createNode();
-	ret->nodeType = BaseTypeLit_t;
-
+	Node *ret = createNode(BaseTypeLit_t);
 	if (type == 0){
 		sprintf(ret->children.BaseTypeLit.literal, "int");
 	}
