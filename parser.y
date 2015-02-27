@@ -93,7 +93,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 
 program:	type_decl_list /*global_var_list*/ END_OF_FILE // function_def_list
 				{
-					rootNode = createProgram($1);
+					//rootNode = createProgram($1);
 					return 0;
 				}
 ;
@@ -106,78 +106,78 @@ global_var_list: assign_var_list
 type_decl_list: type_decl_list type_decl
 				{
 					printf("typedec list\n");
-					$$ = createTypeDeclList($1, $2);
+					//$$ = createTypeDeclList($1, $2);
 				}
 				|
 				type_decl
 				{
 					printf("single typedec\n");
-					$$ = createTypeDeclList(NULL, $1);
+					//$$ = createTypeDeclList(NULL, $1);
 				}
 				|
 				/*Empty*/
 				{
 					printf("empty typedec\n");
-					$$ = NULL;
+					//$$ = NULL;
 				}
 ;
 type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
 				{
 					printf("decl found\n");
-					$$ = createTypeDecl($2, $3);
+					//$$ = createTypeDecl($2, $3);
 				}
 ;
 
 var_name_iden: 	IDENTIFIER
 				{
-					Node * temp = createIden($1);
-					$$ = createVarNameIden(temp, 1);
+					//Node * temp = createIden($1);
+					//$$ = createVarNameIden(temp, 1);
 				}
 				|
 				IDENTIFIER array_decl
 				{
-					Node * temp = createIden($1);
-					$$ = createVarNameIden(temp, $2);
+					//Node * temp = createIden($1);
+					//$$ = createVarNameIden(temp, $2);
 				}
 ;
 
 array_decl: SQUARE_OPEN INT SQUARE_CLOSE
 				{
-					$$ = $2;
+					//$$ = $2;
 				}
 ;
 
 base_type_lit: INT_LIT | FLOAT_LIT | CHAR_LIT
 				{
-					$$ = createBaseTypeLit($1);
+					//$$ = createBaseTypeLit($1);
 				}
 
 type_iden: 		IDENTIFIER
 				{
-					Node * temp = createIden($1);
-					$$ = createTypeIden(temp);
+					//Node * temp = createIden($1);
+					//$$ = createTypeIden(temp);
 				}
 				|
 				struct_def
 				{
-					$$ = createTypeIden($1);
+					//$$ = createTypeIden($1);
 				}
 				|
 				base_type_lit
 				{
-					$$ = createTypeIden($1);
+					//$$ = createTypeIden($1);
 				}
 ;
 
 struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
 				{
-					Node * temp = createIden($2);
-					$$ = createStructDef(temp, $4);
+					//Node * temp = createIden($2);
+					//$$ = createStructDef(temp, $4);
 				}
 				|
 				STRUCT CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
 				{
-					$$ = createStructDef(NULL, $3);
+					//$$ = createStructDef(NULL, $3);
 				}
 ;
 
@@ -234,17 +234,17 @@ expr: INT
 
 var_list: var_list var_decl
 				{
-					$$ = createVarList($1, $2);
+					//$$ = createVarList($1, $2);
 				}
 				|
 				var_decl
 				{
-					$$ = createVarList(NULL, $1);
+					//$$ = createVarList(NULL, $1);
 				}
 				|
 				/*Empty*/
 				{
-					$$ = NULL;
+					//$$ = NULL;
 				}
 ;
 

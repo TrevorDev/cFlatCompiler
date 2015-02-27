@@ -1,114 +1,95 @@
+//THIS FILE IS GENERATED IN proNode/nodes.jc
 #include <stdlib.h>
 #include <stdio.h>
-
 #include "nodes.h"
 
-#define maxNumChild 10
 
-
-Node *createNode(enum NodeType t){
-	Node *ret = malloc(sizeof(*ret));
-	ret->nodeType = t;
-	return ret;
-}
-
-Node *createProgram(Node * type_decl_list){
-	Node *ret = createNode(Program_t);
-	ret->children.Program.type_decl_list = type_decl_list;
-	return ret;
-}
-
-Node *createTypeDecl(Node * type_iden, Node * var_name_iden){
-	Node *ret = createNode(TypeDecl_t);
-	ret->children.TypeDecl.type_iden = type_iden;
-	ret->children.TypeDecl.var_name_iden = var_name_iden;
-	return ret;
-}
-
-Node *createTypeDeclList(Node * type_decl_list, Node *type_decl) {
-	Node *ret = createNode(TypeDeclList_t);
-	ret->children.TypeDeclList.type_decl_list = type_decl_list;
-	ret->children.TypeDeclList.type_decl = type_decl;
-	return ret;
-}
-
-Node *createVarNameIden(Node *identifier, int array_size) {
-	Node *ret = createNode(VarNameIden_t);
-	ret->children.VarNameIden.identifier = identifier;
-	ret->children.VarNameIden.array_size = array_size;
-	return ret;
-}
-
-Node *createArrayDecl(int array_size) {
-	Node *ret = createNode(ArrayDecl_t);
-	ret->children.ArrayDecl.array_size = array_size;
-	return ret;
-}
-
-Node *createBaseTypeLit(int type){
-	Node *ret = createNode(BaseTypeLit_t);
-	if (type == 0){
-		sprintf(ret->children.BaseTypeLit.literal, "int");
-	}
-	else if (type == 1){
-		sprintf(ret->children.BaseTypeLit.literal, "char");
-	}
-	else if (type == 2){
-		sprintf(ret->children.BaseTypeLit.literal, "float");
+	Node *create_Node(enum NodeType t){
+		Node *ret = malloc(sizeof(*ret));
+		ret->nodeType = t;
+		return ret;
 	}
 
-	return ret;
-}
+
+	Node *create_program(Node * type_decl_list){
+		Node *ret = create_Node(program_t);
+		ret->children.program.type_decl_list = type_decl_list;
+		return ret;
+	}
+
+	Node *create_type_decl_list(Node * type_decl_list, Node * type_decl){
+		Node *ret = create_Node(type_decl_list_t);
+		ret->children.type_decl_list.type_decl_list = type_decl_list;
+		ret->children.type_decl_list.type_decl = type_decl;
+		return ret;
+	}
+
+	Node *create_type_decl(Node * type_iden, Node * var_name_iden){
+		Node *ret = create_Node(type_decl_t);
+		ret->children.type_decl.type_iden = type_iden;
+		ret->children.type_decl.var_name_iden = var_name_iden;
+		return ret;
+	}
+
+	Node *create_var_name_iden(Node * identifier, Node * array_decl){
+		Node *ret = create_Node(var_name_iden_t);
+		ret->children.var_name_iden.identifier = identifier;
+		ret->children.var_name_iden.array_decl = array_decl;
+		return ret;
+	}
+
+	Node *create_identifier(){
+		Node *ret = create_Node(identifier_t);
+		
+		return ret;
+	}
+
+	Node *create_array_decl(){
+		Node *ret = create_Node(array_decl_t);
+		
+		return ret;
+	}
+
+	Node *create_base_type_lit(){
+		Node *ret = create_Node(base_type_lit_t);
+		
+		return ret;
+	}
+
+	Node *create_type_iden(Node * base_type_lit, Node * identifier, Node * struct_def){
+		Node *ret = create_Node(type_iden_t);
+		ret->children.type_iden.base_type_lit = base_type_lit;
+		ret->children.type_iden.identifier = identifier;
+		ret->children.type_iden.struct_def = struct_def;
+		return ret;
+	}
+
+	Node *create_struct_def(Node * identifier, Node * var_list){
+		Node *ret = create_Node(struct_def_t);
+		ret->children.struct_def.identifier = identifier;
+		ret->children.struct_def.var_list = var_list;
+		return ret;
+	}
+
+	Node *create_var_list(Node * var_list, Node * var_decl){
+		Node *ret = create_Node(var_list_t);
+		ret->children.var_list.var_list = var_list;
+		ret->children.var_list.var_decl = var_decl;
+		return ret;
+	}
+
+	Node *create_var_decl(Node * type_iden, Node * comma_iden_list){
+		Node *ret = create_Node(var_decl_t);
+		ret->children.var_decl.type_iden = type_iden;
+		ret->children.var_decl.comma_iden_list = comma_iden_list;
+		return ret;
+	}
+
+	Node *create_comma_iden_list(Node * comma_iden_list, Node * var_name_iden){
+		Node *ret = create_Node(comma_iden_list_t);
+		ret->children.comma_iden_list.comma_iden_list = comma_iden_list;
+		ret->children.comma_iden_list.var_name_iden = var_name_iden;
+		return ret;
+	}
 
 
-Node *createTypeIden(Node *type) {
-	Node *ret = createNode(TypeIden_t);
-	ret->children.TypeIden.type = type;
-	return ret;
-}
-
-Node *createIden(char *identifier) {
-	Node *ret = createNode(Iden_t);
-	ret->children.Iden.identifier = identifier;
-	return ret;
-}
-
-Node *createStructDef(Node *identifier, Node *var_list) {
-	Node *ret = createNode(StructDef_t);
-	ret->children.StructDef.identifier = identifier;
-	ret->children.StructDef.var_list = var_list;
-	return ret;
-}
-
-
-Node *createVarList(Node *var_list, Node* var_decl) {
-	Node *ret = createNode(VarList_t);
-	ret->children.VarList.var_list = var_list;
-	ret->children.VarList.var_decl = var_decl;
-	return ret;
-}
-
-
-// Node *createStmtListNode(Node *list, Node *stmt)
-// {
-// 	Node *ret = createNode();
-// 	ret->nodeType = StmtListNodeT;
-// 	ret->children[stmtC] = stmt;
-// 	ret->children[stmtListC] = list;
-// 	return ret;
-// }
-
-// Node *createStmtNode(void *val, int type)
-// {
-// 	Node *ret = createNode();
-// 	ret->nodeType = StmtNodeT;
-// 	ret->valType = type;
-// 	if(type == INTVAL){
-// 		ret->val.ival = *((int*)val);
-// 	}else if(type == FLOATVAL){
-// 		ret->val.fval = *((float*)val);
-// 	}else if(type == STRVAL){
-// 		ret->val.sval = ((char*)val);
-// 	}
-// 	return ret;
-// }

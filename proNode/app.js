@@ -33,7 +33,7 @@ fs.readFile('nodes.jh', 'utf8', function (err,data) {
 		return console.log(err);
 	}
 	var out = ejs.render(data, {typeNames: typeNames, nodeTypes: nodeTypes});
-	fs.writeFile("nodes.h", out, function(err) {
+	fs.writeFile("../nodes.h", out, function(err) {
 	    if(err) {
 	        console.log(err);
 	    } else {
@@ -48,7 +48,7 @@ fs.readFile('nodes.jc', 'utf8', function (err,data) {
 	}
 	var out = ejs.render(data, {typeNames: typeNames, nodeTypes: nodeTypes});
 	//console.log(out);
-	fs.writeFile("nodes.c", out, function(err) {
+	fs.writeFile("../nodes.c", out, function(err) {
 	    if(err) {
 	        console.log(err);
 	    } else {

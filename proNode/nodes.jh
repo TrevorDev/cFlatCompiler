@@ -1,3 +1,4 @@
+//THIS FILE IS GENERATED IN proNode/nodes.jc
 #ifndef NODES_H
 #define NODES_H
 
@@ -22,6 +23,6 @@ typedef struct Node{
 }Node;
 
 <% for (var key in nodeTypes) { %>
-	Node * create<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).join(", ") %>);
+	Node * create_<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).join(", ") %>);
 <% }; %>
 #endif

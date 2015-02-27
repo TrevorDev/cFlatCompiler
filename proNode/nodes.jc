@@ -1,17 +1,18 @@
+//THIS FILE IS GENERATED IN proNode/nodes.jc
 #include <stdlib.h>
 #include <stdio.h>
 #include "nodes.h"
 
 
-Node *createNode(enum NodeType t){
-	Node *ret = malloc(sizeof(*ret));
-	ret->nodeType = t;
-	return ret;
-}
+	Node *create_Node(enum NodeType t){
+		Node *ret = malloc(sizeof(*ret));
+		ret->nodeType = t;
+		return ret;
+	}
 
 <% for (var key in nodeTypes) { %>
-	Node *create<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).join(", ") %>){
-		Node *ret = createNode(<%- key+"_t" %>);
+	Node *create_<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).join(", ") %>){
+		Node *ret = create_Node(<%- key+"_t" %>);
 		<%- nodeTypes[key].children.map(function(val){return "ret->children."+key+"."+val+" = "+val+";"}).join("\n\t\t") %>
 		return ret;
 	}

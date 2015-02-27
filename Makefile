@@ -12,10 +12,13 @@ LIBS = -ll
 endif
 
 #Rules
-all: cflatc 
+all: nodeGen
 
 cflatc: parser.o lex.yy.o nodes.o
 	$(CC) $^ -o $@ $(LIBS)
+
+nodeGen: proNode/app.js
+	cd proNode; node app.js; cd ..;make cflatc;
 
 parser.o: y.tab.c y.tab.h
 
@@ -42,3 +45,5 @@ clean:
 	rm -f cflatc
 	rm -f y.tab.h
 	rm -f scanner.h
+	rm nodes.c
+	rm nodes.h
