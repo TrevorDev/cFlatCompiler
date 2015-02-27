@@ -73,10 +73,21 @@ Node *createIden(char *identifier) {
 	return ret;
 }
 
-Node *createStructDef(Node *identifier, Node *var_list){
+Node *createStructDef(Node *identifier, Node *var_list) {
 	Node *ret = createNode(StructDef_t);
+	ret->children.StructDef.identifier = identifier;
+	ret->children.StructDef.var_list = var_list;
 	return ret;
 }
+
+
+Node *createVarList(Node *var_list, Node* var_decl) {
+	Node *ret = createNode(VarList_t);
+	ret->children.VarList.var_list = var_list;
+	ret->children.VarList.var_decl = var_decl;
+	return ret;
+}
+
 
 // Node *createStmtListNode(Node *list, Node *stmt)
 // {

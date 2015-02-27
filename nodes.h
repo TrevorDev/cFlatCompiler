@@ -16,7 +16,8 @@ enum NodeType {
 	BaseTypeLit_t,
 	TypeIden_t,
 	Iden_t,
-	StructDef_t
+	StructDef_t,
+	VarList_t
 };
 
 typedef struct Node{
@@ -59,8 +60,14 @@ typedef struct Node{
 		} Iden;
 
 		struct StructDef {
-			
+			struct Node *identifier;
+			struct Node *var_list;
 		} StructDef;
+
+		struct VarList {
+			struct Node *var_list;
+			struct Node *var_decl;
+		} VarList;
 
     }children;
 }Node;
@@ -71,5 +78,10 @@ Node *createTypeDeclList(Node *existingList, Node *newTypeDecl);
 Node *createVarNameIden(Node *identifier, int array_size);
 Node *createTypeIden(Node *type);
 Node *createIden(char *identifier);
+Node *createBaseTypeLit(int type);
+Node *createTypeIden(Node *type);
+Node *createIden(char *identifier);
+Node *createStructDef(Node *identifier, Node *var_list);
+Node *createVarList(Node *var_list, Node* var_decl);
 
 #endif
