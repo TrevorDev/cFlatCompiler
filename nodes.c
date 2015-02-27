@@ -16,7 +16,15 @@ Node *createNode(){
 Node * createProgramNode(Node * type_decl_list){
 	Node *ret = createNode();
 	ret->nodeType = ProgramNode_t;
-	ret->children.ProgramNode.type_decl_list = type_decl_list;
+	ret->children.Program.type_decl_list = type_decl_list;
+	return ret;
+}
+
+Node *createTypeDeclList(Node *existingList, Node *newTypeDecl) {
+	Node *ret = createNode();
+	ret->nodeType = TypeDeclList_t;
+	ret->children.TypeDeclList_t.existingList = existingList;
+	ret->children.TypeDeclList_t.newTypeDecl = newTypeDecl;
 	return ret;
 }
 

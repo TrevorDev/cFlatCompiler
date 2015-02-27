@@ -8,7 +8,8 @@ enum ValType {
 };
 
 enum NodeType {
-	ProgramNode_t
+	Program_t,
+	TypeDeclList_t
 };
 
 
@@ -17,14 +18,20 @@ typedef struct Node{
     int nodeType;
 
     union{
-    	struct ProgramNode{
-			struct Node * type_decl_list;
-		}ProgramNode;
+    	struct Program {
+			struct Node *type_decl_list;
+		} Program;
+
+		struct TypeDeclList {
+			struct Node *
+		} TypeDeclList;
+
     }children;
 }Node;
 
 Node *createNode();
 // Node *createStmtListNode(Node *list, Node *stmt);
 // Node *createStmtNode(void *val, int type);
+Node *createTypeDeclList(Node *, Node *);
 
 #endif

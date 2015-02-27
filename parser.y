@@ -106,7 +106,7 @@ type_decl_list: type_decl_list type_decl
 				/*Empty*/
 				{
 					printf("empty typedec\n");
-					$$ = createTypeDeclList(NULL, NULL);
+					$$ = NULL;
 				}
 ;
 type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
