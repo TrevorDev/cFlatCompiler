@@ -11,7 +11,8 @@ enum NodeType {
 	Program_t,
 	TypeDecl_t,
 	VarNameIden_t,
-	TypeDeclList_t
+	TypeDeclList_t,
+	ArrayDecl_t
 };
 
 typedef struct Node{
@@ -23,24 +24,25 @@ typedef struct Node{
 		}Program;
 		struct TypeDecl{
 			struct Node * type_iden;
-			struct Node * type_decl_list;
+			struct Node * var_name_iden;
 		}TypeDecl;
 		struct VarNameIden{
-			struct Node * type_iden;
-			struct Node * type_decl_list;
+			char * identifier;
+			int array_size;
 		}VarNameIden;
-    	struct Program {
-			struct Node *type_decl_list;
-		} Program;
 		struct TypeDeclList {
-			struct Node *
+			struct Node * type_decl_list;
+			struct Node * type_decl;
 		} TypeDeclList;
+		struct ArrayDecl {
+			int array_size;
+		} ArrayDecl;
     }children;
 }Node;
 
-Node *createNode();
-// Node *createStmtListNode(Node *list, Node *stmt);
-// Node *createStmtNode(void *val, int type);
-Node *createTypeDeclList(Node *, Node *);
+Node * createProgram(Node * type_decl_list);
+Node * createTypeDecl(Node * type_iden, Node * var_name_iden);
+Node *createTypeDeclList(Node *existingList, Node *newTypeDecl);
+Node *createVarNameIden(char *identifier, int array_size);
 
 #endif

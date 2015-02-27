@@ -8,19 +8,17 @@
 
 Node *createNode(){
 	Node *ret = malloc(sizeof(*ret));
-	//ret->children = calloc(sizeof(Node*), maxNumChild);
-	int i = 0;
 	return ret;
 }
 
-Node * createProgram(Node * type_decl_list){
+Node *createProgram(Node * type_decl_list){
 	Node *ret = createNode();
 	ret->nodeType = Program_t;
 	ret->children.Program.type_decl_list = type_decl_list;
 	return ret;
 }
 
-Node * createTypeDecl(Node * type_iden, Node * var_name_iden){
+Node *createTypeDecl(Node * type_iden, Node * var_name_iden){
 	Node *ret = createNode();
 	ret->nodeType = TypeDecl_t;
 	ret->children.TypeDecl.type_iden = type_iden;
@@ -28,11 +26,26 @@ Node * createTypeDecl(Node * type_iden, Node * var_name_iden){
 	return ret;
 }
 
-Node *createTypeDeclList(Node *existingList, Node *newTypeDecl) {
+Node *createTypeDeclList(Node * type_decl_list, Node *type_decl) {
 	Node *ret = createNode();
 	ret->nodeType = TypeDeclList_t;
-	ret->children.TypeDeclList_t.existingList = existingList;
-	ret->children.TypeDeclList_t.newTypeDecl = newTypeDecl;
+	ret->children.TypeDeclList.type_decl_list = type_decl_list;
+	ret->children.TypeDeclList.type_decl = type_decl;
+	return ret;
+}
+
+Node *createVarNameIden(char *identifier, int array_size) {
+	Node *ret = createNode();
+	ret->nodeType = VarNameIden_t;
+	ret->children.VarNameIden.identifier = identifier;
+	ret->children.VarNameIden.array_size = array_size;
+	return ret;
+}
+
+Node *createArrayDecl(int array_size) {
+	Node *ret = createNode();
+	ret->nodeType = ArrayDecl_t;
+	ret->children.ArrayDecl.array_size = array_size;
 	return ret;
 }
 

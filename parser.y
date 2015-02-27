@@ -25,11 +25,12 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 	char *sval;
 	float fval;
 	Node * node;
+	int btype; // int = 0, char = 1, float = 2
 }
 
-%token INT_LIT
-%token CHAR_LIT
-%token FLOAT_LIT
+%token <btype> INT_LIT
+%token <btype> CHAR_LIT
+%token <btype> FLOAT_LIT
 %token VOID_LIT
 %token SINGLE_QUOTE
 %token NEW_LINE
@@ -77,6 +78,16 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 /*%type <node> stmt_list
 %type <node> stmt*/
 
+%type <node> program
+%type <node> type_decl_list
+%type <node> type_decl
+%type <node> var_name_iden
+%type <node> struct_def
+%type <node> base_type_lit
+%type <node> type_iden
+%type <ival> array_decl
+%type <node> var_list
+
 %% /* Grammar rules and actions follow */
 
 program:	type_decl_list /*global_var_list*/ END_OF_FILE // function_def_list
@@ -118,7 +129,7 @@ type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
 
 var_name_iden: 	IDENTIFIER
 				{
-					$$ = createVarNameIden($1, NULL);
+					$$ = createVarNameIden($1, 1);
 				}
 				|
 				IDENTIFIER array_decl
@@ -129,7 +140,7 @@ var_name_iden: 	IDENTIFIER
 
 array_decl: SQUARE_OPEN INT SQUARE_CLOSE
 				{
-					$$ = createArrayDecl($2);
+					$$ = $2;
 				}
 ;
 
@@ -161,7 +172,7 @@ struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
 				|
 				STRUCT CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
 				{
-					$$ = createStructDef(NULL, $4);
+					$$ = createStructDef(NULL, $3);
 				}
 ;
 
