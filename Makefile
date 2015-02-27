@@ -14,7 +14,7 @@ endif
 #Rules
 all: cflatc 
 
-cflatc: parser.o lex.yy.o nodes.o graph.o
+cflatc: parser.o lex.yy.o nodes.o
 	$(CC) $^ -o $@ $(LIBS)
 
 parser.o: y.tab.c y.tab.h

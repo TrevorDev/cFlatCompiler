@@ -4,7 +4,7 @@
 #include <math.h>
 #include <string.h>
 
-#include "graph.h"
+//#include "graph.h"
 #include "nodes.h"
 
 extern int yylineno;
@@ -79,8 +79,9 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 
 %% /* Grammar rules and actions follow */
 
-program:	type_decl_list global_var_list END_OF_FILE // function_def_list
+program:	type_decl_list /*global_var_list*/ END_OF_FILE // function_def_list
 				{
+					$$ = createProgram($1);
 					return 0;
 				}
 ;
@@ -93,32 +94,36 @@ global_var_list: assign_var_list
 type_decl_list: type_decl_list type_decl
 				{
 					printf("typedec list\n");
+					$$ = createTypeDeclList($1, $2);
 				}
 				|
 				type_decl
 				{
 					printf("single typedec\n");
+					$$ = createTypeDeclList(NULL, $1);
 				}
 				|
 				/*Empty*/
 				{
 					printf("empty typedec\n");
+					$$ = createTypeDeclList(NULL, NULL);
 				}
 ;
 type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
 				{
 					printf("decl found\n");
+					$$ = createTypeDecl($2, $3);
 				}
 ;
 
-var_name_iden: IDENTIFIER
+var_name_iden: 	IDENTIFIER
 				{
-
+					$$ = createVarNameIden($1, NULL);
 				}
 				|
 				IDENTIFIER array_decl
 				{
-
+					$$ = createVarNameIden($1, $2);
 				}
 ;
 
@@ -297,16 +302,16 @@ int main(int argc, char *argv[])
 	}
 
 
-	Node * curPos = rootNode;
-	int c = 0;
-	while(curPos != NULL){
-		curPos = curPos->children[1];
-		c++;
-	}
-	printf("%d\n", c);
+	// Node * curPos = rootNode;
+	// int c = 0;
+	// while(curPos != NULL){
+	// 	curPos = curPos->children[1];
+	// 	c++;
+	// }
+	// printf("%d\n", c);
 
 	if (syntaxAnalysisOutput){
-		printGraphString(rootNode);
+		//printGraphString(rootNode);
 	}
 
 	return 0;
