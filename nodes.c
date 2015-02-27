@@ -32,7 +32,7 @@ Node *createTypeDeclList(Node * type_decl_list, Node *type_decl) {
 	return ret;
 }
 
-Node *createVarNameIden(char *identifier, int array_size) {
+Node *createVarNameIden(Node *identifier, int array_size) {
 	Node *ret = createNode(VarNameIden_t);
 	ret->children.VarNameIden.identifier = identifier;
 	ret->children.VarNameIden.array_size = array_size;
@@ -61,11 +61,34 @@ Node *createBaseTypeLit(int type){
 }
 
 
-Node *createTypeIden() {
-	Node *ret = createNode();
-	ret->nodeType = BaseTypeLit_t;
+Node *createTypeIden(Node *type) {
+	Node *ret = createNode(TypeIden_t);
+	ret->children.TypeIden.type = type;
 	return ret;
 }
+
+Node *createIden(char *identifier) {
+	Node *ret = createNode(Iden_t);
+	ret->children.Iden.identifier = identifier;
+	return ret;
+}
+
+Node *createStructDef(Node *identifier, Node *var_list) {
+	Node *ret = createNode(StructDef_t);
+	ret->children.StructDef.identifier = identifier;
+	ret->children.StructDef.var_list = var_list;
+	return ret;
+}
+
+
+Node *createVarList(Node *var_list, Node* var_decl) {
+	Node *ret = createNode(VarList_t);
+	ret->children.VarList.var_list = var_list;
+	ret->children.VarList.var_decl = var_decl;
+	return ret;
+}
+
+
 // Node *createStmtListNode(Node *list, Node *stmt)
 // {
 // 	Node *ret = createNode();

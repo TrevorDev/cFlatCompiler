@@ -87,12 +87,13 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> type_iden
 %type <ival> array_decl
 %type <node> var_list
+%type <node> var_decl
 
 %% /* Grammar rules and actions follow */
 
 program:	type_decl_list /*global_var_list*/ END_OF_FILE // function_def_list
 				{
-					$$ = createProgram($1);
+					rootNode = createProgram($1);
 					return 0;
 				}
 ;
@@ -129,12 +130,14 @@ type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
 
 var_name_iden: 	IDENTIFIER
 				{
-					$$ = createVarNameIden($1, 1);
+					Node * temp = createIden($1);
+					$$ = createVarNameIden(temp, 1);
 				}
 				|
 				IDENTIFIER array_decl
 				{
-					$$ = createVarNameIden($1, $2);
+					Node * temp = createIden($1);
+					$$ = createVarNameIden(temp, $2);
 				}
 ;
 
@@ -151,7 +154,8 @@ base_type_lit: INT_LIT | FLOAT_LIT | CHAR_LIT
 
 type_iden: 		IDENTIFIER
 				{
-					$$ = createTypeIden($1);
+					Node * temp = createIden($1);
+					$$ = createTypeIden(temp);
 				}
 				|
 				struct_def
@@ -167,7 +171,8 @@ type_iden: 		IDENTIFIER
 
 struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
 				{
-					$$ = createStructDef($2, $4);
+					Node * temp = createIden($2);
+					$$ = createStructDef(temp, $4);
 				}
 				|
 				STRUCT CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
@@ -229,17 +234,17 @@ expr: INT
 
 var_list: var_list var_decl
 				{
-					printf("var dec list\n");
+					$$ = createVarList($1, $2);
 				}
 				|
 				var_decl
 				{
-					printf("var dec single\n");
+					$$ = createVarList(NULL, $1);
 				}
 				|
 				/*Empty*/
 				{
-					printf("empty var dec\n");
+					$$ = NULL;
 				}
 ;
 
