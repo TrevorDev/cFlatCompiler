@@ -41,3 +41,4 @@ clean:
 	rm -f lex.yy.c
 	rm -f cflatc
 	rm -f y.tab.h
+	rm -f scanner.h

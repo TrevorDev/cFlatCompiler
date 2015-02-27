@@ -2,13 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 #include "graph.h"
 #include "nodes.h"
-#include "scanner.h"
 
-
-
+extern int yylineno;
 void yyerror(const char* msg) {
       fprintf(stderr, "%s on line %d\n", msg, yylineno);
 }
