@@ -21,13 +21,6 @@ typedef struct Node{
 			struct Node * type_decl_list;
 		}ProgramNode;
     }children;
-
-    int valType;
-    union{
-		int ival;
-		char *sval;
-		float fval;
-	}val;
 }Node;
 
 Node *createNode();

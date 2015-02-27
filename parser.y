@@ -129,39 +129,39 @@ var_name_iden: 	IDENTIFIER
 
 array_decl: SQUARE_OPEN INT SQUARE_CLOSE
 				{
-
+					$$ = createArrayDecl($2);
 				}
 ;
 
 base_type_lit: INT_LIT | FLOAT_LIT | CHAR_LIT
 				{
-
+					$$ = createBaseTypeLit($1);
 				}
 
-type_iden: 	IDENTIFIER
+type_iden: 		IDENTIFIER
 				{
-
+					$$ = createTypeIden($1);
 				}
 				|
 				struct_def
 				{
-
+					$$ = createTypeIden($1);
 				}
 				|
 				base_type_lit
 				{
-
+					$$ = createTypeIden($1);
 				}
 ;
 
 struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
 				{
-
+					$$ = createStructDef($2, $4);
 				}
 				|
 				STRUCT CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
 				{
-
+					$$ = createStructDef(NULL, $4);
 				}
 ;
 
