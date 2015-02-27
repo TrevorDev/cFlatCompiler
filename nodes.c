@@ -28,6 +28,14 @@ Node * createTypeDecl(Node * type_iden, Node * var_name_iden){
 	return ret;
 }
 
+Node *createTypeDeclList(Node *existingList, Node *newTypeDecl) {
+	Node *ret = createNode();
+	ret->nodeType = TypeDeclList_t;
+	ret->children.TypeDeclList_t.existingList = existingList;
+	ret->children.TypeDeclList_t.newTypeDecl = newTypeDecl;
+	return ret;
+}
+
 // Node *createStmtListNode(Node *list, Node *stmt)
 // {
 // 	Node *ret = createNode();
