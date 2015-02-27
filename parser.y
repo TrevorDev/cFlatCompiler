@@ -129,12 +129,14 @@ type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
 
 var_name_iden: 	IDENTIFIER
 				{
-					$$ = createVarNameIden($1, 1);
+					Node * temp = createIden($1);
+					$$ = createVarNameIden(temp, 1);
 				}
 				|
 				IDENTIFIER array_decl
 				{
-					$$ = createVarNameIden($1, $2);
+					Node * temp = createIden($1);
+					$$ = createVarNameIden(temp, $2);
 				}
 ;
 
@@ -151,7 +153,8 @@ base_type_lit: INT_LIT | FLOAT_LIT | CHAR_LIT
 
 type_iden: 		IDENTIFIER
 				{
-					$$ = createTypeIden($1);
+					Node * temp = createIden($1);
+					$$ = createTypeIden(temp);
 				}
 				|
 				struct_def
