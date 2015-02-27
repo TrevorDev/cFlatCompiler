@@ -1,0 +1,19 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include "nodes.h"
+
+
+Node *createNode(enum NodeType t){
+	Node *ret = malloc(sizeof(*ret));
+	ret->nodeType = t;
+	return ret;
+}
+
+<% for (var key in nodeTypes) { %>
+	Node *create<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).join(", ") %>){
+		Node *ret = createNode(<%- key+"_t" %>);
+		<%- nodeTypes[key].children.map(function(val){return "ret->children."+key+"."+val+" = "+val+";"}).join("\n\t\t") %>
+		return ret;
+	}
+<% }; %>
+

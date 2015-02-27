@@ -1,0 +1,27 @@
+#ifndef NODES_H
+#define NODES_H
+
+enum ValType {
+	INTVAL,
+	STRVAL,
+	FLOATVAL
+};
+enum NodeType {
+	<%- typeNames.map(function(val){return val+"_t"}).join(",\n\t") %>
+};
+
+typedef struct Node{
+    int nodeType;
+    union{
+		<% for (var key in nodeTypes) { %>
+		struct <%- key %>{
+			<%- nodeTypes[key].children.map(function(val){return "struct Node * "+val+";"}).join("\n\t\t\t") %>
+		}<%- key %>;
+		<% }; %>
+    }children;
+}Node;
+
+<% for (var key in nodeTypes) { %>
+	Node * create<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).join(", ") %>);
+<% }; %>
+#endif
