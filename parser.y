@@ -147,7 +147,17 @@ array_decl: SQUARE_OPEN INT SQUARE_CLOSE
 				}
 ;
 
-base_type_lit: INT_LIT | FLOAT_LIT | CHAR_LIT
+base_type_lit: INT_LIT 
+				{
+					$$ = createBaseTypeLit($1);
+				}
+				| 
+				FLOAT_LIT 
+				{
+					$$ = createBaseTypeLit($1);
+				}
+				| 
+				CHAR_LIT
 				{
 					$$ = createBaseTypeLit($1);
 				}
@@ -327,7 +337,7 @@ int main(int argc, char *argv[])
 	// printf("%d\n", c);
 
 	if (syntaxAnalysisOutput){
-		//printGraphString(rootNode);
+		printGraphString(rootNode);
 	}
 
 	return 0;

@@ -14,7 +14,7 @@ endif
 #Rules
 all: cflatc 
 
-cflatc: parser.o lex.yy.o nodes.o
+cflatc: parser.o lex.yy.o nodes.o graph.o
 	$(CC) $^ -o $@ $(LIBS)
 
 parser.o: y.tab.c y.tab.h
@@ -33,7 +33,7 @@ run: all
 
 graph: run
 	-rm -f graph.txt graph.png
-	./cflatc < testFiles/ints.txt
+	./cflatc -a < testFiles/typedefs.txt
 	dot -Tpng graph.txt -o graph.png
 
 clean: 

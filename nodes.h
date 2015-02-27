@@ -22,7 +22,7 @@ enum NodeType {
 
 typedef struct Node{
     int nodeType;
-
+    void (*printNode)(struct Node *node, int parentId);
     union{
     	struct Program{
 			struct Node * type_decl_list;

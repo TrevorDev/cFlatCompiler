@@ -182,10 +182,12 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 }
 
 "int"	{
+	yylval.btype = 0;
 	return INT_LIT;
 }
 
 "float"	{
+	yylval.btype = 2;
 	return FLOAT_LIT;
 }
 
@@ -194,6 +196,7 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 }
 
 "char"	{
+	yylval.btype = 1;
 	return CHAR_LIT;
 }
 

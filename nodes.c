@@ -2,51 +2,53 @@
 #include <stdio.h>
 
 #include "nodes.h"
+#include "graph.h"
 
 #define maxNumChild 10
 
 
-Node *createNode(enum NodeType t){
+Node *createNode(enum NodeType t, void (*printNode)(struct Node *node, int parentId)){
 	Node *ret = malloc(sizeof(*ret));
 	ret->nodeType = t;
+	ret->printNode = printNode;
 	return ret;
 }
 
 Node *createProgram(Node * type_decl_list){
-	Node *ret = createNode(Program_t);
+	Node *ret = createNode(Program_t, &printProgramNode);
 	ret->children.Program.type_decl_list = type_decl_list;
 	return ret;
 }
 
 Node *createTypeDecl(Node * type_iden, Node * var_name_iden){
-	Node *ret = createNode(TypeDecl_t);
+	Node *ret = createNode(TypeDecl_t, &printTypeDeclNode);
 	ret->children.TypeDecl.type_iden = type_iden;
 	ret->children.TypeDecl.var_name_iden = var_name_iden;
 	return ret;
 }
 
 Node *createTypeDeclList(Node * type_decl_list, Node *type_decl) {
-	Node *ret = createNode(TypeDeclList_t);
+	Node *ret = createNode(TypeDeclList_t, &printTypeDeclListNode);
 	ret->children.TypeDeclList.type_decl_list = type_decl_list;
 	ret->children.TypeDeclList.type_decl = type_decl;
 	return ret;
 }
 
 Node *createVarNameIden(Node *identifier, int array_size) {
-	Node *ret = createNode(VarNameIden_t);
+	Node *ret = createNode(VarNameIden_t, &printVarNameIdenNode);
 	ret->children.VarNameIden.identifier = identifier;
 	ret->children.VarNameIden.array_size = array_size;
 	return ret;
 }
 
 Node *createArrayDecl(int array_size) {
-	Node *ret = createNode(ArrayDecl_t);
+	Node *ret = createNode(ArrayDecl_t, NULL);
 	ret->children.ArrayDecl.array_size = array_size;
 	return ret;
 }
 
 Node *createBaseTypeLit(int type){
-	Node *ret = createNode(BaseTypeLit_t);
+	Node *ret = createNode(BaseTypeLit_t, &printBaseTypeLit);
 	if (type == 0){
 		sprintf(ret->children.BaseTypeLit.literal, "int");
 	}
@@ -62,19 +64,19 @@ Node *createBaseTypeLit(int type){
 
 
 Node *createTypeIden(Node *type) {
-	Node *ret = createNode(TypeIden_t);
+	Node *ret = createNode(TypeIden_t, &printTypeIdenNode);
 	ret->children.TypeIden.type = type;
 	return ret;
 }
 
 Node *createIden(char *identifier) {
-	Node *ret = createNode(Iden_t);
+	Node *ret = createNode(Iden_t, &printIdenNode);
 	ret->children.Iden.identifier = identifier;
 	return ret;
 }
 
 Node *createStructDef(Node *identifier, Node *var_list) {
-	Node *ret = createNode(StructDef_t);
+	Node *ret = createNode(StructDef_t, NULL);
 	ret->children.StructDef.identifier = identifier;
 	ret->children.StructDef.var_list = var_list;
 	return ret;
@@ -82,7 +84,7 @@ Node *createStructDef(Node *identifier, Node *var_list) {
 
 
 Node *createVarList(Node *var_list, Node* var_decl) {
-	Node *ret = createNode(VarList_t);
+	Node *ret = createNode(VarList_t, NULL);
 	ret->children.VarList.var_list = var_list;
 	ret->children.VarList.var_decl = var_decl;
 	return ret;
