@@ -49,6 +49,29 @@ Node *createArrayDecl(int array_size) {
 	return ret;
 }
 
+Node *createBaseTypeLit(int type){
+	Node *ret = createNode();
+	ret->nodeType = BaseTypeLit_t;
+
+	if (type == 0){
+		sprintf(ret->children.BaseTypeLit.literal, "int");
+	}
+	else if (type == 1){
+		sprintf(ret->children.BaseTypeLit.literal, "char");
+	}
+	else if (type == 2){
+		sprintf(ret->children.BaseTypeLit.literal, "float");
+	}
+
+	return ret;
+}
+
+
+Node *createTypeIden() {
+	Node *ret = createNode();
+	ret->nodeType = BaseTypeLit_t;
+	return ret;
+}
 // Node *createStmtListNode(Node *list, Node *stmt)
 // {
 // 	Node *ret = createNode();
