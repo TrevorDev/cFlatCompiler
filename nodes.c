@@ -13,10 +13,18 @@ Node *createNode(){
 	return ret;
 }
 
-Node * createProgramNode(Node * type_decl_list){
+Node * createProgram(Node * type_decl_list){
 	Node *ret = createNode();
-	ret->nodeType = ProgramNode_t;
-	ret->children.ProgramNode.type_decl_list = type_decl_list;
+	ret->nodeType = Program_t;
+	ret->children.Program.type_decl_list = type_decl_list;
+	return ret;
+}
+
+Node * createTypeDecl(Node * type_iden, Node * var_name_iden){
+	Node *ret = createNode();
+	ret->nodeType = TypeDecl_t;
+	ret->children.TypeDecl.type_iden = type_iden;
+	ret->children.TypeDecl.var_name_iden = var_name_iden;
 	return ret;
 }
 
