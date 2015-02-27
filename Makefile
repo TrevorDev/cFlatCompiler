@@ -5,10 +5,10 @@ CPPFLAGS =
 # Mac OS X needs -ll; Linux needs -lfl
 UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)
-LIBS = -lfl -lm
+LIBS = -lfl
 endif
 ifeq ($(UNAME), Darwin)
-LIBS = -ll -lm
+LIBS = -ll
 endif
 
 #Rules
@@ -19,7 +19,6 @@ cflatc: parser.o lex.yy.o nodes.o graph.o
 
 parser.o: y.tab.c y.tab.h
 
-
 y.tab.c: parser.y
 	yacc -d -y parser.y
 
@@ -29,10 +28,8 @@ lex.yy.c: scanner.l
 %.o: %.c %.h
 	$(CC) -g -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
-
 run: all
 	./cflatc < testFiles/ints.txt
-
 
 graph: run
 	-rm -f graph.txt graph.png

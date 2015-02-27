@@ -31,6 +31,7 @@
 lex.yy.c
 cflatc
 y.tab.h
+scanner.h
 
 graph.png
 graph.txt
