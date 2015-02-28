@@ -54,3 +54,4 @@ clean:
 	rm -f graph.txt
 	rm -f y.output
 	rm -f parser.c
+	rm -f tokens.h
