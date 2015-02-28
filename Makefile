@@ -17,7 +17,7 @@ all: clean cflatc
 cflatc: scanner
 	cc    -c -o lex.yy.o lex.yy.c
 	cc -g -c nodes.c -o nodes.o  
-	cc parser.o lex.yy.o nodes.o -o cflatc -lfl
+	cc parser.o lex.yy.o nodes.o -o cflatc $(LIBS)
 
 nodeGen:
 	cd proNode; node app.js; cd ..;
