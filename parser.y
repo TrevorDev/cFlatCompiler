@@ -86,19 +86,19 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> program
 %type <node> type_decl_list
 %type <node> type_decl
-%type <node> var_name_iden
 %type <node> struct_def
 %type <node> base_type_lit
 %type <node> type_iden
 %type <node> array_decl
-%type <node> var_list
-%type <node> var_decl
+
 %type <node> expr
+%type <node> global_var_list
+
+%type <node> var_name_iden
 %type <node> assign_var_name_iden
-%type <node> comma_iden_assign_list
 %type <node> assign_var_decl
 %type <node> assign_var_list
-%type <node> global_var_list
+%type <node> comma_iden_assign_list
 
 %% /* Grammar rules and actions follow */
 
@@ -134,6 +134,7 @@ type_decl_list: type_decl_list type_decl
 					$$ = NULL;
 				}
 ;
+
 type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
 				{
 					printf("decl found\n");
@@ -198,21 +199,15 @@ type_iden: 		IDENTIFIER
 				}
 ;
 
-struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
+struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN assign_var_list CONTROL_BLOCK_CLOSE
 				{
 					Node * temp = create_identifier($2);
 					$$ = create_struct_def(temp, $4);
 				}
 				|
-				STRUCT CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
+				STRUCT CONTROL_BLOCK_OPEN assign_var_list CONTROL_BLOCK_CLOSE
 				{
 					$$ = create_struct_def(NULL, $3);
-				}
-;
-
-struct_def_alone: struct_def SEMICOLON
-				{
-
 				}
 ;
 
@@ -309,38 +304,7 @@ expr: 			INT
 				}
 ;
 
-var_list: var_list var_decl
-				{
-					$$ = create_var_list($1, $2);
-				}
-				|
-				/*Empty*/
-				{
-					$$ = NULL;
-				}
-;
 
-var_decl: type_iden comma_iden_list SEMICOLON
-				{
-
-				}
-				|
-				struct_def_alone
-				{
-					
-				}
-;
-
-comma_iden_list: var_name_iden COMMA comma_iden_list 
-				{
-
-				}
-				|
-				var_name_iden
-				{
-
-				}
-;
 %%
 
 int main(int argc, char *argv[])
