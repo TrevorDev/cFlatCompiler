@@ -9,7 +9,7 @@ NZDIGIT	[1-9]
 LETTER	[a-zA-Z_]
 INT		[-+]?(0|([1-9][0-9]*))
 FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
-
+CHARACTER ['].[']
 
 %%
 
@@ -170,6 +170,11 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 {INT}	{
 	sscanf(yytext, "%d", &yylval.ival);
 	return INT;
+}
+
+{CHARACTER} {
+	sscanf(yytext, "%c", &yylval.cval);
+	return CHAR;
 }
 
 {FLOAT}	{

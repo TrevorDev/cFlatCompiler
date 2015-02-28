@@ -23,6 +23,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %union {
 	int ival;
 	char *sval;
+	char cval;
 	float fval;
 	Node * node;
 	int btype; // int = 0, char = 1, float = 2
@@ -70,6 +71,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %token <sval> IDENTIFIER
 %token <ival> INT
 %token <fval> FLOAT
+%token <cval> CHAR
 %token TYPEDEF
 %token COMMA
 %token STRUCT
@@ -256,47 +258,50 @@ assign_var_name_iden: var_name_iden
 
 expr: 			INT
 				{
-					$$ = create_int($1);
+					Node * temp = create_int_val($1);
+					$$ = create_expr(temp, NULL, NULL);
 				}
 				|
 				FLOAT
 				{
-					$$ = create_float($1);
+					Node * temp = create_float_val($1);
+					$$ = create_expr(temp, NULL, NULL);
 				}
 				|
 				CHAR
 				{
-					$$ = create_char($1);
+					Node * temp = create_char_val($1);
+					$$ = create_expr(temp, NULL, NULL);
 				}
 				|
 				expr PLUS expr
 				{
-					$$ = create_addition($1, $3);
+					$$ = create_expr($1, $2, $3);
 				}
 				|
 				expr MINUS expr
 				{
-					$$ = create_subtraction($1, $3);
+					$$ = create_expr($1, $2, $3);
 				}
 				|
 				expr STAR expr
 				{
-					$$ = create_multiplication($1, $3);
+					$$ = create_expr($1, $2, $3);
 				}
 				|
 				expr SLASH expr
 				{
-					$$ = create_division($1, $3);
+					$$ = create_expr($1, $2, $3);
 				}
 				|
 				BRACKET_OPEN expr BRACKET_CLOSE
 				{
-					$$ = create_division($1, $3);
+					$$ = create_expr($1, NULL, NULL);
 				}
 				|
 				MINUS expr %prec NEG
 				{
-					$$ = create_negative($2);
+					$$ = create_expr(NULL, $1, $2);
 				}
 ;
 
