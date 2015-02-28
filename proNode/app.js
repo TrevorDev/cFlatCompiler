@@ -6,7 +6,7 @@ var nodeTypes = {
 	identifier: {children: [], val: [{name: "val", type: "char*"}]},
 	array_decl: {children: [], val: [{name: "size", type: "int"}]},
 	base_type_lit: {children: [], val: [{name: "iden", type: "char*"}]},
-	type_iden: {children: ["base_type_lit", "identifier", "struct_def"], val: [{name: "type", type: "int"}]},
+	type_iden: {children: ["type"]},//base_type_lit_OR_identifier_OR_struct_def"]},
 	struct_def: {children: ["identifier", "var_list"]},
 	var_list: {children: ["var_list", "var_decl"]},
 	var_decl: {children: ["type_iden", "comma_iden_list"]},
@@ -16,6 +16,9 @@ var nodeTypes = {
 var typeNames = []
 for(var name in nodeTypes){
 	typeNames.push(name)
+	if(!nodeTypes[name].val){
+		nodeTypes[name].val = []
+	}
 }
 
 // var recTypes = {}
@@ -56,3 +59,5 @@ fs.readFile('nodes.jc', 'utf8', function (err,data) {
 	    }
 	}); 
 });
+
+

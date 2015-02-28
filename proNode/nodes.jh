@@ -13,16 +13,24 @@ enum NodeType {
 
 typedef struct Node{
     int nodeType;
+    void (*printNode)(struct Node *node, int parentId);
     union{
 		<% for (var key in nodeTypes) { %>
 		struct <%- key %>{
-			<%- nodeTypes[key].children.map(function(val){return "struct Node * "+val+";"}).join("\n\t\t\t") %>
+			<%- nodeTypes[key].children.map(function(val){return "struct Node * "+val+";"}).concat(nodeTypes[key].val.map(function(val){return val.type+" "+val.name+";"})).join("\n\t\t\t") %>
 		}<%- key %>;
 		<% }; %>
     }children;
 }Node;
 
+void printTree(Node *node, int parentId);
+void printGraphString(Node * root);
+Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int parentId));
 <% for (var key in nodeTypes) { %>
-	Node * create_<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).join(", ") %>);
+	Node * create_<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).concat(nodeTypes[key].val.map(function(val){return val.type+" "+val.name})).join(", ") %>);
+<% }; %>
+
+<% for (var key in nodeTypes) { %>
+	void <%- key %>_p(Node * node, int parentId);
 <% }; %>
 #endif

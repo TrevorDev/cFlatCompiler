@@ -28,10 +28,10 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 	int btype; // int = 0, char = 1, float = 2
 }
 
-%token <btype> INT_LIT
-%token <btype> CHAR_LIT
-%token <btype> FLOAT_LIT
-%token VOID_LIT
+%token <sval> INT_LIT
+%token <sval> CHAR_LIT
+%token <sval> FLOAT_LIT
+%token <sval> VOID_LIT
 %token SINGLE_QUOTE
 %token NEW_LINE
 %token NULL_CHAR
@@ -85,7 +85,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> struct_def
 %type <node> base_type_lit
 %type <node> type_iden
-%type <ival> array_decl
+%type <node> array_decl
 %type <node> var_list
 %type <node> var_decl
 
@@ -93,7 +93,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 
 program:	type_decl_list /*global_var_list*/ END_OF_FILE // function_def_list
 				{
-					//rootNode = createProgram($1);
+					rootNode = create_program($1);
 					return 0;
 				}
 ;
@@ -106,78 +106,93 @@ global_var_list: assign_var_list
 type_decl_list: type_decl_list type_decl
 				{
 					printf("typedec list\n");
-					//$$ = createTypeDeclList($1, $2);
+					$$ = create_type_decl_list($1, $2);
 				}
 				|
 				type_decl
 				{
 					printf("single typedec\n");
-					//$$ = createTypeDeclList(NULL, $1);
+					$$ = create_type_decl_list(NULL, $1);
 				}
 				|
 				/*Empty*/
 				{
 					printf("empty typedec\n");
-					//$$ = NULL;
+					$$ = NULL;
 				}
 ;
 type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
 				{
 					printf("decl found\n");
-					//$$ = createTypeDecl($2, $3);
+					$$ = create_type_decl($2, $3);
 				}
 ;
 
 var_name_iden: 	IDENTIFIER
 				{
-					//Node * temp = createIden($1);
-					//$$ = createVarNameIden(temp, 1);
+					Node * temp = create_identifier($1);
+					$$ = create_var_name_iden(temp, NULL);
 				}
 				|
 				IDENTIFIER array_decl
 				{
-					//Node * temp = createIden($1);
-					//$$ = createVarNameIden(temp, $2);
+					Node * temp = create_identifier($1);
+					$$ = create_var_name_iden(temp, $2);
 				}
 ;
 
 array_decl: SQUARE_OPEN INT SQUARE_CLOSE
 				{
-					//$$ = $2;
+					$$ = create_array_decl($2);
 				}
 ;
 
-base_type_lit: INT_LIT | FLOAT_LIT | CHAR_LIT
+base_type_lit: INT_LIT
 				{
-					//$$ = createBaseTypeLit($1);
+					$$ = create_base_type_lit($1);
 				}
-
+				|
+				FLOAT_LIT
+				{
+					$$ = create_base_type_lit($1);
+				}
+				|
+				CHAR_LIT
+				{
+					$$ = create_base_type_lit($1);
+				}
+				|
+				VOID_LIT
+				{
+					$$ = create_base_type_lit($1);
+				}
+;
 type_iden: 		IDENTIFIER
 				{
-					//Node * temp = createIden($1);
-					//$$ = createTypeIden(temp);
+					Node * temp = create_identifier($1);
+					$$ = create_type_iden(temp);
 				}
 				|
 				struct_def
 				{
-					//$$ = createTypeIden($1);
+					$$ = create_type_iden($1);
 				}
 				|
 				base_type_lit
 				{
-					//$$ = createTypeIden($1);
+					$$ = create_type_iden($1);
 				}
 ;
 
 struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
 				{
-					//Node * temp = createIden($2);
-					//$$ = createStructDef(temp, $4);
+					Node * temp = create_identifier($2);
+					$$ = create_struct_def(temp, $4);
 				}
 				|
 				STRUCT CONTROL_BLOCK_OPEN var_list CONTROL_BLOCK_CLOSE
 				{
-					//$$ = createStructDef(NULL, $3);
+					$$ = create_struct_def(NULL, $3);
 				}
 ;
 
@@ -234,17 +249,17 @@ expr: INT
 
 var_list: var_list var_decl
 				{
-					//$$ = createVarList($1, $2);
+					$$ = create_var_list($1, $2);
 				}
 				|
 				var_decl
 				{
-					//$$ = createVarList(NULL, $1);
+					$$ = create_var_list(NULL, $1);
 				}
 				|
 				/*Empty*/
 				{
-					//$$ = NULL;
+					$$ = NULL;
 				}
 ;
 
@@ -327,7 +342,7 @@ int main(int argc, char *argv[])
 	// printf("%d\n", c);
 
 	if (syntaxAnalysisOutput){
-		//printGraphString(rootNode);
+		printGraphString(rootNode);
 	}
 
 	return 0;

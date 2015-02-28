@@ -24,6 +24,7 @@ enum NodeType {
 
 typedef struct Node{
     int nodeType;
+    void (*printNode)(struct Node *node, int parentId);
     union{
 		
 		struct program{
@@ -46,21 +47,19 @@ typedef struct Node{
 		}var_name_iden;
 		
 		struct identifier{
-			
+			char* val;
 		}identifier;
 		
 		struct array_decl{
-			
+			int size;
 		}array_decl;
 		
 		struct base_type_lit{
-			
+			char* iden;
 		}base_type_lit;
 		
 		struct type_iden{
-			struct Node * base_type_lit;
-			struct Node * identifier;
-			struct Node * struct_def;
+			struct Node * type;
 		}type_iden;
 		
 		struct struct_def{
@@ -86,6 +85,9 @@ typedef struct Node{
     }children;
 }Node;
 
+void printTree(Node *node, int parentId);
+void printGraphString(Node * root);
+Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int parentId));
 
 	Node * create_program(Node * type_decl_list);
 
@@ -95,13 +97,13 @@ typedef struct Node{
 
 	Node * create_var_name_iden(Node * identifier, Node * array_decl);
 
-	Node * create_identifier();
+	Node * create_identifier(char* val);
 
-	Node * create_array_decl();
+	Node * create_array_decl(int size);
 
-	Node * create_base_type_lit();
+	Node * create_base_type_lit(char* iden);
 
-	Node * create_type_iden(Node * base_type_lit, Node * identifier, Node * struct_def);
+	Node * create_type_iden(Node * type);
 
 	Node * create_struct_def(Node * identifier, Node * var_list);
 
@@ -110,5 +112,31 @@ typedef struct Node{
 	Node * create_var_decl(Node * type_iden, Node * comma_iden_list);
 
 	Node * create_comma_iden_list(Node * comma_iden_list, Node * var_name_iden);
+
+
+
+	void program_p(Node * node, int parentId);
+
+	void type_decl_list_p(Node * node, int parentId);
+
+	void type_decl_p(Node * node, int parentId);
+
+	void var_name_iden_p(Node * node, int parentId);
+
+	void identifier_p(Node * node, int parentId);
+
+	void array_decl_p(Node * node, int parentId);
+
+	void base_type_lit_p(Node * node, int parentId);
+
+	void type_iden_p(Node * node, int parentId);
+
+	void struct_def_p(Node * node, int parentId);
+
+	void var_list_p(Node * node, int parentId);
+
+	void var_decl_p(Node * node, int parentId);
+
+	void comma_iden_list_p(Node * node, int parentId);
 
 #endif

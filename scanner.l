@@ -182,18 +182,22 @@ FLOAT	[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 }
 
 "int"	{
+	yylval.sval = strdup("int");
 	return INT_LIT;
 }
 
 "float"	{
+	yylval.sval = strdup("float");
 	return FLOAT_LIT;
 }
 
 "void"	{
+	yylval.sval = strdup("float");
 	return VOID_LIT;
 }
 
 "char"	{
+	yylval.sval = strdup("char");
 	return CHAR_LIT;
 }
 

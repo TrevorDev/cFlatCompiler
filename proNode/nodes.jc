@@ -2,19 +2,59 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "nodes.h"
+int nodeId = 0;
+FILE* fp;
 
 
-	Node *create_Node(enum NodeType t){
-		Node *ret = malloc(sizeof(*ret));
-		ret->nodeType = t;
-		return ret;
+Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int parentId)){
+	Node *ret = malloc(sizeof(*ret));
+	ret->nodeType = t;
+	ret->printNode = printNode;
+	return ret;
+}
+
+void printTree(Node *node, int parentId){
+	if (node) {
+		node->printNode(node, parentId);
+ 	}
+ 	return;
+ }
+
+ void printGraphString(Node * root){
+	fp = fopen("graph.txt", "w");
+	fprintf(fp, "digraph G {\n");
+	printTree(root, nodeId);
+	fprintf(fp, "}\n");
+	fflush(fp);
+	fclose(fp);
+}
+
+ void printNode(char *label, int myNodeId, int parentId){
+	fprintf(fp, "\t%d [label=\"%s\", shape=box];\n", myNodeId, label);
+
+
+	if (parentId > -1) {
+		fprintf(fp, "\t%d -> %d;\n", parentId, myNodeId);
 	}
+}
 
 <% for (var key in nodeTypes) { %>
-	Node *create_<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).join(", ") %>){
-		Node *ret = create_Node(<%- key+"_t" %>);
-		<%- nodeTypes[key].children.map(function(val){return "ret->children."+key+"."+val+" = "+val+";"}).join("\n\t\t") %>
+	Node *create_<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).concat(nodeTypes[key].val.map(function(val){return val.type+" "+val.name})).join(", ") %> ){
+
+
+		Node *ret = create_Node(<%- key+"_t" %>, &<%- key+"_p" %>);
+		<%- nodeTypes[key].children.map(function(val){return "ret->children."+key+"."+val+" = "+val+";"}).concat(nodeTypes[key].val.map(function(val){ return "ret->children."+key+"."+val.name+"="+val.name+";"})).join("\n\t\t") %>
+		
 		return ret;
 	}
 <% }; %>
 
+<% for (var key in nodeTypes) { %>
+	void <%- key %>_p(Node * node, int parentId){
+		nodeId++;
+		int myNodeId = nodeId;
+
+		<%- nodeTypes[key].children.map(function(val){return "printTree(node->children."+key+"."+val+", myNodeId);"}).join("\n\t\t") %>
+		<%- "printNode(\""+key+"\", myNodeId, parentId);" %>
+	};
+<% }; %>
