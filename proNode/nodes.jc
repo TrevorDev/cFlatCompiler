@@ -29,11 +29,12 @@ void printTree(Node *node, int parentId){
 	fclose(fp);
 }
 
- void printNode(char *label, int myNodeId, int parentId){
+void printNode(char *label, int myNodeId, int parentId){
+
 	fprintf(fp, "\t%d [label=\"%s\", shape=box];\n", myNodeId, label);
 
 
-	if (parentId > -1) {
+	if (parentId > 0) {
 		fprintf(fp, "\t%d -> %d;\n", parentId, myNodeId);
 	}
 }
@@ -53,8 +54,24 @@ void printTree(Node *node, int parentId){
 	void <%- key %>_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		<%- nodeTypes[key].children.map(function(val){return "printTree(node->children."+key+"."+val+", myNodeId);"}).join("\n\t\t") %>
 		<%- "printNode(\""+key+"\", myNodeId, parentId);" %>
+
+		<%- nodeTypes[key].val.map(function(val){
+			var cPrintSyn = "%s";
+			if(val.type == "int"){
+				cPrintSyn = "%d";
+			}else if(val.type == "float"){
+				cPrintSyn = "%f";
+			}
+			var top = "nodeId++;temp = nodeId;\n"
+			var a = 'fprintf(fp, "%d [label='+'\\"'+cPrintSyn+'\\"'+', shape=box];", temp, node->children.'+key+'.'+val.name+');\n'
+			var b = 'fprintf(fp, "%d -> %d;", myNodeId, temp);'
+			return top+a+b}) 
+		%>
+		
+		
+		
 	};
 <% }; %>

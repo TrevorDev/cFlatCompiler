@@ -29,11 +29,12 @@ void printTree(Node *node, int parentId){
 	fclose(fp);
 }
 
- void printNode(char *label, int myNodeId, int parentId){
+void printNode(char *label, int myNodeId, int parentId){
+
 	fprintf(fp, "\t%d [label=\"%s\", shape=box];\n", myNodeId, label);
 
 
-	if (parentId > -1) {
+	if (parentId > 0) {
 		fprintf(fp, "\t%d -> %d;\n", parentId, myNodeId);
 	}
 }
@@ -159,102 +160,168 @@ void printTree(Node *node, int parentId){
 	void program_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		printTree(node->children.program.type_decl_list, myNodeId);
 		printNode("program", myNodeId, parentId);
+
+		
+		
+		
+		
 	};
 
 	void type_decl_list_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		printTree(node->children.type_decl_list.type_decl_list, myNodeId);
 		printTree(node->children.type_decl_list.type_decl, myNodeId);
 		printNode("type_decl_list", myNodeId, parentId);
+
+		
+		
+		
+		
 	};
 
 	void type_decl_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		printTree(node->children.type_decl.type_iden, myNodeId);
 		printTree(node->children.type_decl.var_name_iden, myNodeId);
 		printNode("type_decl", myNodeId, parentId);
+
+		
+		
+		
+		
 	};
 
 	void var_name_iden_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		printTree(node->children.var_name_iden.identifier, myNodeId);
 		printTree(node->children.var_name_iden.array_decl, myNodeId);
 		printNode("var_name_iden", myNodeId, parentId);
+
+		
+		
+		
+		
 	};
 
 	void identifier_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		
 		printNode("identifier", myNodeId, parentId);
+
+		nodeId++;temp = nodeId;
+fprintf(fp, "%d [label=\"%s\", shape=box];", temp, node->children.identifier.val);
+fprintf(fp, "%d -> %d;", myNodeId, temp);
+		
+		
+		
 	};
 
 	void array_decl_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		
 		printNode("array_decl", myNodeId, parentId);
+
+		nodeId++;temp = nodeId;
+fprintf(fp, "%d [label=\"%d\", shape=box];", temp, node->children.array_decl.size);
+fprintf(fp, "%d -> %d;", myNodeId, temp);
+		
+		
+		
 	};
 
 	void base_type_lit_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		
 		printNode("base_type_lit", myNodeId, parentId);
+
+		nodeId++;temp = nodeId;
+fprintf(fp, "%d [label=\"%s\", shape=box];", temp, node->children.base_type_lit.iden);
+fprintf(fp, "%d -> %d;", myNodeId, temp);
+		
+		
+		
 	};
 
 	void type_iden_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		printTree(node->children.type_iden.type, myNodeId);
 		printNode("type_iden", myNodeId, parentId);
+
+		
+		
+		
+		
 	};
 
 	void struct_def_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		printTree(node->children.struct_def.identifier, myNodeId);
 		printTree(node->children.struct_def.var_list, myNodeId);
 		printNode("struct_def", myNodeId, parentId);
+
+		
+		
+		
+		
 	};
 
 	void var_list_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		printTree(node->children.var_list.var_list, myNodeId);
 		printTree(node->children.var_list.var_decl, myNodeId);
 		printNode("var_list", myNodeId, parentId);
+
+		
+		
+		
+		
 	};
 
 	void var_decl_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		printTree(node->children.var_decl.type_iden, myNodeId);
 		printTree(node->children.var_decl.comma_iden_list, myNodeId);
 		printNode("var_decl", myNodeId, parentId);
+
+		
+		
+		
+		
 	};
 
 	void comma_iden_list_p(Node * node, int parentId){
 		nodeId++;
 		int myNodeId = nodeId;
-
+		int temp = 0;
 		printTree(node->children.comma_iden_list.comma_iden_list, myNodeId);
 		printTree(node->children.comma_iden_list.var_name_iden, myNodeId);
 		printNode("comma_iden_list", myNodeId, parentId);
+
+		
+		
+		
+		
 	};
