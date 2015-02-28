@@ -52,12 +52,13 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %token <sval> LOGICAL_AND
 %token <sval> LOGICAL_OR
 %token <sval> NOT
-%token ASSIGNMENT
+%token <sval> ASSIGNMENT
 %token SIZE_OF
 %token IF
 %token ELSE
 %token FOR
 %token RETURN
+%token DOT
 %token WHILE
 %token COMMENT_OPEN
 %token COMMENT_CLOSE
@@ -90,6 +91,8 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> base_type_lit
 %type <node> type_iden
 %type <node> array_decl
+%type <node> variable
+%type <node> non_rec_variable
 
 %type <node> expr
 %type <node> global_var_list
@@ -155,7 +158,31 @@ var_name_iden: 	IDENTIFIER
 				}
 ;
 
-array_decl: SQUARE_OPEN INT SQUARE_CLOSE
+non_rec_variable: IDENTIFIER
+				{
+					Node *temp = create_identifier($1);
+					$$ = create_non_rec_variable(temp, NULL);
+				}
+				|
+				IDENTIFIER array_decl
+				{
+					Node *temp = create_identifier($1);
+					$$ = create_non_rec_variable(temp, $2);
+				}
+;
+
+variable:		non_rec_variable
+				{
+					$$ = create_variable($1, NULL);
+				}
+				|
+				non_rec_variable DOT variable
+				{
+					$$ = create_variable($1, $3);
+				}
+;
+
+array_decl: SQUARE_OPEN expr SQUARE_CLOSE
 				{
 					$$ = create_array_decl($2);
 				}
@@ -250,6 +277,12 @@ assign_var_name_iden: var_name_iden
 				}
 ;
 
+// assignment: variable ASSIGNMENT expr
+// 				{
+// 					$$ = create_assignment($1, $3);
+// 				}
+// ;
+
 expr: 			INT
 				{
 					Node * temp = create_int_val($1);
@@ -267,6 +300,16 @@ expr: 			INT
 					Node * temp = create_char_val($1);
 					$$ = create_expr(temp, NULL, NULL);
 				}
+				|
+				variable
+				{
+					$$ = create_expr($1, NULL, NULL);
+				}
+				// |
+				// assignment
+				// {
+				// 	$$ = create_expr($1, NULL, NULL);
+				// }
 				|
 				expr PLUS expr
 				{

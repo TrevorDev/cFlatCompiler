@@ -4,7 +4,7 @@ var nodeTypes = {
 	type_decl: {children: ["type_iden", "var_name_iden"]},
 	var_name_iden: {children: ["identifier", "array_decl"]},
 	identifier: {children: [], val: [{name: "val", type: "char*"}]},
-	array_decl: {children: [], val: [{name: "size", type: "int"}]},
+	array_decl: {children: ["expr"]},
 	base_type_lit: {children: [], val: [{name: "iden", type: "char*"}]},
 	type_iden: {children: ["type"]},
 	struct_def: {children: ["identifier", "var_list"]},
@@ -20,7 +20,9 @@ var nodeTypes = {
 	comma_iden_assign_list: {children: ["assign_var_name_iden", "comma_iden_assign_list"]},
 	assign_var_decl: {children: ["type_iden", "comma_iden_assign_list"]},
 	assign_var_list: {children: ["assign_var_list", "assign_var_decl"]},
-	global_var_list: {children: ["assign_var_list"]}
+	global_var_list: {children: ["assign_var_list"]},
+	variable: {children: ["variable", "struct_member"]},
+	non_rec_variable: {children: ["iden", "array_decl"]}
 }
 
 var typeNames = []

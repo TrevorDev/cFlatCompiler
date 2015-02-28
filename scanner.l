@@ -107,6 +107,7 @@ CHARACTER ['].[']
 }
 
 "="	{
+	yylval.sval = strdup(yytext);
 	return ASSIGNMENT;
 }
 
@@ -178,6 +179,9 @@ CHARACTER ['].[']
 	return COMMA;
 }
 
+"." {
+	return DOT;
+}
 
 "struct"	{
 	return STRUCT;
