@@ -27,7 +27,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 	Node * node;
 	int btype; // int = 0, char = 1, float = 2
 }
-
+// Token 
 %token <sval> INT_LIT
 %token <sval> CHAR_LIT
 %token <sval> FLOAT_LIT
@@ -75,20 +75,24 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %token STRUCT
 %token END_OF_FILE
 
-/*%type <node> stmt_list
-%type <node> stmt*/
+// Precedence
+%left MINUS PLUS
+%left STAR SLASH
+%precedence NEG
 
+// Types
 %type <node> program
 %type <node> type_decl_list
 %type <node> type_decl
 %type <node> var_name_iden
 %type <node> struct_def
 %type <node> base_type_lit
+%type <noed> base_type
 %type <node> type_iden
 %type <node> array_decl
 %type <node> var_list
 %type <node> var_decl
-//%type <node> expr
+%type <node> expr
 %type <node> assign_var_name_iden
 %type <node> comma_iden_assign_list
 %type <node> assign_var_decl
@@ -175,6 +179,7 @@ base_type_lit: INT_LIT
 					$$ = create_base_type_lit($1);
 				}
 ;
+
 type_iden: 		IDENTIFIER
 				{
 					Node * temp = create_identifier($1);
@@ -249,10 +254,50 @@ assign_var_name_iden: var_name_iden
 				}
 ;
 
-expr: INT
-	{
-		//TODO FIX EXPR
-	}
+expr: 			INT
+				{
+					$$ = create_int($1);
+				}
+				|
+				FLOAT
+				{
+					$$ = create_float($1);
+				}
+				|
+				CHAR
+				{
+					$$ = create_char($1);
+				}
+				|
+				expr PLUS expr
+				{
+					$$ = create_addition($1, $3);
+				}
+				|
+				expr MINUS expr
+				{
+					$$ = create_subtraction($1, $3);
+				}
+				|
+				expr STAR expr
+				{
+					$$ = create_multiplication($1, $3);
+				}
+				|
+				expr SLASH expr
+				{
+					$$ = create_division($1, $3);
+				}
+				|
+				BRACKET_OPEN expr BRACKET_CLOSE
+				{
+					$$ = create_division($1, $3);
+				}
+				|
+				MINUS expr %prec NEG
+				{
+					$$ = create_negative($2);
+				}
 ;
 
 var_list: var_list var_decl
@@ -276,6 +321,7 @@ var_decl: type_iden comma_iden_list SEMICOLON
 					
 				}
 ;
+
 comma_iden_list: var_name_iden COMMA comma_iden_list 
 				{
 
