@@ -1,2 +1,1 @@
-typedef a b;
-int x = 5, y = 6, z;
+int x = (5 + 3) * 6;

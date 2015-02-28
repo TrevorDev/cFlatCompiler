@@ -64,6 +64,8 @@ void printNode(char *label, int myNodeId, int parentId){
 				cPrintSyn = "%d";
 			}else if(val.type == "float"){
 				cPrintSyn = "%f";
+			}else if(val.type == "char"){
+				cPrintSyn = "%c";
 			}
 			var top = "nodeId++;temp = nodeId;\n"
 			var a = 'fprintf(fp, "%d [label='+'\\"'+cPrintSyn+'\\"'+', shape=box];", temp, node->children.'+key+'.'+val.name+');\n'

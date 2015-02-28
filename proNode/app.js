@@ -13,7 +13,7 @@ var nodeTypes = {
 	comma_iden_list: {children: ["comma_iden_list", "var_name_iden"]},
 	assign_var_name_iden: {children: ["var_name_iden", "expr"]},
 	expr: {children: ["left_expr", "operator", "right_expr"]},
-	operator: {children: [], val: [{name: "type", type: "char"}]},
+	operator: {children: [], val: [{name: "type", type: "char*"}]},
 	int_val: {children: [], val: [{name: "val", type: "int"}]},
 	float_val: {children: [], val: [{name: "val", type: "float"}]},
 	char_val: {children: [], val: [{name: "val", type: "char"}]},

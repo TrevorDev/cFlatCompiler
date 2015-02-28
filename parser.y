@@ -36,22 +36,22 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %token SINGLE_QUOTE
 %token NEW_LINE
 %token NULL_CHAR
-%token PLUS_PLUS
-%token PLUS
-%token MINUS_MINUS
-%token MINUS
-%token STAR
-%token SLASH
-%token MODULUS
-%token EQUALITY
-%token INEQUALITY
-%token LESS_THAN
-%token GREATER_THAN
-%token LESS_THAN_OR_EQUAL_TO
-%token GREATER_THAN_OR_EQUAL_TO
-%token LOGICAL_AND
-%token LOGICAL_OR
-%token NOT
+%token <sval> PLUS_PLUS
+%token <sval> PLUS
+%token <sval> MINUS_MINUS
+%token <sval> MINUS
+%token <sval> STAR
+%token <sval> SLASH
+%token <sval> MODULUS
+%token <sval> EQUALITY
+%token <sval> INEQUALITY
+%token <sval> LESS_THAN
+%token <sval> GREATER_THAN
+%token <sval> LESS_THAN_OR_EQUAL_TO
+%token <sval> GREATER_THAN_OR_EQUAL_TO
+%token <sval> LOGICAL_AND
+%token <sval> LOGICAL_OR
+%token <sval> NOT
 %token ASSIGNMENT
 %token SIZE_OF
 %token IF
@@ -89,7 +89,6 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> var_name_iden
 %type <node> struct_def
 %type <node> base_type_lit
-%type <noed> base_type
 %type <node> type_iden
 %type <node> array_decl
 %type <node> var_list
@@ -252,7 +251,7 @@ assign_var_name_iden: var_name_iden
 				| 
 				var_name_iden ASSIGNMENT expr
 				{
-					$$ = create_assign_var_name_iden($1, NULL);
+					$$ = create_assign_var_name_iden($1, $3);
 				}
 ;
 
@@ -276,32 +275,37 @@ expr: 			INT
 				|
 				expr PLUS expr
 				{
-					$$ = create_expr($1, $2, $3);
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
 				}
 				|
 				expr MINUS expr
 				{
-					$$ = create_expr($1, $2, $3);
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
 				}
 				|
 				expr STAR expr
 				{
-					$$ = create_expr($1, $2, $3);
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
 				}
 				|
 				expr SLASH expr
 				{
-					$$ = create_expr($1, $2, $3);
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
 				}
 				|
 				BRACKET_OPEN expr BRACKET_CLOSE
 				{
-					$$ = create_expr($1, NULL, NULL);
+					$$ = create_expr($2, NULL, NULL);
 				}
 				|
 				MINUS expr %prec NEG
 				{
-					$$ = create_expr(NULL, $1, $2);
+					Node * temp = create_operator($1);
+					$$ = create_expr(NULL, temp, $2);
 				}
 ;
 

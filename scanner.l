@@ -27,66 +27,82 @@ CHARACTER ['].[']
 }
 
 "++"	{
+	yylval.sval = strdup(yytext);
 	return PLUS_PLUS;
 }
 
 "+"	{
+	yylval.sval = strdup(yytext);
 	return PLUS;
 }
 
 "--"	{
+	yylval.sval = strdup(yytext);
 	return MINUS_MINUS;
 }
 
 "-"	{
+	yylval.sval = strdup(yytext);
 	return MINUS;
 }
 
 "*"	{
+	yylval.sval = strdup(yytext);
 	return STAR;
 }
 
 "\/"	{
+	yylval.sval = strdup(yytext);
 	return SLASH;
 }
 
 "%"	{
+	yylval.sval = strdup(yytext);
 	return MODULUS;
 }
 
 "=="	{
+	yylval.sval = strdup(yytext);
 	return EQUALITY;
 }
 
 "!="	{
+	yylval.sval = strdup(yytext);
 	return INEQUALITY;
 }
 
 "<"	{
+	yylval.sval = strdup(yytext);
 	return LESS_THAN;
 }
 
 ">"	{
+	yylval.sval = strdup(yytext);
 	return GREATER_THAN;
 }
 
 "<="	{
+	yylval.sval = strdup(yytext);
 	return LESS_THAN_OR_EQUAL_TO;
 }
 
 ">="	{
+	yylval.sval = strdup(yytext);
 	return GREATER_THAN_OR_EQUAL_TO;
 }
 
 "&&"	{
+	yylval.sval = strdup(yytext);
 	return LOGICAL_AND;
 }
 
 "||"	{
+	yylval.sval = strdup(yytext);
 	return LOGICAL_OR;
 }
 
 "!"	{
+	yylval.sval = strdup(yytext);
 	return NOT;
 }
 
