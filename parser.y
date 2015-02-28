@@ -123,12 +123,6 @@ type_decl_list: type_decl_list type_decl
 					$$ = create_type_decl_list($1, $2);
 				}
 				|
-				type_decl
-				{
-					printf("single typedec\n");
-					$$ = create_type_decl_list(NULL, $1);
-				}
-				|
 				/*Empty*/
 				{
 					printf("empty typedec\n");
@@ -264,11 +258,6 @@ expr: INT
 var_list: var_list var_decl
 				{
 					$$ = create_var_list($1, $2);
-				}
-				|
-				var_decl
-				{
-					$$ = create_var_list(NULL, $1);
 				}
 				|
 				/*Empty*/
