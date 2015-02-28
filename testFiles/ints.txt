@@ -1,1 +1,2 @@
-yo hey how are you
+typedef a b;
+int x = 5, y = 6, z;

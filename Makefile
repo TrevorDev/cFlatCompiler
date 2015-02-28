@@ -36,7 +36,7 @@ run: all
 
 graph: run
 	-rm -f graph.txt graph.png
-	./cflatc -a < testFiles/typedefs.txt
+	./cflatc -a < testFiles/ints.txt
 	dot -Tpng graph.txt -o graph.png
 
 clean: 

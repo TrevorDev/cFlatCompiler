@@ -6,7 +6,7 @@ var nodeTypes = {
 	identifier: {children: [], val: [{name: "val", type: "char*"}]},
 	array_decl: {children: [], val: [{name: "size", type: "int"}]},
 	base_type_lit: {children: [], val: [{name: "iden", type: "char*"}]},
-	type_iden: {children: ["type"]},//base_type_lit_OR_identifier_OR_struct_def"]},
+	type_iden: {children: ["type"]},
 	struct_def: {children: ["identifier", "var_list"]},
 	var_list: {children: ["var_list", "var_decl"]},
 	var_decl: {children: ["type_iden", "comma_iden_list"]},

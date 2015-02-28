@@ -91,7 +91,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 
 %% /* Grammar rules and actions follow */
 
-program:	type_decl_list /*global_var_list*/ END_OF_FILE // function_def_list
+program:	type_decl_list global_var_list END_OF_FILE // function_def_list
 				{
 					rootNode = create_program($1);
 					return 0;
@@ -101,7 +101,15 @@ program:	type_decl_list /*global_var_list*/ END_OF_FILE // function_def_list
 global_var_list: assign_var_list
 				{
 					printf("global var list\n");
+					$$ = create_global_var_list($1);
 				}
+				|
+				/*Empty*/
+				{
+					printf("empty global_var_list\n");
+					$$ = NULL;
+				}
+;
 
 type_decl_list: type_decl_list type_decl
 				{
@@ -204,40 +212,40 @@ struct_def_alone: struct_def SEMICOLON
 
 assign_var_list: assign_var_list assign_var_decl
 				{
-
+					$$ = create_assign_var_list($1, $2);
 				}
 				|
 				assign_var_decl
 				{
-
+					$$ = create_assign_var_list(NULL, $1);
 				}
 ;
 
 assign_var_decl: type_iden comma_iden_assign_list SEMICOLON
 				{
-
-				}
-				|
-				/*Empty*/
-				{
-					printf("empty var dec\n");
+					$$ = create_assign_var_decl($1, $2);
 				}
 ;
 
 comma_iden_assign_list: assign_var_name_iden COMMA comma_iden_assign_list 
 				{
-
+					$$ = create_comma_iden_assign_list($1, $3);
 				}
 				|
 				assign_var_name_iden
 				{
-
+					$$ = create_comma_iden_assign_list($1, NULL);
 				}
 ;
 
-assign_var_name_iden: var_name_iden | var_name_iden ASSIGNMENT expr
+assign_var_name_iden: var_name_iden 
 				{
-
+					$$ = create_assign_var_name_iden($1, NULL);
+				}
+				| 
+				var_name_iden ASSIGNMENT expr
+				{
+					$$ = create_assign_var_name_iden($1, NULL);
 				}
 ;
 
