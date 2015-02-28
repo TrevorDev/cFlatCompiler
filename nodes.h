@@ -19,7 +19,13 @@ enum NodeType {
 	struct_def_t,
 	var_list_t,
 	var_decl_t,
-	comma_iden_list_t
+	comma_iden_list_t,
+	assign_var_name_iden_t,
+	expr_t,
+	comma_iden_assign_list_t,
+	assign_var_decl_t,
+	assign_var_list_t,
+	global_var_list_t
 };
 
 typedef struct Node{
@@ -29,6 +35,7 @@ typedef struct Node{
 		
 		struct program{
 			struct Node * type_decl_list;
+			struct Node * global_var_list;
 		}program;
 		
 		struct type_decl_list{
@@ -82,6 +89,34 @@ typedef struct Node{
 			struct Node * var_name_iden;
 		}comma_iden_list;
 		
+		struct assign_var_name_iden{
+			struct Node * var_name_iden;
+			struct Node * expr;
+		}assign_var_name_iden;
+		
+		struct expr{
+			
+		}expr;
+		
+		struct comma_iden_assign_list{
+			struct Node * assign_var_name_iden;
+			struct Node * comma_iden_assign_list;
+		}comma_iden_assign_list;
+		
+		struct assign_var_decl{
+			struct Node * type_iden;
+			struct Node * comma_iden_assign_list;
+		}assign_var_decl;
+		
+		struct assign_var_list{
+			struct Node * assign_var_list;
+			struct Node * assign_var_decl;
+		}assign_var_list;
+		
+		struct global_var_list{
+			struct Node * assign_var_list;
+		}global_var_list;
+		
     }children;
 }Node;
 
@@ -89,7 +124,7 @@ void printTree(Node *node, int parentId);
 void printGraphString(Node * root);
 Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int parentId));
 
-	Node * create_program(Node * type_decl_list);
+	Node * create_program(Node * type_decl_list, Node * global_var_list);
 
 	Node * create_type_decl_list(Node * type_decl_list, Node * type_decl);
 
@@ -112,6 +147,18 @@ Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int pare
 	Node * create_var_decl(Node * type_iden, Node * comma_iden_list);
 
 	Node * create_comma_iden_list(Node * comma_iden_list, Node * var_name_iden);
+
+	Node * create_assign_var_name_iden(Node * var_name_iden, Node * expr);
+
+	Node * create_expr();
+
+	Node * create_comma_iden_assign_list(Node * assign_var_name_iden, Node * comma_iden_assign_list);
+
+	Node * create_assign_var_decl(Node * type_iden, Node * comma_iden_assign_list);
+
+	Node * create_assign_var_list(Node * assign_var_list, Node * assign_var_decl);
+
+	Node * create_global_var_list(Node * assign_var_list);
 
 
 
@@ -138,5 +185,17 @@ Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int pare
 	void var_decl_p(Node * node, int parentId);
 
 	void comma_iden_list_p(Node * node, int parentId);
+
+	void assign_var_name_iden_p(Node * node, int parentId);
+
+	void expr_p(Node * node, int parentId);
+
+	void comma_iden_assign_list_p(Node * node, int parentId);
+
+	void assign_var_decl_p(Node * node, int parentId);
+
+	void assign_var_list_p(Node * node, int parentId);
+
+	void global_var_list_p(Node * node, int parentId);
 
 #endif

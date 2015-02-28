@@ -88,12 +88,18 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> array_decl
 %type <node> var_list
 %type <node> var_decl
+//%type <node> expr
+%type <node> assign_var_name_iden
+%type <node> comma_iden_assign_list
+%type <node> assign_var_decl
+%type <node> assign_var_list
+%type <node> global_var_list
 
 %% /* Grammar rules and actions follow */
 
 program:	type_decl_list global_var_list END_OF_FILE // function_def_list
 				{
-					rootNode = create_program($1);
+					rootNode = create_program($1, $2);
 					return 0;
 				}
 ;

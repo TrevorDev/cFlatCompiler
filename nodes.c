@@ -40,11 +40,12 @@ void printNode(char *label, int myNodeId, int parentId){
 }
 
 
-	Node *create_program(Node * type_decl_list ){
+	Node *create_program(Node * type_decl_list, Node * global_var_list ){
 
 
 		Node *ret = create_Node(program_t, &program_p);
 		ret->children.program.type_decl_list = type_decl_list;
+		ret->children.program.global_var_list = global_var_list;
 		
 		return ret;
 	}
@@ -155,6 +156,64 @@ void printNode(char *label, int myNodeId, int parentId){
 		return ret;
 	}
 
+	Node *create_assign_var_name_iden(Node * var_name_iden, Node * expr ){
+
+
+		Node *ret = create_Node(assign_var_name_iden_t, &assign_var_name_iden_p);
+		ret->children.assign_var_name_iden.var_name_iden = var_name_iden;
+		ret->children.assign_var_name_iden.expr = expr;
+		
+		return ret;
+	}
+
+	Node *create_expr( ){
+
+
+		Node *ret = create_Node(expr_t, &expr_p);
+		
+		
+		return ret;
+	}
+
+	Node *create_comma_iden_assign_list(Node * assign_var_name_iden, Node * comma_iden_assign_list ){
+
+
+		Node *ret = create_Node(comma_iden_assign_list_t, &comma_iden_assign_list_p);
+		ret->children.comma_iden_assign_list.assign_var_name_iden = assign_var_name_iden;
+		ret->children.comma_iden_assign_list.comma_iden_assign_list = comma_iden_assign_list;
+		
+		return ret;
+	}
+
+	Node *create_assign_var_decl(Node * type_iden, Node * comma_iden_assign_list ){
+
+
+		Node *ret = create_Node(assign_var_decl_t, &assign_var_decl_p);
+		ret->children.assign_var_decl.type_iden = type_iden;
+		ret->children.assign_var_decl.comma_iden_assign_list = comma_iden_assign_list;
+		
+		return ret;
+	}
+
+	Node *create_assign_var_list(Node * assign_var_list, Node * assign_var_decl ){
+
+
+		Node *ret = create_Node(assign_var_list_t, &assign_var_list_p);
+		ret->children.assign_var_list.assign_var_list = assign_var_list;
+		ret->children.assign_var_list.assign_var_decl = assign_var_decl;
+		
+		return ret;
+	}
+
+	Node *create_global_var_list(Node * assign_var_list ){
+
+
+		Node *ret = create_Node(global_var_list_t, &global_var_list_p);
+		ret->children.global_var_list.assign_var_list = assign_var_list;
+		
+		return ret;
+	}
+
 
 
 	void program_p(Node * node, int parentId){
@@ -162,6 +221,7 @@ void printNode(char *label, int myNodeId, int parentId){
 		int myNodeId = nodeId;
 		int temp = 0;
 		printTree(node->children.program.type_decl_list, myNodeId);
+		printTree(node->children.program.global_var_list, myNodeId);
 		printNode("program", myNodeId, parentId);
 
 		
@@ -319,6 +379,88 @@ fprintf(fp, "%d -> %d;", myNodeId, temp);
 		printTree(node->children.comma_iden_list.comma_iden_list, myNodeId);
 		printTree(node->children.comma_iden_list.var_name_iden, myNodeId);
 		printNode("comma_iden_list", myNodeId, parentId);
+
+		
+		
+		
+		
+	};
+
+	void assign_var_name_iden_p(Node * node, int parentId){
+		nodeId++;
+		int myNodeId = nodeId;
+		int temp = 0;
+		printTree(node->children.assign_var_name_iden.var_name_iden, myNodeId);
+		printTree(node->children.assign_var_name_iden.expr, myNodeId);
+		printNode("assign_var_name_iden", myNodeId, parentId);
+
+		
+		
+		
+		
+	};
+
+	void expr_p(Node * node, int parentId){
+		nodeId++;
+		int myNodeId = nodeId;
+		int temp = 0;
+		
+		printNode("expr", myNodeId, parentId);
+
+		
+		
+		
+		
+	};
+
+	void comma_iden_assign_list_p(Node * node, int parentId){
+		nodeId++;
+		int myNodeId = nodeId;
+		int temp = 0;
+		printTree(node->children.comma_iden_assign_list.assign_var_name_iden, myNodeId);
+		printTree(node->children.comma_iden_assign_list.comma_iden_assign_list, myNodeId);
+		printNode("comma_iden_assign_list", myNodeId, parentId);
+
+		
+		
+		
+		
+	};
+
+	void assign_var_decl_p(Node * node, int parentId){
+		nodeId++;
+		int myNodeId = nodeId;
+		int temp = 0;
+		printTree(node->children.assign_var_decl.type_iden, myNodeId);
+		printTree(node->children.assign_var_decl.comma_iden_assign_list, myNodeId);
+		printNode("assign_var_decl", myNodeId, parentId);
+
+		
+		
+		
+		
+	};
+
+	void assign_var_list_p(Node * node, int parentId){
+		nodeId++;
+		int myNodeId = nodeId;
+		int temp = 0;
+		printTree(node->children.assign_var_list.assign_var_list, myNodeId);
+		printTree(node->children.assign_var_list.assign_var_decl, myNodeId);
+		printNode("assign_var_list", myNodeId, parentId);
+
+		
+		
+		
+		
+	};
+
+	void global_var_list_p(Node * node, int parentId){
+		nodeId++;
+		int myNodeId = nodeId;
+		int temp = 0;
+		printTree(node->children.global_var_list.assign_var_list, myNodeId);
+		printNode("global_var_list", myNodeId, parentId);
 
 		
 		

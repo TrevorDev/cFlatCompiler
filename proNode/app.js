@@ -1,5 +1,5 @@
 var nodeTypes = {
-	program: {children: ["type_decl_list"]},
+	program: {children: ["type_decl_list", "global_var_list"]},
 	type_decl_list: {children: ["type_decl_list", "type_decl"]},
 	type_decl: {children: ["type_iden", "var_name_iden"]},
 	var_name_iden: {children: ["identifier", "array_decl"]},
@@ -11,6 +11,12 @@ var nodeTypes = {
 	var_list: {children: ["var_list", "var_decl"]},
 	var_decl: {children: ["type_iden", "comma_iden_list"]},
 	comma_iden_list: {children: ["comma_iden_list", "var_name_iden"]},
+	assign_var_name_iden: {children: ["var_name_iden", "expr"]},
+	expr: {children: []},
+	comma_iden_assign_list: {children: ["assign_var_name_iden", "comma_iden_assign_list"]},
+	assign_var_decl: {children: ["type_iden", "comma_iden_assign_list"]},
+	assign_var_list: {children: ["assign_var_list", "assign_var_decl"]},
+	global_var_list: {children: ["assign_var_list"]}
 }
 
 var typeNames = []
