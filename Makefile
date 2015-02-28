@@ -23,7 +23,7 @@ nodeGen: proNode/app.js
 parser.o: y.tab.c y.tab.h
 
 y.tab.c: parser.y
-	yacc -d -y parser.y
+	yacc -d -v -y parser.y
 
 lex.yy.c: scanner.l
 	flex --header-file=scanner.h scanner.l
