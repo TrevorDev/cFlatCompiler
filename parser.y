@@ -709,6 +709,15 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
+	if (asmOutput) {
+		if (errorCount == 0) {
+			printf("valid C flat code\n");
+		}
+		else {
+			fprintf(stderr, "invalid C flat code\n");
+		}
+	}
+
 	if (syntaxAnalysisOutput){
 		printGraphString(rootNode);
 	}

@@ -44,23 +44,19 @@ runtests: all
 
 	@echo "\nCompiling 2.cb..."
 	@echo ""
-	-./cflatc -a < testFiles/2.cb
-	dot -Tsvg graph.txt -o graph2.svg
+	-./cflatc -c < testFiles/2.cb
 
 	@echo "\nCompiling 3.cb..."
 	@echo ""
-	-./cflatc -a < testFiles/3.cb
-	dot -Tsvg graph.txt -o graph2.svg
+	-./cflatc -c < testFiles/3.cb
 
 	@echo "\nCompiling 4.cb..."
 	@echo ""
-	-./cflatc -a < testFiles/4.cb
-	dot -Tsvg graph.txt -o graph2.svg
+	-./cflatc -c < testFiles/4.cb
 
 	@echo "\nCompiling 5.cb..."
 	@echo ""
-	-./cflatc -a < testFiles/5.cb
-	dot -Tsvg graph.txt -o graph2.svg
+	-./cflatc -c < testFiles/5.cb
 
 graph: all
 	-rm -f graph.txt graph.png
