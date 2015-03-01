@@ -337,10 +337,11 @@ function_def: IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPE
 				}
 ;
 
-function_body: global_var_list stmt_list
+function_body: /*global_var_list */ stmt_list
 				{
 					printf("caught function body\n");
-					$$ = create_function_body($1, $2);
+					//$$ = create_function_body($1, $2);
+					$$ = create_function_body(NULL, $1);
 				}
 ;
 

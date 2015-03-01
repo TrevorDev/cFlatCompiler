@@ -25,17 +25,17 @@ float subtract_a_litte_bit(float f)
 
 void increment(float f)
 {
-	/* this works because C flat passes by reference
-	f += 1.0f;
+	/* this works because C flat passes by reference */
+	f = f + 1.0;
 }
 
 int main(void)
 {
-	float f, g, h;
-	f = 1.0f;
+	/* float f, g, h; */
+	f = 1.0;
 
-	if (f > 0.5f) {
-		while (f > 0.0f) {
+	if (f > 0.5) {
+		while (f > 0.0) {
 			f = f - 0.1;
 			f = subtract_a_litte_bit(f);
 			putc('S');
@@ -45,16 +45,16 @@ int main(void)
 		puti(-1);
 	}
 
-	if (f > 1000.0f) {
+	if (f > 1000.0) {
 		puti(-1);
 	}
 	else {
-		for (f = 0.0f; f < 10.0f; f++) {
+		for (f = 0.0; f < 10.0; f++) {
 			increment(f);
-			f = f + 1.0f;
+			f = f + 1.0;
 		}
 	}
 
-	putf(0.0f);
+	putf(0.0);
 	return 0;
 }
