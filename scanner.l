@@ -309,7 +309,7 @@ CHARACTER ['].[']
 "void"	{
 	tokenlen = yyleng;
 	tokenpos += yyleng;
-	yylval.sval = strdup("float");
+	yylval.sval = strdup("void");
 	return VOID_LIT;
 }
 
