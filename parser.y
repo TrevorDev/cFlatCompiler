@@ -479,6 +479,12 @@ expr: 			INT
 					Node * temp = create_operator($1);
 					$$ = create_expr(NULL, temp, $2);
 				}
+				|
+				PLUS expr %prec NEG
+				{
+					Node * temp = create_operator($1);
+					$$ = create_expr(NULL, temp, $2);
+				}
 ;
 
 
