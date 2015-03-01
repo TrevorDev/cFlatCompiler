@@ -15,9 +15,9 @@ endif
 all: clean cflatc
 
 cflatc: scanner
-	cc    -c -o lex.yy.o lex.yy.c
+	cc  -g  -c -o lex.yy.o lex.yy.c
 	cc -g -c nodes.c -o nodes.o  
-	cc parser.o lex.yy.o nodes.o -o cflatc $(LIBS)
+	cc parser.o lex.yy.o nodes.o -o cflatc $(LIBS) -g
 
 nodeGen:
 	cd proNode; node app.js; cd ..;
@@ -25,7 +25,7 @@ nodeGen:
 parser: nodeGen
 	yacc -d -v -y parser.y
 	mv -f y.tab.c parser.c
-	cc    -c -o parser.o parser.c
+	cc -g   -c -o parser.o parser.c
 
 scanner: parser
 	flex --header-file=scanner.h scanner.l

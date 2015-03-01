@@ -1,1 +1,10 @@
-int x = fdjkjfd(x, +5);
+typedef x y;
+
+/* comment int x */
+
+/* comment int x */
+/* comment int x */
+/* comment int x */
+
+float i 
+int x;

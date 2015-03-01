@@ -7,10 +7,12 @@
 //#include "graph.h"
 #include "nodes.h"
 
-extern int yylineno;
-void yyerror(const char* msg) {
-      fprintf(stderr, "%s on line %d\n", msg, yylineno);
-}
+extern int yylineno, commentsOn, tokenpos, tokenlen;
+void yyerror(const char *msg);
+
+int errorCount = 0;
+extern char *linebuf;
+
 Node * rootNode;
 int yylex();
 
@@ -538,6 +540,25 @@ expr: 			INT
 
 %%
 
+void yyerror(const char* msg) {
+	fprintf(stderr, "%s on line %d\n", msg, yylineno);
+	printf("\t%s\n", linebuf);
+    printf("\t%*s\n", 1+tokenpos - tokenlen, "^");
+	errorCount++;
+	if (errorCount == 5) {
+		fprintf(stderr, "Aborting compilation process - 5 syntax errors have been detected.\n");
+		return;
+	}
+	while (!feof(stdin)) {
+		int t;
+		t = yylex();
+		if (t == SEMICOLON || t == CONTROL_BLOCK_CLOSE) {
+			break;
+		}
+	}
+	yyparse();
+}
+
 int main(int argc, char *argv[])
 {
 	int x;
@@ -575,24 +596,15 @@ int main(int argc, char *argv[])
 				break;
 		}
 	}
-	/*
-	while((x = yylex()) != END_OF_FILE){
-		//printf("%s ", yytext);
-		//printf("%s\n", yytname[x-258+3]);//SCANNER_VALS[x]);
-	}
-	*/
+
 	while(!feof(stdin)){
 		yyparse();
 	}
 
-
-	// Node * curPos = rootNode;
-	// int c = 0;
-	// while(curPos != NULL){
-	// 	curPos = curPos->children[1];
-	// 	c++;
-	// }
-	// printf("%d\n", c);
+	if (commentsOn) {
+		yyerror("Syntax error: Unterminated comment");
+		return 1;
+	}
 
 	if (syntaxAnalysisOutput){
 		printGraphString(rootNode);
