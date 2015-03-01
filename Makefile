@@ -36,6 +36,32 @@ lex.yy.c: scanner.l
 run: all
 	./cflatc < testFiles/ints.txt
 
+runtests: all
+	@echo "\nCompiling 1.cb..."
+	@echo ""
+	./cflatc -a < testFiles/1.cb
+	dot -Tsvg graph.txt -o graph1.svg
+
+	@echo "\nCompiling 2.cb..."
+	@echo ""
+	-./cflatc -a < testFiles/2.cb
+	dot -Tsvg graph.txt -o graph2.svg
+
+	@echo "\nCompiling 3.cb..."
+	@echo ""
+	-./cflatc -a < testFiles/3.cb
+	dot -Tsvg graph.txt -o graph2.svg
+
+	@echo "\nCompiling 4.cb..."
+	@echo ""
+	-./cflatc -a < testFiles/4.cb
+	dot -Tsvg graph.txt -o graph2.svg
+
+	@echo "\nCompiling 5.cb..."
+	@echo ""
+	-./cflatc -a < testFiles/5.cb
+	dot -Tsvg graph.txt -o graph2.svg
+
 graph: all
 	-rm -f graph.txt graph.png
 	./cflatc -a < testFiles/1.cb
