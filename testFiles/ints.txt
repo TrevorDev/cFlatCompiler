@@ -1,1 +1,5 @@
-int x = fdjkjfd(x, +5);
+typedef x y;
+
+/* comment int x
+
+int x;

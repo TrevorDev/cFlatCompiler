@@ -1,8 +1,10 @@
 %{
          #include "nodes.h"
          #include "y.tab.h"
+		int commentsOn;
 
 %}
+%x C_COMMENT
 %option yylineno
 DIGIT		[0-9]
 NZDIGIT	[1-9]
@@ -136,12 +138,17 @@ CHARACTER ['].[']
 }
 
 "/\*"	{	
-	return COMMENT_OPEN;
+	commentsOn = 1;
+	BEGIN(C_COMMENT);
+	//return COMMENT_OPEN;
 }
 
-"\*/"	{	
-	return COMMENT_CLOSE;
+<C_COMMENT>"*/" { 
+	commentsOn = 0;
+	BEGIN(INITIAL);
 }
+
+<C_COMMENT>.    { }
 
 "\("	{
 	return BRACKET_OPEN;

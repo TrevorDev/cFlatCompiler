@@ -7,10 +7,9 @@
 //#include "graph.h"
 #include "nodes.h"
 
-extern int yylineno;
-void yyerror(const char* msg) {
-      fprintf(stderr, "%s on line %d\n", msg, yylineno);
-}
+extern int yylineno, commentsOn;
+void yyerror(const char *msg);
+
 Node * rootNode;
 int yylex();
 
@@ -490,6 +489,10 @@ expr: 			INT
 
 %%
 
+void yyerror(const char* msg) {
+	fprintf(stderr, "%s on line %d\n", msg, yylineno);
+}
+
 int main(int argc, char *argv[])
 {
 	int x;
@@ -527,24 +530,15 @@ int main(int argc, char *argv[])
 				break;
 		}
 	}
-	/*
-	while((x = yylex()) != END_OF_FILE){
-		//printf("%s ", yytext);
-		//printf("%s\n", yytname[x-258+3]);//SCANNER_VALS[x]);
-	}
-	*/
+
 	while(!feof(stdin)){
 		yyparse();
 	}
-
-
-	// Node * curPos = rootNode;
-	// int c = 0;
-	// while(curPos != NULL){
-	// 	curPos = curPos->children[1];
-	// 	c++;
-	// }
-	// printf("%d\n", c);
+	
+	if (commentsOn) {
+		yyerror("Syntax error: Unterminated comment");
+		return 1;
+	}
 
 	if (syntaxAnalysisOutput){
 		printGraphString(rootNode);
