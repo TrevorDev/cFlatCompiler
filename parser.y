@@ -141,13 +141,11 @@ program:	type_decl_list global_var_list END_OF_FILE
 
 stmt: 	expr SEMICOLON
 		{
-			printf("stmt: caught expression statement\n");
 			$$ = create_stmt($1);
 		}
 		|
 		CONTROL_BLOCK_OPEN stmt_list CONTROL_BLOCK_CLOSE
 		{
-			printf("stmt: caught { stmt list }\n");
 			$$ = create_stmt($2);
 		}
 		|
@@ -158,26 +156,22 @@ stmt: 	expr SEMICOLON
 		|
 		select_stmt
 		{
-			printf("stmt: caught select statement\n");
 			$$ = create_stmt($1);
 		}
 		|
 		iter_stmt
 		{
-			printf("stmt: caught iterative statement\n");
 			$$ = create_stmt($1);
 		}
 		|
 		return_stmt
 		{
-			printf("stmt: caught return statement\n");
 			$$ = create_stmt($1);
 		}
 ;
 
 return_stmt: RETURN expr_or_empty SEMICOLON
 			{
-				printf("caught return_stmt\n");
 				$$ = create_return_stmt($2);
 			}
 ;
@@ -228,7 +222,6 @@ stmt_list:  stmt stmt_list
 
 global_var_list: assign_var_list
 				{
-					printf("caught global var list\n");
 					$$ = create_global_var_list($1);
 				}
 ;
@@ -314,28 +307,24 @@ function_call:  IDENTIFIER BRACKET_OPEN comma_expr_list BRACKET_CLOSE
 
 function_def: IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPEN function_body CONTROL_BLOCK_CLOSE
 				{
-					printf("caught function def\n");
 					Node *temp = create_identifier($1);
 					$$ = create_function_def(temp, $3, $6);
 				}
 				|
 				IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPEN CONTROL_BLOCK_CLOSE
 				{
-					printf("caught function def 0.5\n");
 					Node *temp = create_identifier($1);
 					$$ = create_function_def(temp, $3, NULL);
 				}
 				|
 				IDENTIFIER BRACKET_OPEN BRACKET_CLOSE CONTROL_BLOCK_OPEN function_body CONTROL_BLOCK_CLOSE
 				{
-					printf("caught function def 1\n");
 					Node *temp = create_identifier($1);
 					$$ = create_function_def(temp, NULL, $5);
 				}
 				|
 				IDENTIFIER BRACKET_OPEN VOID_LIT BRACKET_CLOSE CONTROL_BLOCK_OPEN function_body CONTROL_BLOCK_CLOSE
 				{
-					printf("caught function def 2\n");
 					Node *temp = create_identifier($1);
 					Node *temp2 = create_base_type_lit($3);
 					$$ = create_function_def(temp, temp2, $6);
@@ -344,21 +333,17 @@ function_def: IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPE
 
 function_body: stmt_list
 				{
-					printf("caught function body\n");
-					//$$ = create_function_body($1, $2);
-					$$ = create_function_body(NULL, $1);
+					$$ = create_function_body($1);
 				}
 ;
 
 param_list: param COMMA param_list
 				{
-					printf("param_list: caught param list\n");
 					$$ = create_param_list($1, $3);
 				}
 				|
 				param
 				{
-					printf("param_list: caught param\n");
 					$$ = create_param_list($1, NULL);
 				}
 ;
@@ -433,59 +418,50 @@ struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN assign_var_list CONTROL_BLOCK_C
 
 assign_var_list: assign_var_decl assign_var_list
 				{
-					printf("assign_var_list: caught assign_var_decl assign_var_list\n");
 					$$ = create_assign_var_list($1, $2);
 				}
 				|
 				assign_var_decl
 				{  
-					printf("assign_var_list: caught assign_var_decl\n");
 					$$ = create_assign_var_list(NULL, $1);
 				}
 ;
 
 assign_var_decl: type_iden comma_iden_assign_list SEMICOLON
 				{
-					printf("assign_var_decl: caught type_iden comma_iden_assign_list SEMICOLON\n");
 					$$ = create_assign_var_decl($1, $2);
 				}
 				|
 				type_iden function_def
 				{
-					printf("assign_var_decl: caught type_iden function_def\n");
 					$$ = create_assign_var_decl($1, $2);
 				}
 ;
 
 comma_iden_assign_list: assign_var_name_iden COMMA comma_iden_assign_list 
 				{
-					printf("comma_iden_assign_list: caught assign_var_name_iden COMMA comma_iden_assign_list\n");
 					$$ = create_comma_iden_assign_list($1, $3);
 				}
 				|
 				assign_var_name_iden
 				{
-					printf("comma_iden_assign_list: caught assign_var_name_iden\n");
 					$$ = create_comma_iden_assign_list($1, NULL);
 				}
 ;
 
 assign_var_name_iden: var_name_iden 
 				{
-					printf("assign_var_name_iden: caught var_name_iden \n");
 					$$ = create_assign_var_name_iden($1, NULL);
 				}
 				| 
 				var_name_iden ASSIGNMENT expr
 				{
-					printf("assign_var_name_iden: var_name_iden ASSIGNMENT expr\n");
 					$$ = create_assign_var_name_iden($1, $3);
 				}
 ;
 
 assignment: variable ASSIGNMENT expr
  				{
- 					printf("caught assignment\n");
  					$$ = create_assignment($1, $3);
  				}
 ;
