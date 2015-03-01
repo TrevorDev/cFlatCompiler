@@ -26,7 +26,12 @@ var nodeTypes = {
 	array_defin: {children: ["comma_expr_list"]},
 	comma_expr_list: {children: ["expr", "comma_expr_list"]},
 	assignment: {children: ["variable", "expr"]},
-	function_call: {children: ["iden", "expr_list"]}
+	function_call: {children: ["iden", "expr_list"]},
+	param_list: {children: ["param", "param_list"]},
+	param: {children: ["type_iden", "iden"]},
+	function_body: {children: ["global_var_list", "return_expr"]},
+	function_def: {children: ["type_decl", "iden", "param_list", "function_body"]},
+	function_def_list: {children: ["function_def", "function_def_list"]}
 }
 
 var typeNames = []

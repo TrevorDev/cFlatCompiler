@@ -98,6 +98,11 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> type_iden
 %type <node> array_decl
 %type <node> variable
+%type <node> param
+%type <node> param_list
+%type <node> function_def
+%type <node> function_body
+%type <node> function_def_list
 %type <node> non_rec_variable
 %type <node> assignment
 
@@ -116,7 +121,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 
 %% /* Grammar rules and actions follow */
 
-program:	type_decl_list global_var_list END_OF_FILE // function_def_list
+program:	type_decl_list global_var_list function_def_list END_OF_FILE 
 				{
 					rootNode = create_program($1, $2);
 					return 0;
@@ -217,6 +222,49 @@ function_call:  IDENTIFIER BRACKET_OPEN comma_expr_list BRACKET_CLOSE
 					$$ = create_function_call(temp, NULL);
 				}
 ;
+
+function_def_list: function_def function_def_list
+				{
+					$$ = create_function_def_list($1, $2);
+				}
+				|
+				function_def
+				{
+					$$ = create_function_def_list($1, NULL);
+				}
+;
+
+function_def: type_decl IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPEN function_body CONTROL_BLOCK_CLOSE
+				{
+					Node * temp = create_identifier($2);
+					$$ = create_function_def($1, temp, $4, $7);
+				}
+;
+
+function_body: global_var_list RETURN expr SEMICOLON
+				{
+					$$ = create_function_body($1, $3);
+				}
+;
+
+param_list: param COMMA param_list
+				{
+					$$ = create_param_list($1, $3);
+				}
+				|
+				param
+				{
+					$$ = create_param_list($1, NULL);
+				}
+;
+
+param: type_iden IDENTIFIER
+				{
+					Node * temp = create_identifier($2);
+					$$ = create_param($1, temp);
+				}
+;
+
 comma_expr_list: expr
 				{
 					$$ = create_comma_expr_list($1, NULL);
