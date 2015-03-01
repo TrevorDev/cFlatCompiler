@@ -39,7 +39,7 @@ run: all
 graph: all
 	-rm -f graph.txt graph.png
 	./cflatc -a < testFiles/1.cb
-	dot -Tpng graph.txt -o graph.png
+	dot -Tsvg graph.txt -o graph.svg
 
 clean: 
 	rm -f *.o
@@ -50,6 +50,7 @@ clean:
 	rm -f nodes.c
 	rm -f nodes.h
 	rm -f graph.png
+	rm -f graph.svg
 	rm -f nodes.h
 	rm -f graph.txt
 	rm -f y.output
