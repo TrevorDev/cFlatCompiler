@@ -1,2 +1,1 @@
-int x = {1, 2, 3};
-int a = c.hey[5].x = d = 5;
+int a = b++ = --c && b == !c != d <= f;

@@ -80,8 +80,13 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 
 // Precedence
 %right ASSIGNMENT
+%left LOGICAL_OR
+%left LOGICAL_AND
+%left EQUALITY INEQUALITY
+%left GREATER_THAN GREATER_THAN_OR_EQUAL_TO LESS_THAN LESS_THAN_OR_EQUAL_TO
 %left MINUS PLUS
-%left STAR SLASH
+%left STAR SLASH MODULUS
+%right SIZE_OF NOT 
 %precedence NEG
 
 // Types
@@ -350,13 +355,13 @@ expr: 			INT
 					$$ = create_expr($1, temp, $3);
 				}
 				|
-				expr GREATHER_THAN expr
+				expr GREATER_THAN expr
 				{
 					Node * temp = create_operator($2);
 					$$ = create_expr($1, temp, $3);
 				}
 				|
-				expr GREATHER_THAN_OR_EQUAL_TO expr
+				expr GREATER_THAN_OR_EQUAL_TO expr
 				{
 					Node * temp = create_operator($2);
 					$$ = create_expr($1, temp, $3);
@@ -365,19 +370,19 @@ expr: 			INT
 				NOT expr
 				{
 					Node * temp = create_operator($1);
-					$$ = create_expr($2, temp, NULL);
+					$$ = create_expr(NULL, temp, $2);
 				}
 				|
-				expr PLUS_PLUS
+				variable PLUS_PLUS
 				{
 					Node * temp = create_operator($2);
 					$$ = create_expr($1, temp, NULL);
 				}
 				|
-				PLUS_PLUS expr
+				PLUS_PLUS variable
 				{
-					Node * temp = create_operator($2);
-					$$ = create_expr(NULL, temp, $1);
+					Node * temp = create_operator($1);
+					$$ = create_expr(NULL, temp, $2);
 				}
 				|
 				expr MINUS expr
@@ -386,16 +391,16 @@ expr: 			INT
 					$$ = create_expr($1, temp, $3);
 				}
 				|
-				expr MINUS_MINUS
+				variable MINUS_MINUS
 				{
 					Node * temp = create_operator($2);
 					$$ = create_expr($1, temp, NULL);
 				}
 				|
-				MINUS_MINUS expr
+				MINUS_MINUS variable
 				{
-					Node * temp = create_operator($2);
-					$$ = create_expr(NULL, temp, $1);
+					Node * temp = create_operator($1);
+					$$ = create_expr(NULL, temp, $2);
 				}
 				|
 				expr EQUALITY expr
@@ -416,7 +421,7 @@ expr: 			INT
 					$$ = create_expr($1, temp, $3);
 				}
 				|
-				expr LOGICAL_OR
+				expr LOGICAL_OR expr
 				{
 					Node * temp = create_operator($2);
 					$$ = create_expr($1, temp, $3);
