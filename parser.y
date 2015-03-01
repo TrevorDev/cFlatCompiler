@@ -79,6 +79,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %token END_OF_FILE
 
 // Precedence
+%right ASSIGNMENT
 %left MINUS PLUS
 %left STAR SLASH
 %precedence NEG
@@ -93,6 +94,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> array_decl
 %type <node> variable
 %type <node> non_rec_variable
+%type <node> assignment
 
 %type <node> expr
 %type <node> global_var_list
@@ -277,11 +279,11 @@ assign_var_name_iden: var_name_iden
 				}
 ;
 
-// assignment: variable ASSIGNMENT expr
-// 				{
-// 					$$ = create_assignment($1, $3);
-// 				}
-// ;
+assignment: variable ASSIGNMENT expr
+ 				{
+ 					$$ = create_assignment($1, $3);
+ 				}
+;
 
 expr: 			INT
 				{
@@ -305,11 +307,11 @@ expr: 			INT
 				{
 					$$ = create_expr($1, NULL, NULL);
 				}
-				// |
-				// assignment
-				// {
-				// 	$$ = create_expr($1, NULL, NULL);
-				// }
+				|
+				assignment
+				{
+				 	$$ = create_expr($1, NULL, NULL);
+				}
 				|
 				expr PLUS expr
 				{

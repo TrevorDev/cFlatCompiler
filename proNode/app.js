@@ -22,7 +22,9 @@ var nodeTypes = {
 	assign_var_list: {children: ["assign_var_list", "assign_var_decl"]},
 	global_var_list: {children: ["assign_var_list"]},
 	variable: {children: ["variable", "struct_member"]},
-	non_rec_variable: {children: ["iden", "array_decl"]}
+	non_rec_variable: {children: ["iden", "array_decl"]},
+	assignment: {children: ["variable", "expr"]}
+
 }
 
 var typeNames = []

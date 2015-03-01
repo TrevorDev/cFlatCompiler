@@ -1,1 +1,1 @@
-int x = x[4].a.d;
+int a = c.hey[5].x = d = 5;
