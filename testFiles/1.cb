@@ -31,7 +31,7 @@ void increment(float f)
 
 int main(void)
 {
-	/* float f, g, h; */
+	float f, g, h;
 	f = 1.0;
 
 	if (f > 0.5) {
@@ -44,6 +44,9 @@ int main(void)
 	else {
 		puti(-1);
 	}
+
+	/* We support this! */
+	float ff, gg, hh;
 
 	if (f > 1000.0) {
 		puti(-1);
