@@ -722,5 +722,5 @@ int main(int argc, char *argv[]) {
 		printGraphString(rootNode);
 	}
 
-	return 0;
+	return errorCount ? 1 : 0;
 }
