@@ -33,6 +33,7 @@ cflatc
 y.tab.h
 scanner.h
 
+graph.svg
 graph.png
 graph.txt
 y.output
@@ -40,3 +41,4 @@ y.output
 nodes.c
 nodes.h
 parser.c
+
