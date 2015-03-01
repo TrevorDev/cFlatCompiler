@@ -1,5 +1,19 @@
 typedef x y;
 
-/* comment int x
+/* comment int x */
+
+/* comment int x */
+/* comment int x */
+/* comment int x */
+
+a;
+
+foo;
+
+foo;
+foo;
+foo;
+foo;
+foo;
 
 int x;

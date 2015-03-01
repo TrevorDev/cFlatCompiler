@@ -10,6 +10,8 @@
 extern int yylineno, commentsOn;
 void yyerror(const char *msg);
 
+int errorCount = 0;
+
 Node * rootNode;
 int yylex();
 
@@ -491,6 +493,19 @@ expr: 			INT
 
 void yyerror(const char* msg) {
 	fprintf(stderr, "%s on line %d\n", msg, yylineno);
+	errorCount++;
+	if (errorCount == 5) {
+		fprintf(stderr, "Aborting compilation process - 5 syntax errors have been detected.\n");
+		return;
+	}
+	while (!feof(stdin)) {
+		int t;
+		t = yylex();
+		if (t == SEMICOLON || t == CONTROL_BLOCK_CLOSE) {
+			break;
+		}
+	}
+	yyparse();
 }
 
 int main(int argc, char *argv[])
@@ -534,7 +549,7 @@ int main(int argc, char *argv[])
 	while(!feof(stdin)){
 		yyparse();
 	}
-	
+
 	if (commentsOn) {
 		yyerror("Syntax error: Unterminated comment");
 		return 1;
