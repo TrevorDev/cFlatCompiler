@@ -338,6 +338,90 @@ expr: 			INT
 				 	$$ = create_expr($1, NULL, NULL);
 				}
 				|
+				expr LESS_THAN expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
+				}
+				|
+				expr LESS_THAN_OR_EQUAL_TO expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
+				}
+				|
+				expr GREATHER_THAN expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
+				}
+				|
+				expr GREATHER_THAN_OR_EQUAL_TO expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
+				}
+				|
+				NOT expr
+				{
+					Node * temp = create_operator($1);
+					$$ = create_expr($2, temp, NULL);
+				}
+				|
+				expr PLUS_PLUS
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, NULL);
+				}
+				|
+				PLUS_PLUS expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr(NULL, temp, $1);
+				}
+				|
+				expr MINUS expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
+				}
+				|
+				expr MINUS_MINUS
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, NULL);
+				}
+				|
+				MINUS_MINUS expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr(NULL, temp, $1);
+				}
+				|
+				expr EQUALITY expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
+				}
+				|
+				expr INEQUALITY expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
+				}
+				|
+				expr LOGICAL_AND expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
+				}
+				|
+				expr LOGICAL_OR
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
+				}
+				|
 				expr PLUS expr
 				{
 					Node * temp = create_operator($2);
@@ -357,6 +441,12 @@ expr: 			INT
 				}
 				|
 				expr SLASH expr
+				{
+					Node * temp = create_operator($2);
+					$$ = create_expr($1, temp, $3);
+				}
+				|
+				expr MODULUS expr
 				{
 					Node * temp = create_operator($2);
 					$$ = create_expr($1, temp, $3);
