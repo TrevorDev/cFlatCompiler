@@ -24,7 +24,8 @@ var nodeTypes = {
 	variable: {children: ["variable", "struct_member"]},
 	non_rec_variable: {children: ["iden", "array_decl"]},
 	array_defin: {children: ["comma_expr_list"]},
-	comma_expr_list: {children: ["expr", "comma_expr_list"]}
+	comma_expr_list: {children: ["expr", "comma_expr_list"]},
+	assignment: {children: ["variable", "expr"]}
 }
 
 var typeNames = []
