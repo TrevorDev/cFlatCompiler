@@ -277,7 +277,7 @@ CHARACTER ['].[']
 {CHARACTER} {
 	tokenlen = yyleng;
 	tokenpos += yyleng;
-	sscanf(yytext, "%c", &yylval.cval);
+	yylval.cval = yytext[1];
 	return CHAR;
 }
 
