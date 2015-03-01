@@ -112,6 +112,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 
 %type <node> array_defin
 %type <node> comma_expr_list
+%type <node> function_call
 
 %% /* Grammar rules and actions follow */
 
@@ -204,6 +205,18 @@ array_defin: CONTROL_BLOCK_OPEN comma_expr_list CONTROL_BLOCK_CLOSE
 				}
 ;
 
+function_call:  IDENTIFIER BRACKET_OPEN comma_expr_list BRACKET_CLOSE
+				{
+					Node * temp = create_identifier($1);
+					$$ = create_function_call(temp, $3);
+				}
+				|
+				IDENTIFIER BRACKET_OPEN BRACKET_CLOSE
+				{
+					Node * temp = create_identifier($1);
+					$$ = create_function_call(temp, NULL);
+				}
+;
 comma_expr_list: expr
 				{
 					$$ = create_comma_expr_list($1, NULL);
@@ -329,6 +342,11 @@ expr: 			INT
 				}
 				|
 				array_defin
+				{
+					$$ = create_expr($1, NULL, NULL);
+				}
+				|
+				function_call
 				{
 					$$ = create_expr($1, NULL, NULL);
 				}
