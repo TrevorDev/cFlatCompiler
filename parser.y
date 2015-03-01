@@ -151,6 +151,11 @@ stmt: 	expr SEMICOLON
 			$$ = create_stmt($2);
 		}
 		|
+		assign_var_decl
+		{
+			$$ = create_stmt($1);
+		}
+		|
 		select_stmt
 		{
 			printf("stmt: caught select statement\n");
@@ -337,7 +342,7 @@ function_def: IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPE
 				}
 ;
 
-function_body: /*global_var_list */ stmt_list
+function_body: stmt_list
 				{
 					printf("caught function body\n");
 					//$$ = create_function_body($1, $2);
