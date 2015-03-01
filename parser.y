@@ -125,6 +125,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> expr_or_epmpty
 %type <node> iter_stmt
 %type <node> stmt_list
+%type <node> return_stmt
 
 %% /* Grammar rules and actions follow */
 
@@ -160,6 +161,17 @@ stmt: 	expr SEMICOLON
 		{
 			$$ = create_stmt($1);
 		}
+		|
+		return_stmt
+		{
+			$$ = create_stmt($1);
+		}
+;
+
+return_stmt: RETURN expr
+			{
+				$$ = create_return_stmt($2);
+			}
 ;
 
 select_stmt: IF BRACKET_OPEN expr BRACKET_CLOSE stmt
@@ -315,14 +327,14 @@ function_def: IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPE
 				}
 ;
 
-function_body: global_var_list stmt_list RETURN expr SEMICOLON
+function_body: global_var_list stmt_list SEMICOLON
 				{
-					$$ = create_function_body($1, $2, $4);
+					$$ = create_function_body($1, $2);
 				}
 				|
 				stmt_list RETURN expr SEMICOLON
 				{
-					$$ = create_function_body(NULL, $1, $3);
+					$$ = create_function_body(NULL, $1);
 				}
 ;
 
