@@ -1,5 +1,5 @@
 var nodeTypes = {
-	program: {children: ["type_decl_list", "global_var_list"]},
+	program: {children: ["type_decl_list", "global_var_list", "functions"]},
 	type_decl_list: {children: ["type_decl_list", "type_decl"]},
 	type_decl: {children: ["type_iden", "var_name_iden"]},
 	var_name_iden: {children: ["identifier", "array_decl"]},
@@ -30,7 +30,7 @@ var nodeTypes = {
 	param_list: {children: ["param", "param_list"]},
 	param: {children: ["type_iden", "iden"]},
 	function_body: {children: ["global_var_list", "return_expr"]},
-	function_def: {children: ["type_decl", "iden", "param_list", "function_body"]},
+	function_def: {children: ["iden", "param_list", "function_body"]},
 	function_def_list: {children: ["function_def", "function_def_list"]}
 }
 
