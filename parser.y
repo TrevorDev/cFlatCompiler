@@ -100,6 +100,10 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> type_iden
 %type <node> array_decl
 %type <node> variable
+%type <node> param
+%type <node> param_list
+%type <node> function_def
+%type <node> function_body
 %type <node> non_rec_variable
 %type <node> assignment
 
@@ -118,9 +122,9 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 
 %% /* Grammar rules and actions follow */
 
-program:	type_decl_list global_var_list END_OF_FILE // function_def_list
+program:	type_decl_list global_var_list END_OF_FILE 
 				{
-					rootNode = create_program($1, $2);
+					rootNode = create_program($1, $2, NULL);
 					return 0;
 				}
 ;
@@ -219,6 +223,51 @@ function_call:  IDENTIFIER BRACKET_OPEN comma_expr_list BRACKET_CLOSE
 					$$ = create_function_call(temp, NULL);
 				}
 ;
+
+function_def: IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPEN function_body CONTROL_BLOCK_CLOSE
+				{
+					Node * temp = create_identifier($1);
+					$$ = create_function_def(temp, $3, $6);
+				}
+				|
+				IDENTIFIER BRACKET_OPEN BRACKET_CLOSE CONTROL_BLOCK_OPEN function_body CONTROL_BLOCK_CLOSE
+				{
+					Node * temp = create_identifier($1);
+					$$ = create_function_def(temp, NULL, $5);
+				}
+				|
+				IDENTIFIER BRACKET_OPEN VOID_LIT BRACKET_CLOSE CONTROL_BLOCK_OPEN function_body CONTROL_BLOCK_CLOSE
+				{
+					Node * temp = create_identifier($1);
+					Node * temp2 = create_base_type_lit($3);
+					$$ = create_function_def(temp, temp2, $6);
+				}
+;
+
+function_body: global_var_list RETURN expr SEMICOLON
+				{
+					$$ = create_function_body($1, $3);
+				}
+;
+
+param_list: param COMMA param_list
+				{
+					$$ = create_param_list($1, $3);
+				}
+				|
+				param
+				{
+					$$ = create_param_list($1, NULL);
+				}
+;
+
+param: type_iden IDENTIFIER
+				{
+					Node * temp = create_identifier($2);
+					$$ = create_param($1, temp);
+				}
+;
+
 comma_expr_list: expr
 				{
 					$$ = create_comma_expr_list($1, NULL);
@@ -292,6 +341,11 @@ assign_var_list: assign_var_list assign_var_decl
 ;
 
 assign_var_decl: type_iden comma_iden_assign_list SEMICOLON
+				{
+					$$ = create_assign_var_decl($1, $2);
+				}
+				|
+				type_iden function_def
 				{
 					$$ = create_assign_var_decl($1, $2);
 				}
