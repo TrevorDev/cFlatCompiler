@@ -1,0 +1,61 @@
+/* typedefs */
+typedef x int;
+typedef y int[3];
+
+/* global variables */
+int z = 2, a[3] = {1, 2, 3}, b[5] = {0};
+char c, d = 'A';
+float e = 3.0f, 3e6, -0.5f;
+
+/* functions */
+
+void unused_function()
+{
+	return;
+}
+
+void another_unused_function(int a, char b, float c)
+{
+	return;
+} 
+
+float subtract_a_litte_bit(float f)
+{
+	return f - 0.05;
+}
+
+void increment(float f)
+{
+	/* this works because C flat passes by reference */
+	f += 1.0f;
+}
+
+int main(void)
+{
+	float f, g, h;
+	f = 1.0f;
+
+	if (f > 0.5f) {
+		while (f > 0.0f) {
+			f = f - 0.1;
+			f = subtract_a_litte_bit(f);
+			putc('S');
+		}
+	}
+	else {
+		puti(-1);
+	}
+
+	if (f > 1000.0f) {
+		puti(-1);
+	}
+	else {
+		for (f = 0.0f; f < 10.0f; f++) {
+			increment(f);
+			f = f + 1.0f;
+		}
+	}
+
+	putf(0.0f);
+	return 0;
+}
