@@ -29,9 +29,15 @@ var nodeTypes = {
 	function_call: {children: ["iden", "expr_list"]},
 	param_list: {children: ["param", "param_list"]},
 	param: {children: ["type_iden", "iden"]},
-	function_body: {children: ["global_var_list", "return_expr"]},
+	function_body: {children: ["global_var_list", "stmt_list", "return_expr"]},
 	function_def: {children: ["iden", "param_list", "function_body"]},
-	function_def_list: {children: ["function_def", "function_def_list"]}
+	function_def_list: {children: ["function_def", "function_def_list"]},
+	stmt: {children: ["child"]},
+	select_stmt: {children: ["expr", "if_block", "else_block"]},
+	expr_or_epmpty: {children: ["expr"]},
+	iter_stmt: {children: ["exp1", "exp2", "exp3", "stmt"]},
+	stmt_list: {children: ["stmt", "stmt_list"]}
+
 }
 
 var typeNames = []

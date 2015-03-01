@@ -120,25 +120,96 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> comma_expr_list
 %type <node> function_call
 
+%type <node> stmt
+%type <node> select_stmt
+%type <node> expr_or_epmpty
+%type <node> iter_stmt
+%type <node> stmt_list
+
 %% /* Grammar rules and actions follow */
 
 program:	type_decl_list global_var_list END_OF_FILE 
+			{
+				rootNode = create_program($1, $2, NULL);
+				return 0;
+			}
+			|
+			type_decl_list END_OF_FILE 
+			{
+				rootNode = create_program($1, NULL, NULL);
+				return 0;
+			}
+;
+
+stmt: 	expr SEMICOLON
+		{
+			$$ = create_stmt($1);
+		}
+		|
+		CONTROL_BLOCK_OPEN stmt_list CONTROL_BLOCK_CLOSE
+		{
+			$$ = create_stmt($2);
+		}
+		|
+		select_stmt
+		{
+			$$ = create_stmt($1);
+		}
+		|
+		iter_stmt
+		{
+			$$ = create_stmt($1);
+		}
+;
+
+select_stmt: IF BRACKET_OPEN expr BRACKET_CLOSE stmt
+			{
+				$$ = create_select_stmt($3, $5, NULL);
+			}
+			|
+			IF BRACKET_OPEN expr BRACKET_CLOSE stmt ELSE stmt
+			{
+				$$ = create_select_stmt($3, $5, $7);
+			}
+;
+
+expr_or_epmpty: expr
 				{
-					rootNode = create_program($1, $2, NULL);
-					return 0;
+					$$ = NULL;
 				}
+				|
+				/* empty */
+				{
+					$$ = NULL;
+				}
+;
+
+iter_stmt: WHILE BRACKET_OPEN expr BRACKET_CLOSE stmt
+			{
+				$$ = create_iter_stmt($3, NULL, NULL, $5);
+			}
+			|
+			FOR BRACKET_OPEN expr_or_epmpty SEMICOLON expr_or_epmpty SEMICOLON expr_or_epmpty BRACKET_CLOSE stmt
+			{
+				$$ = create_iter_stmt($3, $5, $7, $9);
+			}
+;
+
+stmt_list:  stmt stmt_list
+			{
+				$$ = create_stmt_list($1, $2);
+			}
+			|
+			stmt
+			{
+				$$ = create_stmt_list($1, NULL);
+			}
 ;
 
 global_var_list: assign_var_list
 				{
 					printf("global var list\n");
 					$$ = create_global_var_list($1);
-				}
-				|
-				/*Empty*/
-				{
-					printf("empty global_var_list\n");
-					$$ = NULL;
 				}
 ;
 
@@ -244,9 +315,14 @@ function_def: IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPE
 				}
 ;
 
-function_body: global_var_list RETURN expr SEMICOLON
+function_body: global_var_list stmt_list RETURN expr SEMICOLON
 				{
-					$$ = create_function_body($1, $3);
+					$$ = create_function_body($1, $2, $4);
+				}
+				|
+				stmt_list RETURN expr SEMICOLON
+				{
+					$$ = create_function_body(NULL, $1, $3);
 				}
 ;
 
@@ -329,7 +405,7 @@ struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN assign_var_list CONTROL_BLOCK_C
 				}
 ;
 
-assign_var_list: assign_var_list assign_var_decl
+assign_var_list: assign_var_decl assign_var_list
 				{
 					$$ = create_assign_var_list($1, $2);
 				}
