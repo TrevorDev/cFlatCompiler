@@ -333,8 +333,7 @@ function_def: IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPE
 
 function_body: stmt_list
 				{
-					//$$ = create_function_body($1, $2);
-					$$ = create_function_body(NULL, $1);
+					$$ = create_function_body($1);
 				}
 ;
 

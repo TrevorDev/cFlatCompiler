@@ -29,7 +29,7 @@ var nodeTypes = {
 	function_call: {children: ["iden", "expr_list"]},
 	param_list: {children: ["param", "param_list"]},
 	param: {children: ["type_iden", "iden"]},
-	function_body: {children: ["global_var_list", "stmt_list"]},
+	function_body: {children: ["stmt_list"]},
 	function_def: {children: ["iden", "param_list", "function_body"]},
 	function_def_list: {children: ["function_def", "function_def_list"]},
 	stmt: {children: ["child"]},
