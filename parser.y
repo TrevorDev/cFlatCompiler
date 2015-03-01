@@ -103,6 +103,9 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %type <node> assign_var_list
 %type <node> comma_iden_assign_list
 
+%type <node> array_defin
+%type <node> comma_expr_list
+
 %% /* Grammar rules and actions follow */
 
 program:	type_decl_list global_var_list END_OF_FILE // function_def_list
@@ -185,6 +188,23 @@ variable:		non_rec_variable
 array_decl: SQUARE_OPEN expr SQUARE_CLOSE
 				{
 					$$ = create_array_decl($2);
+				}
+;
+
+array_defin: CONTROL_BLOCK_OPEN comma_expr_list CONTROL_BLOCK_CLOSE
+				{
+					$$ = create_array_defin($2);
+				}
+;
+
+comma_expr_list: expr
+				{
+					$$ = create_comma_expr_list($1, NULL);
+				}
+				|
+				expr COMMA comma_expr_list
+				{
+					$$ = create_comma_expr_list($1, $3);
 				}
 ;
 
@@ -299,6 +319,11 @@ expr: 			INT
 				{
 					Node * temp = create_char_val($1);
 					$$ = create_expr(temp, NULL, NULL);
+				}
+				|
+				array_defin
+				{
+					$$ = create_expr($1, NULL, NULL);
 				}
 				|
 				variable
