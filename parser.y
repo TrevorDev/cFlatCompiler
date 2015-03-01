@@ -7,10 +7,11 @@
 //#include "graph.h"
 #include "nodes.h"
 
-extern int yylineno, commentsOn;
+extern int yylineno, commentsOn, tokenpos, tokenlen;
 void yyerror(const char *msg);
 
 int errorCount = 0;
+extern char *linebuf;
 
 Node * rootNode;
 int yylex();
@@ -493,6 +494,8 @@ expr: 			INT
 
 void yyerror(const char* msg) {
 	fprintf(stderr, "%s on line %d\n", msg, yylineno);
+	printf("\t%s\n", linebuf);
+    printf("\t%*s\n", 1+tokenpos - tokenlen, "^");
 	errorCount++;
 	if (errorCount == 5) {
 		fprintf(stderr, "Aborting compilation process - 5 syntax errors have been detected.\n");

@@ -6,14 +6,5 @@ typedef x y;
 /* comment int x */
 /* comment int x */
 
-a;
-
-foo;
-
-foo;
-foo;
-foo;
-foo;
-foo;
-
+float i 
 int x;
