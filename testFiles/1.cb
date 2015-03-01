@@ -1,22 +1,21 @@
 /* typedefs */
-typedef x int;
-typedef y int[3];
+typedef int km_per_hour;
+typedef int points[3];
 
-/* global variables */
 int z = 2, a[3] = {1, 2, 3}, b[5] = {0};
 char c, d = 'A';
-float e = 3.0f, 3e6, -0.5f;
+float e = 3.0, f = 3.0e6, g = -0.5;
+
 
 /* functions */
-
-void unused_function()
+void unused_function(int a)
 {
-	return;
+	x = x + 1;
 }
 
 void another_unused_function(int a, char b, float c)
 {
-	return;
+	return 0;
 } 
 
 float subtract_a_litte_bit(float f)
@@ -26,7 +25,7 @@ float subtract_a_litte_bit(float f)
 
 void increment(float f)
 {
-	/* this works because C flat passes by reference */
+	/* this works because C flat passes by reference
 	f += 1.0f;
 }
 

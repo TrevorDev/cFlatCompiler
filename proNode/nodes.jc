@@ -1,19 +1,24 @@
 //THIS FILE IS GENERATED IN proNode/nodes.jc
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "nodes.h"
+
 int nodeId = 0;
 FILE* fp;
 
-
-Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int parentId)){
+Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int parentId)) {
 	Node *ret = malloc(sizeof(*ret));
+	if (!ret) {
+		perror("malloc");
+		exit(1);
+	}
 	ret->nodeType = t;
 	ret->printNode = printNode;
 	return ret;
 }
 
-void printTree(Node *node, int parentId){
+void printTree(Node *node, int parentId) {
 	if (node) {
 		node->printNode(node, parentId);
  	}
@@ -29,10 +34,8 @@ void printTree(Node *node, int parentId){
 	fclose(fp);
 }
 
-void printNode(char *label, int myNodeId, int parentId){
-
+void printNode(char *label, int myNodeId, int parentId) {
 	fprintf(fp, "\t%d [label=\"%s\", shape=box];\n", myNodeId, label);
-
 
 	if (parentId > 0) {
 		fprintf(fp, "\t%d -> %d;\n", parentId, myNodeId);
@@ -40,40 +43,34 @@ void printNode(char *label, int myNodeId, int parentId){
 }
 
 <% for (var key in nodeTypes) { %>
-	Node *create_<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node * "+val}).concat(nodeTypes[key].val.map(function(val){return val.type+" "+val.name})).join(", ") %> ){
-
-
-		Node *ret = create_Node(<%- key+"_t" %>, &<%- key+"_p" %>);
-		<%- nodeTypes[key].children.map(function(val){return "ret->children."+key+"."+val+" = "+val+";"}).concat(nodeTypes[key].val.map(function(val){ return "ret->children."+key+"."+val.name+"="+val.name+";"})).join("\n\t\t") %>
-		
-		return ret;
-	}
+Node *create_<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node *"+val}).concat(nodeTypes[key].val.map(function(val){return val.type+" "+val.name})).join(", ") %>) {
+	Node *ret = create_Node(<%- key+"_t" %>, &<%- key+"_p" %>);
+	<%- nodeTypes[key].children.map(function(val){return "ret->children."+key+"."+val+" = "+val+";"}).concat(nodeTypes[key].val.map(function(val){ return "ret->children."+key+"."+val.name+"="+val.name+";"})).join("\n\t\t") %>
+	return ret;
+}
 <% }; %>
 
 <% for (var key in nodeTypes) { %>
-	void <%- key %>_p(Node * node, int parentId){
-		nodeId++;
-		int myNodeId = nodeId;
-		int temp = 0;
-		<%- nodeTypes[key].children.map(function(val){return "printTree(node->children."+key+"."+val+", myNodeId);"}).join("\n\t\t") %>
-		<%- "printNode(\""+key+"\", myNodeId, parentId);" %>
+void <%- key %>_p(Node * node, int parentId){
+	nodeId++;
+	int myNodeId = nodeId;
+	int temp = 0;
+	<%- nodeTypes[key].children.map(function(val){return "printTree(node->children."+key+"."+val+", myNodeId);"}).join("\n\t\t") %>
+	<%- "printNode(\""+key+"\", myNodeId, parentId);" %>
 
-		<%- nodeTypes[key].val.map(function(val){
-			var cPrintSyn = "%s";
-			if(val.type == "int"){
-				cPrintSyn = "%d";
-			}else if(val.type == "float"){
-				cPrintSyn = "%f";
-			}else if(val.type == "char"){
-				cPrintSyn = "%c";
-			}
-			var top = "nodeId++;temp = nodeId;\n"
-			var a = 'fprintf(fp, "%d [label='+'\\"'+cPrintSyn+'\\"'+', shape=box];", temp, node->children.'+key+'.'+val.name+');\n'
-			var b = 'fprintf(fp, "%d -> %d;", myNodeId, temp);'
-			return top+a+b}) 
-		%>
-		
-		
-		
-	};
+	<%- nodeTypes[key].val.map(function(val){
+		var cPrintSyn = "%s";
+		if(val.type == "int"){
+			cPrintSyn = "%d";
+		}else if(val.type == "float"){
+			cPrintSyn = "%f";
+		}else if(val.type == "char"){
+			cPrintSyn = "%c";
+		}
+		var top = "nodeId++;\n\ttemp = nodeId;\n\t"
+		var a = 'fprintf(fp, "%d [label='+'\\"'+cPrintSyn+'\\"'+', shape=box];", temp, node->children.'+key+'.'+val.name+');\n\t'
+		var b = 'fprintf(fp, "%d -> %d;", myNodeId, temp);'
+		return top+a+b}) 
+	%>	
+};
 <% }; %>

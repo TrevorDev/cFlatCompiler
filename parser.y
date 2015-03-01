@@ -91,6 +91,9 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %right SIZE_OF NOT 
 %precedence NEG
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
+
 // Types
 %type <node> program
 %type <node> type_decl_list
@@ -122,7 +125,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 
 %type <node> stmt
 %type <node> select_stmt
-%type <node> expr_or_epmpty
+%type <node> expr_or_empty
 %type <node> iter_stmt
 %type <node> stmt_list
 %type <node> return_stmt
@@ -134,47 +137,47 @@ program:	type_decl_list global_var_list END_OF_FILE
 				rootNode = create_program($1, $2, NULL);
 				return 0;
 			}
-			|
-			type_decl_list END_OF_FILE 
-			{
-				rootNode = create_program($1, NULL, NULL);
-				return 0;
-			}
 ;
 
 stmt: 	expr SEMICOLON
 		{
+			printf("stmt: caught expression statement\n");
 			$$ = create_stmt($1);
 		}
 		|
 		CONTROL_BLOCK_OPEN stmt_list CONTROL_BLOCK_CLOSE
 		{
+			printf("stmt: caught { stmt list }\n");
 			$$ = create_stmt($2);
 		}
 		|
 		select_stmt
 		{
+			printf("stmt: caught select statement\n");
 			$$ = create_stmt($1);
 		}
 		|
 		iter_stmt
 		{
+			printf("stmt: caught iterative statement\n");
 			$$ = create_stmt($1);
 		}
 		|
 		return_stmt
 		{
+			printf("stmt: caught return statement\n");
 			$$ = create_stmt($1);
 		}
 ;
 
-return_stmt: RETURN expr
+return_stmt: RETURN expr_or_empty SEMICOLON
 			{
+				printf("caught return_stmt\n");
 				$$ = create_return_stmt($2);
 			}
 ;
 
-select_stmt: IF BRACKET_OPEN expr BRACKET_CLOSE stmt
+select_stmt: IF BRACKET_OPEN expr BRACKET_CLOSE stmt %prec LOWER_THAN_ELSE
 			{
 				$$ = create_select_stmt($3, $5, NULL);
 			}
@@ -185,9 +188,9 @@ select_stmt: IF BRACKET_OPEN expr BRACKET_CLOSE stmt
 			}
 ;
 
-expr_or_epmpty: expr
+expr_or_empty: expr
 				{
-					$$ = NULL;
+					$$ = $1;
 				}
 				|
 				/* empty */
@@ -201,7 +204,7 @@ iter_stmt: WHILE BRACKET_OPEN expr BRACKET_CLOSE stmt
 				$$ = create_iter_stmt($3, NULL, NULL, $5);
 			}
 			|
-			FOR BRACKET_OPEN expr_or_epmpty SEMICOLON expr_or_epmpty SEMICOLON expr_or_epmpty BRACKET_CLOSE stmt
+			FOR BRACKET_OPEN expr_or_empty SEMICOLON expr_or_empty SEMICOLON expr_or_empty BRACKET_CLOSE stmt
 			{
 				$$ = create_iter_stmt($3, $5, $7, $9);
 			}
@@ -220,27 +223,24 @@ stmt_list:  stmt stmt_list
 
 global_var_list: assign_var_list
 				{
-					printf("global var list\n");
+					printf("caught global var list\n");
 					$$ = create_global_var_list($1);
 				}
 ;
 
 type_decl_list: type_decl_list type_decl
 				{
-					printf("typedec list\n");
 					$$ = create_type_decl_list($1, $2);
 				}
 				|
 				/*Empty*/
 				{
-					printf("empty typedec\n");
 					$$ = NULL;
 				}
 ;
 
 type_decl: TYPEDEF type_iden var_name_iden SEMICOLON
 				{
-					printf("decl found\n");
 					$$ = create_type_decl($2, $3);
 				}
 ;
@@ -296,55 +296,63 @@ array_defin: CONTROL_BLOCK_OPEN comma_expr_list CONTROL_BLOCK_CLOSE
 
 function_call:  IDENTIFIER BRACKET_OPEN comma_expr_list BRACKET_CLOSE
 				{
-					Node * temp = create_identifier($1);
+					Node *temp = create_identifier($1);
 					$$ = create_function_call(temp, $3);
 				}
 				|
 				IDENTIFIER BRACKET_OPEN BRACKET_CLOSE
 				{
-					Node * temp = create_identifier($1);
+					Node *temp = create_identifier($1);
 					$$ = create_function_call(temp, NULL);
 				}
 ;
 
 function_def: IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPEN function_body CONTROL_BLOCK_CLOSE
 				{
-					Node * temp = create_identifier($1);
+					printf("caught function def\n");
+					Node *temp = create_identifier($1);
 					$$ = create_function_def(temp, $3, $6);
+				}
+				|
+				IDENTIFIER BRACKET_OPEN param_list BRACKET_CLOSE CONTROL_BLOCK_OPEN CONTROL_BLOCK_CLOSE
+				{
+					printf("caught function def 0.5\n");
+					Node *temp = create_identifier($1);
+					$$ = create_function_def(temp, $3, NULL);
 				}
 				|
 				IDENTIFIER BRACKET_OPEN BRACKET_CLOSE CONTROL_BLOCK_OPEN function_body CONTROL_BLOCK_CLOSE
 				{
-					Node * temp = create_identifier($1);
+					printf("caught function def 1\n");
+					Node *temp = create_identifier($1);
 					$$ = create_function_def(temp, NULL, $5);
 				}
 				|
 				IDENTIFIER BRACKET_OPEN VOID_LIT BRACKET_CLOSE CONTROL_BLOCK_OPEN function_body CONTROL_BLOCK_CLOSE
 				{
-					Node * temp = create_identifier($1);
-					Node * temp2 = create_base_type_lit($3);
+					printf("caught function def 2\n");
+					Node *temp = create_identifier($1);
+					Node *temp2 = create_base_type_lit($3);
 					$$ = create_function_def(temp, temp2, $6);
 				}
 ;
 
-function_body: global_var_list stmt_list SEMICOLON
+function_body: global_var_list stmt_list
 				{
+					printf("caught function body\n");
 					$$ = create_function_body($1, $2);
-				}
-				|
-				stmt_list RETURN expr SEMICOLON
-				{
-					$$ = create_function_body(NULL, $1);
 				}
 ;
 
 param_list: param COMMA param_list
 				{
+					printf("param_list: caught param list\n");
 					$$ = create_param_list($1, $3);
 				}
 				|
 				param
 				{
+					printf("param_list: caught param\n");
 					$$ = create_param_list($1, NULL);
 				}
 ;
@@ -419,50 +427,59 @@ struct_def: STRUCT IDENTIFIER CONTROL_BLOCK_OPEN assign_var_list CONTROL_BLOCK_C
 
 assign_var_list: assign_var_decl assign_var_list
 				{
+					printf("assign_var_list: caught assign_var_decl assign_var_list\n");
 					$$ = create_assign_var_list($1, $2);
 				}
 				|
 				assign_var_decl
-				{
+				{  
+					printf("assign_var_list: caught assign_var_decl\n");
 					$$ = create_assign_var_list(NULL, $1);
 				}
 ;
 
 assign_var_decl: type_iden comma_iden_assign_list SEMICOLON
 				{
+					printf("assign_var_decl: caught type_iden comma_iden_assign_list SEMICOLON\n");
 					$$ = create_assign_var_decl($1, $2);
 				}
 				|
 				type_iden function_def
 				{
+					printf("assign_var_decl: caught type_iden function_def\n");
 					$$ = create_assign_var_decl($1, $2);
 				}
 ;
 
 comma_iden_assign_list: assign_var_name_iden COMMA comma_iden_assign_list 
 				{
+					printf("comma_iden_assign_list: caught assign_var_name_iden COMMA comma_iden_assign_list\n");
 					$$ = create_comma_iden_assign_list($1, $3);
 				}
 				|
 				assign_var_name_iden
 				{
+					printf("comma_iden_assign_list: caught assign_var_name_iden\n");
 					$$ = create_comma_iden_assign_list($1, NULL);
 				}
 ;
 
 assign_var_name_iden: var_name_iden 
 				{
+					printf("assign_var_name_iden: caught var_name_iden \n");
 					$$ = create_assign_var_name_iden($1, NULL);
 				}
 				| 
 				var_name_iden ASSIGNMENT expr
 				{
+					printf("assign_var_name_iden: var_name_iden ASSIGNMENT expr\n");
 					$$ = create_assign_var_name_iden($1, $3);
 				}
 ;
 
 assignment: variable ASSIGNMENT expr
  				{
+ 					printf("caught assignment\n");
  					$$ = create_assignment($1, $3);
  				}
 ;
@@ -631,13 +648,12 @@ expr: 			INT
 				}
 ;
 
-
 %%
 
 void yyerror(const char* msg) {
 	fprintf(stderr, "%s on line %d\n", msg, yylineno);
-	printf("\t%s\n", linebuf);
-    printf("\t%*s\n", 1+tokenpos - tokenlen, "^");
+	printf("%s\n", linebuf);
+    printf("%*s\n", 1+tokenpos /*- tokenlen*/, "^");
 	errorCount++;
 	if (errorCount == 5) {
 		fprintf(stderr, "Aborting compilation process - 5 syntax errors have been detected.\n");
@@ -647,14 +663,14 @@ void yyerror(const char* msg) {
 		int t;
 		t = yylex();
 		if (t == SEMICOLON || t == CONTROL_BLOCK_CLOSE) {
+			printf("hit semicolon or control block close\n");
 			break;
 		}
 	}
 	yyparse();
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 	int x;
 
 	syntaxAnalysisOutput = 0;

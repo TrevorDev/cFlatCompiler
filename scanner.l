@@ -17,7 +17,7 @@ CHARACTER ['].[']
 
 %%
 
-\n.*    { tokenpos = 0; free(linebuf); linebuf = strdup(yytext+1); yyless(1); }
+<INITIAL>\n.*    { tokenpos = 0; free(linebuf); linebuf = strdup(yytext+1); yyless(1); }
 
 '	{
 	tokenlen = yyleng;
@@ -187,8 +187,6 @@ CHARACTER ['].[']
 }
 
 "/\*"	{
-tokenlen = yyleng;
-tokenpos += yyleng;	
 	tokenpos = 0;
 	commentsOn = 1;
 	BEGIN(C_COMMENT);
@@ -311,7 +309,7 @@ tokenpos += yyleng;
 "void"	{
 	tokenlen = yyleng;
 	tokenpos += yyleng;
-	yylval.sval = strdup("void");
+	yylval.sval = strdup("float");
 	return VOID_LIT;
 }
 

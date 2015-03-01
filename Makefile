@@ -36,9 +36,9 @@ lex.yy.c: scanner.l
 run: all
 	./cflatc < testFiles/ints.txt
 
-graph: run
+graph: all
 	-rm -f graph.txt graph.png
-	./cflatc -a < testFiles/ints.txt
+	./cflatc -a < testFiles/1.cb
 	dot -Tpng graph.txt -o graph.png
 
 clean: 
