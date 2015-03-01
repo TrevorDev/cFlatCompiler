@@ -433,12 +433,6 @@ expr: 			INT
 					$$ = create_expr($1, temp, $3);
 				}
 				|
-				expr MINUS expr
-				{
-					Node * temp = create_operator($2);
-					$$ = create_expr($1, temp, $3);
-				}
-				|
 				expr STAR expr
 				{
 					Node * temp = create_operator($2);
