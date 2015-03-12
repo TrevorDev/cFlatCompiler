@@ -5,8 +5,8 @@
 #include "hashtable.h"
 
 struct hashElement {
-	int hash;
-	void *data;
+	void *key, *data;
+	struct hashElement *next;
 };
 
 struct HashTable {
@@ -14,13 +14,14 @@ struct HashTable {
 	struct hashElement **buckets;
 	void (*delete)(void *);
 	unsigned int (*hash)(void *);
+	int (*key_compare)(void *, void *);
 };
 
-HashTable *hash_table_create(unsigned int size, void (*delete)(void *), unsigned int (*hash)(void *))
+HashTable *hash_table_create(unsigned int size, void (*delete)(void *), unsigned int (*hash)(void *), int (*key_compare)(void *, void *))
 {
 	HashTable *h;
 
-	if (!hash) {
+	if (!hash || !key_compare) {
 		return NULL;
 	}
 
@@ -31,6 +32,7 @@ HashTable *hash_table_create(unsigned int size, void (*delete)(void *), unsigned
 	h->size = size;
 	h->buckets = calloc(sizeof(*h->buckets), h->size);
 	h->delete = delete;
+	h->key_compare = key_compare;
 	return h;
 }
 
@@ -55,42 +57,36 @@ void hash_table_destroy(HashTable *h)
 
 void hash_table_insert(HashTable *h, void *key, void *data)
 {
-	int hash;
-	struct hashElement *e;
+	unsigned int hash;
+	struct hashElement *e, *e2;
 
 	if (!h) {
 		return;
 	}
-	hash = h->hash(key);
-	if (h->buckets[hash]) {
-		fprintf(stderr, "Hash table collision on insertion");
-		exit(1);
-	}
+	hash = h->hash(key) % h->size;
 	e = malloc(sizeof(*e));
 	if (!e) {
 		return;
 	}
-	e->hash = hash;
 	e->data = data;
+	e->key = key;
+	e->next = h->buckets[hash];
 	h->buckets[hash] = e;
 }
 
 void *hash_table_retrieve(HashTable *h, void *key)
 {
 	int hash;
+	hashElement *e;
+
 	if (!h) {
 		return NULL;
 	}
-	hash = h->hash(key);
-	if (!h->buckets[hash]) {
-		return NULL;
+	hash = h->hash(key) % h->size;
+	for (e = h->buckets[hash]; e; e = e->next) {
+		if (h->key_compare(key, h->buckets[hash]->key) == 1) {
+			return e->data;
+		}
 	}
-	return h->buckets[hash]->data;
+	return NULL;
 }
-
-
-
-
-
-
-
