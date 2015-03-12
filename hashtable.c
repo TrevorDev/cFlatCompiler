@@ -29,6 +29,7 @@ HashTable *hash_table_create(unsigned int size, void (*delete)(void *), unsigned
 	if (!h) {
 		return NULL;
 	}
+	h->hash = hash;
 	h->size = size;
 	h->buckets = calloc(sizeof(*h->buckets), h->size);
 	h->delete = delete;
@@ -63,7 +64,9 @@ void hash_table_insert(HashTable *h, void *key, void *data)
 	if (!h) {
 		return;
 	}
+	printf("about to hash\n");
 	hash = h->hash(key) % h->size;
+	printf("hash: %d\n", hash);
 	e = malloc(sizeof(*e));
 	if (!e) {
 		return;
@@ -77,14 +80,14 @@ void hash_table_insert(HashTable *h, void *key, void *data)
 void *hash_table_retrieve(HashTable *h, void *key)
 {
 	int hash;
-	hashElement *e;
+	struct hashElement *e;
 
 	if (!h) {
 		return NULL;
 	}
 	hash = h->hash(key) % h->size;
 	for (e = h->buckets[hash]; e; e = e->next) {
-		if (h->key_compare(key, h->buckets[hash]->key) == 1) {
+		if (!h->key_compare(key, e->key)) {
 			return e->data;
 		}
 	}

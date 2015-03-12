@@ -6,6 +6,7 @@
 
 //#include "graph.h"
 #include "nodes.h"
+#include "hashtable.h"
 
 extern int yylineno, commentsOn, tokenpos, tokenlen;
 void yyerror(const char *msg);
@@ -663,14 +664,26 @@ void yyerror(const char* msg) {
 	yyparse();
 }
 
-unsigned int hash (char *s0)
+unsigned int hash (void *v)
 {
+	char *s0 = v;
 	unsigned int h=0;
 	char *s;
-	for (s = s0; *s; s++)
-	h = h*65599 + *s;
+	for (s = s0; *s; s++) {
+		h = h*65599 + *s;
+	}
+	
 	return(h);
 } 
+
+int key_compare(void *k1, void *k2) {
+	printf("in %s with %s and %s\n", __FUNCTION__, (char *) k1, (char *) k2);
+	return strcmp(k1, k2);
+}
+
+void delete(void *v) {
+	return;
+}
 
 int main(int argc, char *argv[]) {
 	int x;
@@ -726,6 +739,20 @@ int main(int argc, char *argv[]) {
 			fprintf(stderr, "invalid C flat code\n");
 		}
 	}
+
+	char *bar = "bar", *blue = "blue";
+	HashTable *h = hash_table_create(1, delete, hash, key_compare);
+	hash_table_insert(h, "foo", bar);
+	hash_table_insert(h, "red", blue);
+	hash_table_insert(h, "red", bar);
+
+	char *s = hash_table_retrieve(h, "foo");
+	printf("foo:%s\n", s);
+
+	printf("red:%s\n", hash_table_retrieve(h, "red"));
+
+	hash_table_destroy(h);
+
 
 	if (syntaxAnalysisOutput){
 		printGraphString(rootNode);
