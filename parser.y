@@ -663,6 +663,15 @@ void yyerror(const char* msg) {
 	yyparse();
 }
 
+unsigned int hash (char *s0)
+{
+	unsigned int h=0;
+	char *s;
+	for (s = s0; *s; s++)
+	h = h*65599 + *s;
+	return(h);
+} 
+
 int main(int argc, char *argv[]) {
 	int x;
 
