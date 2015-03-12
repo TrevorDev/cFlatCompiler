@@ -676,6 +676,13 @@ unsigned int hash (void *v)
 	return(h);
 } 
 
+typedef struct symbolTableType{
+	int size;
+	int array_size;
+};
+
+
+
 int key_compare(void *k1, void *k2) {
 	printf("in %s with %s and %s\n", __FUNCTION__, (char *) k1, (char *) k2);
 	return strcmp(k1, k2);
@@ -741,8 +748,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	char *bar = "bar", *blue = "blue";
-	HashTable *h = hash_table_create(1, delete, hash, key_compare);
-	hash_table_insert(h, "foo", bar);
+	HashTable *global_type_table = hash_table_create(128, delete, hash, key_compare);
+	symbolTableType 
+	hash_table_insert(h, "int",);
 	hash_table_insert(h, "red", blue);
 	hash_table_insert(h, "red", bar);
 
