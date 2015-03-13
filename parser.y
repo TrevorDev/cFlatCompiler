@@ -679,7 +679,8 @@ unsigned int hash (void *v)
 typedef struct symbolTableType{
 	int size;
 	int array_size;
-};
+	struct symbolTableType * refType;
+} symbolTableType;
 
 
 
@@ -690,6 +691,21 @@ int key_compare(void *k1, void *k2) {
 
 void delete(void *v) {
 	return;
+}
+
+HashTable *global_type_table;
+HashTable *global_iden_table;
+HashTable *local_iden_table;
+
+int trav_type_decl_list(Node * n){
+
+}
+
+int trav_tree(Node * n){
+	// if(n->nodeType == type_decl_list_t){
+	// 	trav_type_decl_list(n);
+	// }
+	// trav_tree()
 }
 
 int main(int argc, char *argv[]) {
@@ -747,19 +763,22 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	char *bar = "bar", *blue = "blue";
-	HashTable *global_type_table = hash_table_create(128, delete, hash, key_compare);
-	symbolTableType 
-	hash_table_insert(h, "int",);
-	hash_table_insert(h, "red", blue);
-	hash_table_insert(h, "red", bar);
+	global_type_table = hash_table_create(128, delete, hash, key_compare);
+	{
+		//setup global types
+		symbolTableType int_t = {4, 0, NULL};
+		symbolTableType float_t = {4, 0, NULL};
+		symbolTableType char_t = {4, 0, NULL};
+		hash_table_insert(global_type_table, "int", &int_t);
+		hash_table_insert(global_type_table, "float", &float_t);
+		hash_table_insert(global_type_table, "char", &char_t);
+	}
+	
 
-	char *s = hash_table_retrieve(h, "foo");
-	printf("foo:%s\n", s);
 
-	printf("red:%s\n", hash_table_retrieve(h, "red"));
+	
 
-	hash_table_destroy(h);
+	hash_table_destroy(global_type_table);
 
 
 	if (syntaxAnalysisOutput){

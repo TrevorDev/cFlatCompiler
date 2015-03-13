@@ -62,7 +62,7 @@ runtests: all
 graph: all
 	-rm -f graph.txt graph.png
 	./cflatc -a < testFiles/1.cb
-	dot -Tsvg graph.txt -o graph.svg
+	dot -Tpng graph.txt -o graph.png
 
 clean: 
 	rm -f *.o

@@ -74,3 +74,15 @@ void <%- key %>_p(Node * node, int parentId){
 	%>	
 };
 <% }; %>
+
+int trav_node(Node * node){
+	switch(node->nodeType){
+		<% for (var key in typeNames.map(function(val){return val+"_t"})) { %>
+		case <%- key %>:
+			break;
+		<% }; %>
+		default:
+			printf("BAD NOT TYPE????");
+			break;
+	}
+}

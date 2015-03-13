@@ -33,4 +33,6 @@ Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int pare
 <% for (var key in nodeTypes) { %>
 	void <%- key %>_p(Node * node, int parentId);
 <% }; %>
+
+int trav_node(Node * node);
 #endif
