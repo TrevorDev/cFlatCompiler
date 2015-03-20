@@ -8,7 +8,7 @@ enum ValType {
 	FLOATVAL
 };
 enum NodeType {
-	<%- typeNames.map(function(val){return val+"_t"}).join(",\n\t") %>
+	<%- Object.keys(nodeTypes).map(function(val){return nodeTypes[val].enumType}).join(",\n\t") %>
 };
 
 typedef struct Node{

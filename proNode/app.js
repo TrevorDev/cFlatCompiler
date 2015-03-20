@@ -41,9 +41,9 @@ var nodeTypes = {
 
 }
 
-var typeNames = []
 for(var name in nodeTypes){
-	typeNames.push(name)
+	nodeTypes[name].name = name
+	nodeTypes[name].enumType = name+"_t"
 	if(!nodeTypes[name].val){
 		nodeTypes[name].val = []
 	}
@@ -63,7 +63,7 @@ fs.readFile('nodes.jh', 'utf8', function (err,data) {
 	if (err) {
 		return console.log(err);
 	}
-	var out = ejs.render(data, {typeNames: typeNames, nodeTypes: nodeTypes});
+	var out = ejs.render(data, {nodeTypes: nodeTypes});
 	fs.writeFile("../nodes.h", out, function(err) {
 	    if(err) {
 	        console.log(err);
@@ -77,7 +77,7 @@ fs.readFile('nodes.jc', 'utf8', function (err,data) {
 	if (err) {
 		return console.log(err);
 	}
-	var out = ejs.render(data, {typeNames: typeNames, nodeTypes: nodeTypes});
+	var out = ejs.render(data, {nodeTypes: nodeTypes});
 	//console.log(out);
 	fs.writeFile("../nodes.c", out, function(err) {
 	    if(err) {

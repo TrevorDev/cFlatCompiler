@@ -77,8 +77,9 @@ void <%- key %>_p(Node * node, int parentId){
 
 int trav_node(Node * node){
 	switch(node->nodeType){
-		<% for (var key in typeNames.map(function(val){return val+"_t"})) { %>
-		case <%- key %>:
+		<% for (var key in nodeTypes) { %>
+		case <%- nodeTypes[key].enumType %>:
+			
 			break;
 		<% }; %>
 		default:
