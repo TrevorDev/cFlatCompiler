@@ -7,6 +7,21 @@ enum ValType {
 	STRVAL,
 	FLOATVAL
 };
+
+typedef struct symbolTableType{
+	int size;
+	int array_size;
+	struct symbolTableType * refType;
+	char * baseType;
+} symbolTableType;
+
+typedef struct evaluatedNode{
+	int type;
+	char * strVal;
+	int intVal;
+	float floatVal;
+} evaluatedNode;
+
 enum NodeType {
 	<%- Object.keys(nodeTypes).map(function(val){return nodeTypes[val].enumType}).join(",\n\t") %>
 };
@@ -34,5 +49,5 @@ Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int pare
 	void <%- key %>_p(Node * node, int parentId);
 <% }; %>
 
-int trav_node(Node * node);
+evaluatedNode * trav_node(Node * node);
 #endif

@@ -3,6 +3,11 @@
 #include <stdio.h>
 
 #include "nodes.h"
+#include "hashtable.h"
+
+extern HashTable *global_type_table;
+extern HashTable *global_iden_table;
+extern HashTable *local_iden_table;
 
 int nodeId = 0;
 FILE* fp;
@@ -75,15 +80,82 @@ void <%- key %>_p(Node * node, int parentId){
 };
 <% }; %>
 
-int trav_node(Node * node){
+evaluatedNode * trav_node(Node * node){
+	
+	if(node == NULL){
+		return NULL;
+	}
+	evaluatedNode * ret = calloc(sizeof(*ret), 1);
 	switch(node->nodeType){
 		<% for (var key in nodeTypes) { %>
 		case <%- nodeTypes[key].enumType %>:
-			
+			{
+				printf("%s\n", "<%- nodeTypes[key].enumType %>");
+				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
+					evaluatedNode * <%- cEvNode %> = trav_node(node->children.<%- nodeTypes[key].name %>.<%- nodeTypes[key].children[child] %>);
+				<% }; %>
+
+				<% if (key == nodeTypes.base_type_lit.name) {%>
+					ret->strVal = node->children.base_type_lit.iden;
+				<% } %>
+				<% if (key == nodeTypes.type_iden.name) {%>
+					ret->strVal = type_node->strVal;
+				<% } %>
+				<% if (key == nodeTypes.identifier.name) {%>
+					ret->strVal = node->children.identifier.val;
+				<% } %>
+				<% if (key == nodeTypes.var_name_iden.name) {%>
+					ret->strVal = identifier_node->strVal;
+					if(array_decl_node){
+						ret->intVal = array_decl_node->intVal;
+					}
+				<% } %>
+				<% if (key == nodeTypes.array_decl.name) {%>
+					//TODO ARRAY DECL
+				<% } %>
+				<% if (key == nodeTypes.type_decl.name) {%>
+					//type_iden_node->strVal
+					printf("**%s\n", var_name_iden_node->strVal);
+					if(hash_table_retrieve(global_type_table, var_name_iden_node->strVal)){
+						printf("Duplicate types in type table cant insert %s (%s)\n", var_name_iden_node->strVal, type_iden_node->strVal);
+						exit(0);
+					}else{
+						symbolTableType * typeRef = hash_table_retrieve(global_type_table, type_iden_node->strVal);
+						if(typeRef){
+							symbolTableType * type = calloc(sizeof(*type), 1);
+							type->size = typeRef->size;
+							type->baseType = typeRef->baseType;
+							type->refType = typeRef;
+							type->array_size = 0;/*TODO*/
+							hash_table_insert(global_type_table, var_name_iden_node->strVal, type);
+						}else{
+							printf("Type does not exist\n");
+							exit(0);
+						}
+					}
+					//hash_table_insert(global_type_table, 
+				<% } %>
+				<% if (key == nodeTypes.type_iden.name) {%>
+				<% } %>
+				<% if (key == nodeTypes.type_iden.name) {%>
+				<% } %>
+				<% if (key == nodeTypes.type_iden.name) {%>
+				<% } %>
+
+				
+
+				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
+					if(<%- cEvNode %>){
+						//free(<%- cEvNode %>->strVal);
+						free(<%- cEvNode %>);
+					}
+				<% }; %>
+			}
 			break;
 		<% }; %>
 		default:
 			printf("BAD NOT TYPE????");
 			break;
 	}
+	return ret;
 }

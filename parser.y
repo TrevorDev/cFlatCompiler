@@ -646,7 +646,7 @@ void yyerror(const char* msg) {
 	lastTokenPlace = 1 + tokenpos - tokenlen;
 
 	fprintf(stderr, "%s on line %d\n", msg, yylineno);
-	printf("%s\n", linebuf);
+	printf("%s\n", linebuf ? linebuf : "");
     printf("%*s\n", 1 + tokenpos - tokenlen, "^");
 	errorCount++;
 	if (errorCount == 5) {
@@ -674,14 +674,7 @@ unsigned int hash (void *v)
 	}
 	
 	return(h);
-} 
-
-typedef struct symbolTableType{
-	int size;
-	int array_size;
-	struct symbolTableType * refType;
-} symbolTableType;
-
+}
 
 
 int key_compare(void *k1, void *k2) {
@@ -766,9 +759,9 @@ int main(int argc, char *argv[]) {
 	global_type_table = hash_table_create(128, delete, hash, key_compare);
 	{
 		//setup global types
-		symbolTableType int_t = {4, 0, NULL};
-		symbolTableType float_t = {4, 0, NULL};
-		symbolTableType char_t = {4, 0, NULL};
+		symbolTableType int_t = {4, 0, NULL, "int"};
+		symbolTableType float_t = {4, 0, NULL, "float"};
+		symbolTableType char_t = {4, 0, NULL, "char"};
 		hash_table_insert(global_type_table, "int", &int_t);
 		hash_table_insert(global_type_table, "float", &float_t);
 		hash_table_insert(global_type_table, "char", &char_t);
@@ -776,11 +769,11 @@ int main(int argc, char *argv[]) {
 	
 
 
-	
+	trav_node(rootNode);
 
 	hash_table_destroy(global_type_table);
 
-
+	
 	if (syntaxAnalysisOutput){
 		printGraphString(rootNode);
 	}
