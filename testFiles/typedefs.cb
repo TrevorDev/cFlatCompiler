@@ -1,12 +1,11 @@
-typedef int foo[2*a];
+typedef int foo[2];
 typedef int w;
 w x, y, z;
 
-
-
-
 int main() {
 	int a;
+	int b;
+	a = 2*b;
 	a = 5;
 	return;
 }

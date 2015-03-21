@@ -312,7 +312,6 @@ evaluatedNode * trav_node(Node * node){
 				<% } %>
 				<% if (key == nodeTypes.non_rec_variable.name) {%>
 					ret->strVal = iden_node->strVal;
-					printf("CHECKING FOR VARIABLE: %s\n",  "FUCK YOU");
 				<% } %>
 
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
