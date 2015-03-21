@@ -664,28 +664,6 @@ void yyerror(const char* msg) {
 	yyparse();
 }
 
-unsigned int hash (void *v)
-{
-	char *s0 = v;
-	unsigned int h=0;
-	char *s;
-	for (s = s0; *s; s++) {
-		h = h*65599 + *s;
-	}
-	
-	return(h);
-}
-
-
-int key_compare(void *k1, void *k2) {
-	//printf("in %s with %s and %s\n", __FUNCTION__, (char *) k1, (char *) k2);
-	return strcmp(k1, k2);
-}
-
-void delete(void *v) {
-	return;
-}
-
 HashTable *global_type_table;
 HashTable *global_iden_table;
 HashTable *local_iden_table;
@@ -769,7 +747,7 @@ int main(int argc, char *argv[]) {
 	
 
 
-	//trav_node(rootNode);
+	trav_node(rootNode);
 
 	hash_table_destroy(global_type_table);
 
