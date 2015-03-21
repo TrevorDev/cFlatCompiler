@@ -776,9 +776,9 @@ int main(int argc, char *argv[]) {
 	global_type_table = hash_table_create(128, delete, hash, key_compare);
 	{
 		//setup global types
-		symbolTableType int_t = {4, 0, NULL, "int"};
-		symbolTableType float_t = {4, 0, NULL, "float"};
-		symbolTableType char_t = {4, 0, NULL, "char"};
+		symbolTableType int_t = {"int", 4, 0, NULL, "int"};
+		symbolTableType float_t = {"float", 4, 0, NULL, "float"};
+		symbolTableType char_t = {"char", 4, 0, NULL, "char"};
 		hash_table_insert(global_type_table, "int", &int_t);
 		hash_table_insert(global_type_table, "float", &float_t);
 		hash_table_insert(global_type_table, "char", &char_t);
@@ -787,6 +787,16 @@ int main(int argc, char *argv[]) {
 
 
 	trav_node(rootNode);
+
+	symbolTableType *foo;
+	foo = hash_table_retrieve_after(global_type_table, NULL);
+	printSymbolTableType(foo);
+	do {
+		foo = hash_table_retrieve_after(global_type_table, foo);
+		if(foo){
+			printSymbolTableType(foo);
+		}
+	} while (foo);
 
 	hash_table_destroy(global_type_table);
 

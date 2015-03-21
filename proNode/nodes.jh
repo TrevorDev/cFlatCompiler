@@ -20,12 +20,14 @@ enum ValType {
 };
 
 typedef struct symbolTableType{
+	char * name;
 	int size;
 	int array_size;
 	struct symbolTableType * refType;
 	char * baseType;
-	HashTable * structIdenTable;
 } symbolTableType;
+
+void printSymbolTableType(symbolTableType * s);
 
 typedef struct symbolTableIden{
 	char * name;

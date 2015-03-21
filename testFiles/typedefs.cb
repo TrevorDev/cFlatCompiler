@@ -1,7 +1,2 @@
-typedef struct {
-	int x, y;
-	float z;
-	char c;
-} foo;
-
+typedef int foo[2];
 int x = 5;

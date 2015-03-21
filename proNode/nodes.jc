@@ -19,6 +19,7 @@ void * insert_to_type_table(char * newTypeName, int array_size, char * refTypeNa
 		symbolTableType * typeRef = hash_table_retrieve(global_type_table, refTypeName);
 		if(typeRef){
 			symbolTableType * type = calloc(sizeof(*type), 1);
+			type->name = newTypeName;
 			type->size = typeRef->size;
 			type->baseType = typeRef->baseType;
 			type->refType = typeRef;
@@ -35,6 +36,10 @@ void * insert_to_type_table(char * newTypeName, int array_size, char * refTypeNa
 	}
 }
 
+void printSymbolTableType(symbolTableType * s){
+	printf("----------------\nname: %s\nsize: %d\narray size: %d\nbase type:%s\n", s->name, s->size, s->array_size, s->baseType);
+
+}
 
 int nodeId = 0;
 FILE* fp;
@@ -228,14 +233,8 @@ evaluatedNode * trav_node(Node * node){
 					ret->intVal = node->children.char_val.val;
 				<% } %>
 				<% if (key == nodeTypes.struct_def.name) {%>
-					char * structName = calloc(sizeof(*structName),100);
-					sprintf(structName, "___tmp_struct_%d", structCounter++);
-					symbolTableType * type = calloc(sizeof(*type), 1);
-					type->size = var_list_node->intVal;
-					type->structIdenTable = local_struct_iden_table;
-					hash_table_insert(global_type_table, structName, type);
-					ret->strVal = structName;
-					local_struct_iden_table == NULL;
+					printf("Structs not supported\n");
+					exit(0);
 				<% } %>
 				<% if (key == nodeTypes.assign_var_list.name) {%>
 					ret->intVal = assign_var_list_node->intVal + assign_var_decl_node->intVal;
