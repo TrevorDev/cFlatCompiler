@@ -10,6 +10,7 @@ float e = 3.0, f = 3.0e6, g = -0.5;
 /* functions */
 void unused_function(int a)
 {
+	y.x = 1;
 	x = x + 1;
 }
 
