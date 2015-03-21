@@ -42,7 +42,7 @@ void printSymbolTableType(symbolTableType * s){
 
 void printSymbolTableIden(symbolTableIden *s)
 {
-	printf("----------------\nname: %s\ntype: %s\n", s->name, s->type->name);
+	printf("----------------\nname: %s\narray size: %d\ntype: %s\n", s->name, s->arraySize, s->type->name);
 }
 
 int nodeId = 0;
