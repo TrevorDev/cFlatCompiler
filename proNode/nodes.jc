@@ -39,22 +39,6 @@ void insert_to_type_table(char * newTypeName, int array_size, char * refTypeName
 void printSymbolTableType(symbolTableType * s){
 	printf("----------------\nname: %s\nsize: %d\narray size: %d\nbase type:%s\n", s->name, s->size, s->array_size, s->baseType);
 }
-/*
-typedef struct symbolTableType{
-	char * name;
-	int size;
-	int array_size;
-	struct symbolTableType * refType;
-	char * baseType;
-} symbolTableType;
-
-void printSymbolTableType(symbolTableType * s);
-
-typedef struct symbolTableIden{
-	char * name;
-	symbolTableType * type;
-} symbolTableIden;
-*/
 
 void printSymbolTableIden(symbolTableIden *s)
 {
