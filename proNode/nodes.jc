@@ -44,15 +44,18 @@ void printSymbolTableType(symbolTableType * s){
 
 void printSymbolTableIden(symbolTableIden *s)
 {
-	printf("----------------\nname: %s\narray size: %d\ntype: %s\n", s->name, s->arraySize, s->type->name);
+	printf("----------------\nname: %s\narray size: %d\ntype: %s\nis func: %d\n", s->name, s->arraySize, s->type->name, s->isFunc);
 }
 
 int nodeId = 0;
 FILE* fp;
 int structCounter = 0;
 
-int insert_symbol_table_iden_entry(char * name, int arraySize, char * type){
-
+int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, char * type){
+	if(!isFunc && strcmp(type, "void") == 0){
+		printf("Non function %s cannot have type void\n", name);
+		exit(0);
+	}
 	HashTable * tableToUse = NULL;
 	if(local_iden_table){
 		tableToUse = local_iden_table;
@@ -70,6 +73,7 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, char * type){
 		}
 		data->name = name;
 		data->type = typeRef;
+		data->isFunc = isFunc;
 		data->arraySize = arraySize > 0 ? arraySize : typeRef->array_size;
 		if(arraySize > 0 && typeRef->array_size > 0){
 			printf("Multi dimensional arrays not supported\n");
@@ -291,7 +295,7 @@ evaluatedNode * trav_node(Node * node){
 				<% if (key == nodeTypes.assign_var_name_iden.name) {%>
 					ret->strVal = var_name_iden_node->strVal;
 
-					insert_symbol_table_iden_entry(var_name_iden_node->strVal, var_name_iden_node->intVal, cur_assign_var_decl_type);
+					insert_symbol_table_iden_entry(var_name_iden_node->strVal, var_name_iden_node->intVal, 0, cur_assign_var_decl_type);
 					//TODO what do with var name iden array decl val
 					//TODO what do with expr child
 				<% } %>
@@ -318,7 +322,7 @@ evaluatedNode * trav_node(Node * node){
 				<% if (key == nodeTypes.function_def.name) {%>
 					iden_node->strVal;
 					cur_assign_var_decl_type;
-					insert_symbol_table_iden_entry(iden_node->strVal, 0, cur_assign_var_decl_type);
+					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, cur_assign_var_decl_type);
 				<% } %>
 
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
