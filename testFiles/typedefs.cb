@@ -1,4 +1,7 @@
-typedef int x[2 + 3];
-typedef x y;
-x test = 5 + 3;
+typedef struct {
+	int x, y;
+	float z;
+	char c;
+} foo;
 
+int x = 5;

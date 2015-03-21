@@ -769,7 +769,7 @@ int main(int argc, char *argv[]) {
 	
 
 
-	trav_node(rootNode);
+	//trav_node(rootNode);
 
 	hash_table_destroy(global_type_table);
 

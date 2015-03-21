@@ -3,14 +3,16 @@
 #include <stdio.h>
 
 #include "nodes.h"
-#include "hashtable.h"
 
 extern HashTable *global_type_table;
+extern HashTable *local_struct_iden_table;
 extern HashTable *global_iden_table;
 extern HashTable *local_iden_table;
 
 int nodeId = 0;
 FILE* fp;
+int structCounter = 0;
+
 
 Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int parentId)) {
 	Node *ret = malloc(sizeof(*ret));
@@ -181,11 +183,21 @@ evaluatedNode * trav_node(Node * node){
 					ret->type = CHARVAL;
 					ret->intVal = node->children.char_val.val;
 				<% } %>
-				<% if (key == nodeTypes.type_iden.name) {%>
+				<% if (key == nodeTypes.struct_def.name) {%>
+					
+					ret->
 				<% } %>
-				<% if (key == nodeTypes.type_iden.name) {%>
+				<% if (key == nodeTypes.assign_var_list.name) {%>
+					ret->intVal = assign_var_list_node->intVal + assign_var_decl_node->intVal;
 				<% } %>
-				<% if (key == nodeTypes.type_iden.name) {%>
+				<% if (key == nodeTypes.assign_var_decl.name) {%>
+					symbolTableType* temp = hash_table_retrieve(global_type_table, type_iden_node->strVal);
+					int size = temp->size;
+					if (temp->array_size > 0){
+						size *= temp->array_size;
+					}
+					printf("SIZE IS %d\n", size);
+					ret->intVal = size;
 				<% } %>
 				<% if (key == nodeTypes.type_iden.name) {%>
 				<% } %>

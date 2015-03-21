@@ -22,7 +22,7 @@ int translate_expr(Node *expr){
 			return T_REAL;
 		}
 	}
-	else if (strcmp(expr.operator.type, "%") == 0){
+	else if (strcmp(expr.operator.type, "%%") == 0){
 		if (right_expr == T_INT) && (left_expr == T_INT){
 			return T_INT;
 		}
@@ -47,7 +47,7 @@ int translate_expr(Node *expr){
 		return T_INT;
 	}
 	else if (strcmp(expr.operator.type, "&&") == 0) ||  (strcmp(expr.operator.type, "||") == 0){
-
+		
 	}
 	else if (strcmp(expr.operator.type, "!") == 0){
 

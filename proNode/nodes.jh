@@ -1,6 +1,7 @@
 //THIS FILE IS GENERATED IN proNode/nodes.jc
 #ifndef NODES_H
 #define NODES_H
+#include "hashtable.h"
 
 enum ValType {
 	NONEVAL,
@@ -15,6 +16,7 @@ typedef struct symbolTableType{
 	int array_size;
 	struct symbolTableType * refType;
 	char * baseType;
+	HashTable * structTable;
 } symbolTableType;
 
 typedef struct evaluatedNode{
