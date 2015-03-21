@@ -15,6 +15,20 @@ int nodeId = 0;
 FILE* fp;
 int structCounter = 0;
 
+int insert_symbol_table_entry(void *key, void *data){
+	if !hash_table_retrieve(local_iden_table, key){
+		hash_table_insert(local_iden_table, key, data)
+		return 1;
+	}
+
+	if !hash_table_retrieve(global_iden_table, key){
+		hash_table_insert(global_iden_table, key, data)
+		return 1;
+	}
+
+	return NULL;
+}
+
 unsigned int hash (void *v)
 {
 	char *s0 = v;
