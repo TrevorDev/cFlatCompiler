@@ -11,6 +11,31 @@ extern HashTable *global_iden_table;
 extern HashTable *local_iden_table;
 char * cur_assign_var_decl_type = NULL;
 
+void * insert_to_type_table(char * newTypeName, int array_size, char * refTypeName){
+	if(hash_table_retrieve(global_type_table, newTypeName)){
+		printf("Duplicate types in type table cant insert %s (%s)\n", newTypeName, refTypeName);
+		exit(0);
+	}else{
+		symbolTableType * typeRef = hash_table_retrieve(global_type_table, refTypeName);
+		if(typeRef){
+			symbolTableType * type = calloc(sizeof(*type), 1);
+			type->size = typeRef->size;
+			type->baseType = typeRef->baseType;
+			type->refType = typeRef;
+			if(typeRef->array_size > 0 && array_size > 0){
+				printf("Error cannot make array of array in cflat\n");
+				exit(0);
+			}
+			type->array_size = array_size;
+			hash_table_insert(global_type_table, newTypeName, type);
+		}else{
+			printf("Type does not exist\n");
+			exit(0);
+		}
+	}
+}
+
+
 int nodeId = 0;
 FILE* fp;
 int structCounter = 0;
@@ -146,31 +171,7 @@ evaluatedNode * trav_node(Node * node){
 					ret->intVal = expr_node->intVal;
 				<% } %>
 				<% if (key == nodeTypes.type_decl.name) {%>
-					//type_iden_node->strVal
-					//printf("**%s\n", var_name_iden_node->strVal);
-					if(hash_table_retrieve(global_type_table, var_name_iden_node->strVal)){
-						printf("Duplicate types in type table cant insert %s (%s)\n", var_name_iden_node->strVal, type_iden_node->strVal);
-						exit(0);
-					}else{
-						symbolTableType * typeRef = hash_table_retrieve(global_type_table, type_iden_node->strVal);
-						if(typeRef){
-							symbolTableType * type = calloc(sizeof(*type), 1);
-							type->size = typeRef->size;
-							type->baseType = typeRef->baseType;
-							type->refType = typeRef;
-							//printf("+++%d %d %d\n", var_name_iden_node->intVal, typeRef->array_size, var_name_iden_node->intVal);
-							if(typeRef->array_size > 0 && var_name_iden_node->intVal > 0){
-								printf("Error cannot make array of array in cflat\n");
-								exit(0);
-							}
-							type->array_size = var_name_iden_node->intVal;
-							hash_table_insert(global_type_table, var_name_iden_node->strVal, type);
-						}else{
-							printf("Type does not exist\n");
-							exit(0);
-						}
-					}
-					//hash_table_insert(global_type_table, 
+					insert_to_type_table(var_name_iden_node->strVal, var_name_iden_node->intVal, type_iden_node->strVal);
 				<% } %>
 				<% if (key == nodeTypes.expr.name) {%>
 					if(node->children.expr.right_expr == NULL){
