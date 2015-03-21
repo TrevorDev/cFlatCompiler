@@ -5,6 +5,8 @@
 
 #include "nodes.h"
 
+extern int symbolTableOutput;
+
 extern HashTable *global_type_table;
 HashTable *local_struct_iden_table;
 extern HashTable *global_iden_table;
@@ -73,11 +75,11 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, char * type){
 			printf("HERE %s\n", name);
 			hash_table_insert(tableToUse, name, data);
 		}else{
-			printf("The type %s does not exist\n", (char*)type);
+			printf("The type %s does not exist\n", (char*) type);
 			exit(0);
 		}
 	}else{
-		printf("%s identifier already exists\n", (char*)name);
+		printf("%s identifier already exists\n", (char*) name);
 		exit(0);
 	}
 

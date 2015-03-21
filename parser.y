@@ -782,29 +782,31 @@ int main(int argc, char *argv[]) {
 	
 	trav_node(rootNode);
 
-	printf("GLOBAL TYPE TABLE:\n");
-	symbolTableType *foo;
-	foo = hash_table_retrieve_after(global_type_table, NULL);
-	if (foo) {
-		printSymbolTableType(foo);
-	}
-	while (foo) {
-		foo = hash_table_retrieve_after(global_type_table, foo);
-		if(foo){
+	if (symbolTableOutput) {
+		printf("GLOBAL TYPE TABLE:\n");
+		symbolTableType *foo;
+		foo = hash_table_retrieve_after(global_type_table, NULL);
+		if (foo) {
 			printSymbolTableType(foo);
 		}
-	}
+		while (foo) {
+			foo = hash_table_retrieve_after(global_type_table, foo);
+			if (foo) {
+				printSymbolTableType(foo);
+			}
+		}
 
-	printf("GLOBAL SYMBOL TABLE:\n\n");
-	symbolTableIden *foo2 = hash_table_retrieve_after(global_iden_table, NULL);
-	if (foo2) {
-		printf("HERES\n");
-		printSymbolTableIden(foo2);
-	}
-	while (foo2) {
-		foo2 = hash_table_retrieve_after(global_iden_table, foo2);
+		printf("GLOBAL SYMBOL TABLE:\n\n");
+		symbolTableIden *foo2 = hash_table_retrieve_after(global_iden_table, NULL);
 		if (foo2) {
+			printf("HERES\n");
 			printSymbolTableIden(foo2);
+		}
+		while (foo2) {
+			foo2 = hash_table_retrieve_after(global_iden_table, foo2);
+			if (foo2) {
+				printSymbolTableIden(foo2);
+			}
 		}
 	}
 
