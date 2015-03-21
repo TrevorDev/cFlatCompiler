@@ -678,7 +678,7 @@ unsigned int hash (void *v)
 
 
 int key_compare(void *k1, void *k2) {
-	printf("in %s with %s and %s\n", __FUNCTION__, (char *) k1, (char *) k2);
+	//printf("in %s with %s and %s\n", __FUNCTION__, (char *) k1, (char *) k2);
 	return strcmp(k1, k2);
 }
 

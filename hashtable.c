@@ -64,9 +64,9 @@ void hash_table_insert(HashTable *h, void *key, void *data)
 	if (!h) {
 		return;
 	}
-	printf("about to hash\n");
+	//printf("about to hash\n");
 	hash = h->hash(key) % h->size;
-	printf("hash: %d\n", hash);
+	//printf("hash: %d\n", hash);
 	e = malloc(sizeof(*e));
 	if (!e) {
 		return;

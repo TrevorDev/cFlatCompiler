@@ -81,16 +81,16 @@ void <%- key %>_p(Node * node, int parentId){
 <% }; %>
 
 evaluatedNode * trav_node(Node * node){
-	
-	if(node == NULL){
-		return NULL;
-	}
 	evaluatedNode * ret = calloc(sizeof(*ret), 1);
+	if(node == NULL){
+		return ret;
+	}
+	
 	switch(node->nodeType){
 		<% for (var key in nodeTypes) { %>
 		case <%- nodeTypes[key].enumType %>:
 			{
-				printf("%s\n", "<%- nodeTypes[key].enumType %>");
+				//printf("%s\n", "<%- nodeTypes[key].enumType %>");
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
 					evaluatedNode * <%- cEvNode %> = trav_node(node->children.<%- nodeTypes[key].name %>.<%- nodeTypes[key].children[child] %>);
 				<% }; %>
@@ -106,12 +106,13 @@ evaluatedNode * trav_node(Node * node){
 				<% } %>
 				<% if (key == nodeTypes.var_name_iden.name) {%>
 					ret->strVal = identifier_node->strVal;
-					if(array_decl_node){
-						ret->intVal = array_decl_node->intVal;
-					}
+					//if(array_decl_node){
+					ret->intVal = array_decl_node->intVal;
+					//}
 				<% } %>
 				<% if (key == nodeTypes.array_decl.name) {%>
-					//TODO ARRAY DECL
+					//printf("HERE %d\n", expr_node->intVal);
+					ret->intVal = expr_node->intVal;
 				<% } %>
 				<% if (key == nodeTypes.type_decl.name) {%>
 					//type_iden_node->strVal
@@ -126,6 +127,10 @@ evaluatedNode * trav_node(Node * node){
 							type->size = typeRef->size;
 							type->baseType = typeRef->baseType;
 							type->refType = typeRef;
+							if(typeRef->array_size > 0 && var_name_iden_node->intVal > 0){
+								printf("Error cannot make array of array in cflat\n");
+								exit(0);
+							}
 							type->array_size = 0;/*TODO*/
 							hash_table_insert(global_type_table, var_name_iden_node->strVal, type);
 						}else{
@@ -135,9 +140,35 @@ evaluatedNode * trav_node(Node * node){
 					}
 					//hash_table_insert(global_type_table, 
 				<% } %>
-				<% if (key == nodeTypes.type_iden.name) {%>
+				<% if (key == nodeTypes.expr.name) {%>
+					// if(node->children.expr.left_expr == NULL){
+					// 	printf("unary\n");
+					// }
+					if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
+						(strcmp(operator_node->strVal, "/") == 0))){
+
+						// int left_expr = translate_expr(expr.left_expr);
+						// int right_expr = translate_expr(expr.right_expr);
+
+						// if (left_expr != T_INT) &&  (left_expr != T_REAL){
+						// 	// ERROR
+						// }
+
+						// if (right_expr != T_INT) && (right_expr != T_REAL){
+						// 	// ERROR
+						// }
+
+						// if (right_expr == T_REAL) || (left_expr == T_REAL){
+						// 	// TYPE PROMOTION
+						// 	return T_REAL;
+						// }
+					}
+					// left_expr_node
+					
+					// right_expr_node
 				<% } %>
-				<% if (key == nodeTypes.type_iden.name) {%>
+				<% if (key == nodeTypes.operator.name) {%>
+					ret->strVal = node->children.operator.type;
 				<% } %>
 				<% if (key == nodeTypes.type_iden.name) {%>
 				<% } %>
