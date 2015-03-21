@@ -669,7 +669,7 @@ HashTable *global_iden_table;
 HashTable *local_iden_table;
 
 int trav_type_decl_list(Node * n){
-
+	return 0;
 }
 
 int trav_tree(Node * n){
@@ -677,6 +677,7 @@ int trav_tree(Node * n){
 	// 	trav_type_decl_list(n);
 	// }
 	// trav_tree()
+	return 0;
 }
 
 unsigned int hash2 (void *v)
@@ -784,19 +785,32 @@ int main(int argc, char *argv[]) {
 		hash_table_insert(global_type_table, "char", &char_t);
 	}
 	
-
-
 	trav_node(rootNode);
 
+	printf("GLOBAL TYPE TABLE:\n");
 	symbolTableType *foo;
 	foo = hash_table_retrieve_after(global_type_table, NULL);
-	printSymbolTableType(foo);
-	do {
+	if (foo) {
+		printSymbolTableType(foo);
+	}
+	while (foo) {
 		foo = hash_table_retrieve_after(global_type_table, foo);
 		if(foo){
 			printSymbolTableType(foo);
 		}
-	} while (foo);
+	}
+
+	printf("GLOBAL SYMBOL TABLE:\n\n");
+	symbolTableIden *foo2 = hash_table_retrieve_after(global_iden_table, NULL);
+	if (foo2) {
+		printSymbolTableIden(foo2);
+	}
+	while (foo2) {
+		foo2 = hash_table_retrieve_after(global_iden_table, foo2);
+		if (foo2) {
+			printSymbolTableIden(foo2);
+		}
+	}
 
 	hash_table_destroy(global_type_table);
 

@@ -27,7 +27,7 @@ typedef struct symbolTableType{
 	char * baseType;
 } symbolTableType;
 
-void printSymbolTableType(symbolTableType * s);
+
 
 typedef struct symbolTableIden{
 	char * name;
@@ -40,6 +40,9 @@ typedef struct evaluatedNode{
 	int intVal;
 	float floatVal;
 } evaluatedNode;
+
+void printSymbolTableType(symbolTableType * s);
+void printSymbolTableIden(symbolTableIden *s);
 
 enum NodeType {
 	<%- Object.keys(nodeTypes).map(function(val){return nodeTypes[val].enumType}).join(",\n\t") %>
