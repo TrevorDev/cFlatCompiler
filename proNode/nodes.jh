@@ -3,9 +3,11 @@
 #define NODES_H
 
 enum ValType {
+	NONEVAL,
 	INTVAL,
 	STRVAL,
-	FLOATVAL
+	FLOATVAL,
+	CHARVAL
 };
 
 typedef struct symbolTableType{
