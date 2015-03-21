@@ -775,9 +775,11 @@ int main(int argc, char *argv[]) {
 		symbolTableType int_t = {"int", 4, 0, NULL, "int"};
 		symbolTableType float_t = {"float", 4, 0, NULL, "float"};
 		symbolTableType char_t = {"char", 4, 0, NULL, "char"};
+		symbolTableType void_t = {"void", 0, 0, NULL, "void"};
 		hash_table_insert(global_type_table, "int", &int_t);
 		hash_table_insert(global_type_table, "float", &float_t);
 		hash_table_insert(global_type_table, "char", &char_t);
+		hash_table_insert(global_type_table, "void", &void_t);
 	}
 	
 	trav_node(rootNode);

@@ -2,7 +2,7 @@ typedef int foo[2];
 typedef int w;
 w x, y, z;
 
-int main() {
+void main() {
 	int a;
 	int b;
 	return;
