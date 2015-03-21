@@ -1,9 +1,10 @@
 typedef int foo[2];
 typedef int w;
+int a;
 w x, y, z;
 
 void main() {
-	int a;
 	int b;
+	b = 2 + a;
 	return;
 }

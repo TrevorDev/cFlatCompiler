@@ -94,13 +94,17 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, char 
 	return 0;
 }
 
-symbolTableType *retrieve_symbol_table_iden_entry(char *key){
-	HashTable *tableToUse = NULL;
+symbolTableIden *retrieve_symbol_table_iden_entry(char *key){
+	symbolTableIden * ret = NULL;
 	if(local_iden_table){
-		tableToUse = local_iden_table;
-	}else{
-		tableToUse = global_iden_table;
+		ret = hash_table_retrieve(local_iden_table, key);
 	}
+
+	if (!ret){
+		ret = hash_table_retrieve(global_iden_table, key);
+	}
+	
+	return ret;
 }
 
 unsigned int hash (void *v)
@@ -300,11 +304,13 @@ evaluatedNode * trav_node(Node * node){
 					//TODO what do with expr child
 				<% } %>
 				<% if (key == nodeTypes.variable.name) {%>
-					symbolTableType *temp = hash_table_retrieve(global_type_table, variable_node->strVal);
-					if (!temp){
+					symbolTableIden *temp2 = retrieve_symbol_table_iden_entry(variable_node->strVal);
+					if (!temp2){
 						printf("Variable '%s' not declared\n", variable_node->strVal);
 						exit(0);
 					}
+					symbolTableType *temp = temp2->type;
+
 					if (strcmp(temp->baseType, "char") == 0){
 						ret->type = CHARVAL;
 					}
