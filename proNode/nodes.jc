@@ -184,8 +184,7 @@ evaluatedNode * trav_node(Node * node){
 					ret->intVal = node->children.char_val.val;
 				<% } %>
 				<% if (key == nodeTypes.struct_def.name) {%>
-					
-					ret->
+
 				<% } %>
 				<% if (key == nodeTypes.assign_var_list.name) {%>
 					ret->intVal = assign_var_list_node->intVal + assign_var_decl_node->intVal;
