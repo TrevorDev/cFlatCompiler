@@ -695,8 +695,8 @@ unsigned int hash2 (void *v)
 int main(int argc, char *argv[]) {
 	int x;
 
-	syntaxAnalysisOutput = 0;
-	symbolTableOutput = 0;
+	syntaxAnalysisOutput = 1;
+	symbolTableOutput = 1;
 	intermediateOutput = 0;
 	asmOutput = 0;
 

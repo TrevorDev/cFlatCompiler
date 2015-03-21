@@ -2,12 +2,11 @@ typedef int foo[2];
 typedef int w;
 w x, y, z;
 
-void a;
 
-/*
-void main() {
+
+
+int main() {
 	int a;
 	a = 5;
 	return;
 }
-*/
