@@ -72,7 +72,7 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, char * type){
 		data->type = typeRef;
 		data->arraySize = arraySize > 0 ? arraySize : typeRef->array_size;
 		if(arraySize > 0 && typeRef->array_size > 0){
-			printf("Multi dim arrays not supported\n");
+			printf("Multi dimensional arrays not supported\n");
 			exit(0);
 		} 
 		if(data->type){
@@ -88,6 +88,15 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, char * type){
 	}
 
 	return 0;
+}
+
+symbolTableType *retrieve_symbol_table_iden_entry(char *key){
+	HashTable *tableToUse = NULL;
+	if(local_iden_table){
+		tableToUse = local_iden_table;
+	}else{
+		tableToUse = global_iden_table;
+	}
 }
 
 unsigned int hash (void *v)
@@ -224,7 +233,6 @@ evaluatedNode * trav_node(Node * node){
 					insert_to_type_table(var_name_iden_node->strVal, var_name_iden_node->intVal, type_iden_node->strVal);
 				<% } %>
 				<% if (key == nodeTypes.expr.name) {%>
-					printf("FUCK\n");
 					if(node->children.expr.right_expr == NULL){
 						ret->type = left_expr_node->type;
 						ret->intVal = left_expr_node->intVal;
@@ -234,7 +242,6 @@ evaluatedNode * trav_node(Node * node){
 					if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
 						(strcmp(operator_node->strVal, "/") == 0))){
 
-						printf("type %d == %d\n", left_expr_node->type, right_expr_node->type);
 						if(left_expr_node->type == right_expr_node->type){
 							ret->type = right_expr_node->type;
 							if(ret->type == INTVAL || ret->type == CHARVAL){
@@ -289,7 +296,6 @@ evaluatedNode * trav_node(Node * node){
 					//TODO what do with expr child
 				<% } %>
 				<% if (key == nodeTypes.variable.name) {%>
-					printf("CHECKING FOR VARIABLE: %s\n",  variable_node->strVal);
 					symbolTableType *temp = hash_table_retrieve(global_type_table, variable_node->strVal);
 					if (!temp){
 						printf("Variable '%s' not declared\n", variable_node->strVal);
