@@ -288,10 +288,6 @@ evaluatedNode * trav_node(Node * node){
 					//TODO what do with var name iden array decl val
 					//TODO what do with expr child
 				<% } %>
-				<% if (key == nodeTypes.var_name_iden.name) {%>
-					ret->strVal = identifier_node->strVal;
-					ret->intVal = array_decl_node->intVal;
-				<% } %>
 				<% if (key == nodeTypes.variable.name) {%>
 					printf("CHECKING FOR VARIABLE: %s\n",  variable_node->strVal);
 					symbolTableType *temp = hash_table_retrieve(global_type_table, variable_node->strVal);
@@ -312,6 +308,11 @@ evaluatedNode * trav_node(Node * node){
 				<% } %>
 				<% if (key == nodeTypes.non_rec_variable.name) {%>
 					ret->strVal = iden_node->strVal;
+				<% } %>
+				<% if (key == nodeTypes.function_def.name) {%>
+					iden_node->strVal;
+					cur_assign_var_decl_type;
+					insert_symbol_table_iden_entry(iden_node->strVal, 0, cur_assign_var_decl_type);
 				<% } %>
 
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
