@@ -220,6 +220,7 @@ evaluatedNode * trav_node(Node * node){
 					type->structIdenTable = local_struct_iden_table;
 					hash_table_insert(global_type_table, structName, type);
 					ret->strVal = structName;
+					local_struct_iden_table == NULL;
 				<% } %>
 				<% if (key == nodeTypes.assign_var_list.name) {%>
 					ret->intVal = assign_var_list_node->intVal + assign_var_decl_node->intVal;
@@ -233,9 +234,20 @@ evaluatedNode * trav_node(Node * node){
 					//printf("SIZE IS %d\n", size);
 					ret->intVal = size;
 				<% } %>
-				<% if (key == nodeTypes.type_iden.name) {%>
+				<% if (key == nodeTypes.assign_var_name_iden.name) {%>
+					ret->strVal = var_name_iden_node->strVal;
+					if(local_struct_iden_table != NULL){
+						symbolTableIden * idenTableEntry = calloc(sizeof(*idenTableEntry), 1);
+						idenTableEntry->name = ret->strVal;
+						idenTableEntry->type = hash_table_retrieve(global_type_table, cur_assign_var_decl_type);
+						hash_table_insert(local_struct_iden_table, ret->strVal, idenTableEntry);
+					}
+					//TODO what do with var name iden array decl val
+					//TODO what do with expr child
 				<% } %>
-				<% if (key == nodeTypes.type_iden.name) {%>
+				<% if (key == nodeTypes.var_name_iden.name) {%>
+					ret->strVal = identifier_node->strVal;
+					ret->intVal = array_decl_node->intVal;
 				<% } %>
 
 				
