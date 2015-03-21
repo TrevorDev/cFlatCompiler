@@ -40,12 +40,14 @@ HashTable *hash_table_create(unsigned int size, void (*delete)(void *), unsigned
 void hash_table_destroy(HashTable *h)
 {
 	int i;
-	if (!h || !h->delete) {
+	if (!h) {
 		return;
 	}
 	for (i = 0; i < h->size; i++) {
 		if (h->buckets[i]) {
-			h->delete(h->buckets[i]->data);
+			if (h->delete) {
+				h->delete(h->buckets[i]->data);
+			}
 			free(h->buckets[i]);
 			h->buckets[i] = NULL;
 		}
@@ -91,5 +93,28 @@ void *hash_table_retrieve(HashTable *h, void *key)
 			return e->data;
 		}
 	}
+	return NULL;
+}
+
+void *hash_table_retrieve_after(HashTable *h, void *data)
+{
+	struct hashElement *e;
+	int i, found;
+
+	if (!h) {
+		return NULL;
+	}
+
+	found = data ? 0 : 1;
+	for (i = 0; i < h->size; i++) {
+		for (e = h->buckets[i]; e; e = e->next) {
+			if (found) {
+				return e->data;
+			}
+			if (e->data == data) {
+				found = 1;
+			}
+		}
+	}	
 	return NULL;
 }

@@ -679,6 +679,24 @@ int trav_tree(Node * n){
 	// trav_tree()
 }
 
+unsigned int hash2 (void *v)
+{
+	char *s0 = v;
+	unsigned int h=0;
+	char *s;
+	for (s = s0; *s; s++) {
+		h = h*65599 + *s;
+	}
+	
+	return(h);
+}
+
+
+int key_compare2(void *k1, void *k2) {
+	//printf("in %s with %s and %s\n", __FUNCTION__, (char *) k1, (char *) k2);
+	return strcmp(k1, k2);
+}
+
 int main(int argc, char *argv[]) {
 	int x;
 
@@ -686,6 +704,27 @@ int main(int argc, char *argv[]) {
 	symbolTableOutput = 0;
 	intermediateOutput = 0;
 	asmOutput = 0;
+
+/*
+	HashTable *h = hash_table_create(100, NULL, hash2, key_compare2);
+	hash_table_insert(h, "trevor", "1");
+	hash_table_insert(h, "eric", "2");
+	hash_table_insert(h, "murray", "3");
+	hash_table_insert(h, "foo", "4");
+	hash_table_insert(h, "li", "5");
+
+	char *foo;
+	foo = hash_table_retrieve_after(h, NULL);
+	printf("initial: %s\n", foo);
+	do {
+		foo = hash_table_retrieve_after(h, foo);
+		printf("%s\n", foo);
+	} while (foo);
+	exit(0);
+	//void *hash_table_retrieve_after(HashTable *h, void *data);
+*/
+
+
 
 	if (argc > 2) { // only one command line argument permitted
 		fprintf(stderr, "Usage: cflatc -[asic]\n");
