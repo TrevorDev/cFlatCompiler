@@ -57,13 +57,17 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, char * type){
 	if(local_iden_table){
 		tableToUse = local_iden_table;
 	}else{
-		printf("global\n");
+		//printf("global\n");
 		tableToUse = global_iden_table;
 	}
 	
 	if (!hash_table_retrieve(tableToUse, name)){
 		symbolTableIden * data = calloc(sizeof(*data), 1);
 		symbolTableType * typeRef = hash_table_retrieve(global_type_table, type);
+		if(!typeRef){
+			printf("Invalid type %s for identifier: %s\n", type, name);
+			exit(0);
+		}
 		data->name = name;
 		data->type = typeRef;
 		data->arraySize = arraySize > 0 ? arraySize : typeRef->array_size;
@@ -72,7 +76,7 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, char * type){
 			exit(0);
 		} 
 		if(data->type){
-			printf("HERE %s\n", name);
+			//printf("HERE %s\n", name);
 			hash_table_insert(tableToUse, name, data);
 		}else{
 			printf("The type %s does not exist\n", (char*) type);
