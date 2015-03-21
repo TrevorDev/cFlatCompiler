@@ -218,26 +218,28 @@ evaluatedNode * trav_node(Node * node){
 					insert_to_type_table(var_name_iden_node->strVal, var_name_iden_node->intVal, type_iden_node->strVal);
 				<% } %>
 				<% if (key == nodeTypes.expr.name) {%>
+					printf("FUCK\n");
 					if(node->children.expr.right_expr == NULL){
 						ret->type = left_expr_node->type;
 						ret->intVal = left_expr_node->intVal;
 						ret->floatVal = left_expr_node->floatVal;
 					}
-					if(operator_node->strVal)
-						//printf("%s\n", operator_node->strVal);
-					//printf("--%d %d\n", left_expr_node->type, right_expr_node->type);
+
 					if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
 						(strcmp(operator_node->strVal, "/") == 0))){
 
+						printf("type %d == %d\n", left_expr_node->type, right_expr_node->type);
 						if(left_expr_node->type == right_expr_node->type){
 							ret->type = right_expr_node->type;
 							if(ret->type == INTVAL || ret->type == CHARVAL){
 								ret->intVal = left_expr_node->intVal + right_expr_node->intVal;
-							}else if(ret->type == FLOATVAL){
+							}
+							else if(ret->type == FLOATVAL){
 								ret->floatVal = left_expr_node->floatVal + right_expr_node->floatVal;
 							}
-						}else {
-							printf("Error incompadible types\n");
+						}
+						else {
+							printf("Error incompatible types\n");
 							exit(0);
 						}
 					}
@@ -284,8 +286,28 @@ evaluatedNode * trav_node(Node * node){
 					ret->strVal = identifier_node->strVal;
 					ret->intVal = array_decl_node->intVal;
 				<% } %>
-
-				
+				<% if (key == nodeTypes.variable.name) {%>
+					printf("CHECKING FOR VARIABLE: %s\n",  variable_node->strVal);
+					symbolTableType *temp = hash_table_retrieve(global_type_table, variable_node->strVal);
+					if (!temp){
+						printf("Variable '%s' not declared\n", variable_node->strVal);
+						exit(0);
+					}
+					if (strcmp(temp->baseType, "char") == 0){
+						ret->type = CHARVAL;
+					}
+					else if (strcmp(temp->baseType, "int") == 0){
+						ret->type = INTVAL;
+					}
+					else if (strcmp(temp->baseType, "float") == 0){
+						ret->type = FLOATVAL;
+					}
+					ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
+				<% } %>
+				<% if (key == nodeTypes.non_rec_variable.name) {%>
+					ret->strVal = iden_node->strVal;
+					printf("CHECKING FOR VARIABLE: %s\n",  "FUCK YOU");
+				<% } %>
 
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
 					if(<%- cEvNode %>){

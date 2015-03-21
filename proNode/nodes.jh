@@ -41,6 +41,7 @@ typedef struct evaluatedNode{
 	char * strVal;
 	int intVal;
 	float floatVal;
+	int deferEval;
 } evaluatedNode;
 
 enum NodeType {

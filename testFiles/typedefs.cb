@@ -1,4 +1,4 @@
-typedef int foo[2];
+typedef int foo[2*a];
 typedef int w;
 w x, y, z;
 /*
