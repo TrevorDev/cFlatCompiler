@@ -692,12 +692,6 @@ unsigned int hash2 (void *v)
 	return(h);
 }
 
-
-int key_compare2(void *k1, void *k2) {
-	//printf("in %s with %s and %s\n", __FUNCTION__, (char *) k1, (char *) k2);
-	return strcmp(k1, k2);
-}
-
 int main(int argc, char *argv[]) {
 	int x;
 
@@ -775,6 +769,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	global_type_table = hash_table_create(128, delete, hash, key_compare);
+	global_iden_table = hash_table_create(128, delete, hash, key_compare);
 	{
 		//setup global types
 		symbolTableType int_t = {"int", 4, 0, NULL, "int"};
@@ -803,6 +798,7 @@ int main(int argc, char *argv[]) {
 	printf("GLOBAL SYMBOL TABLE:\n\n");
 	symbolTableIden *foo2 = hash_table_retrieve_after(global_iden_table, NULL);
 	if (foo2) {
+		printf("HERES\n");
 		printSymbolTableIden(foo2);
 	}
 	while (foo2) {

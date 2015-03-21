@@ -49,15 +49,36 @@ int nodeId = 0;
 FILE* fp;
 int structCounter = 0;
 
-int insert_symbol_table_entry(void *key, void *data){
-	if (!hash_table_retrieve(local_iden_table, key)){
-		hash_table_insert(local_iden_table, key, data);
-		return 1;
-	}
+int insert_symbol_table_iden_entry(char * name, int arraySize, char * type){
 
-	if (!hash_table_retrieve(global_iden_table, key)){
-		hash_table_insert(global_iden_table, key, data);
-		return 1;
+	HashTable * tableToUse = NULL;
+	if(local_iden_table){
+		tableToUse = local_iden_table;
+	}else{
+		printf("global\n");
+		tableToUse = global_iden_table;
+	}
+	
+	if (!hash_table_retrieve(tableToUse, name)){
+		symbolTableIden * data = calloc(sizeof(*data), 1);
+		symbolTableType * typeRef = hash_table_retrieve(global_type_table, type);
+		data->name = name;
+		data->type = typeRef;
+		data->arraySize = arraySize > 0 ? arraySize : typeRef->array_size;
+		if(arraySize > 0 && typeRef->array_size > 0){
+			printf("Multi dim arrays not supported\n");
+			exit(0);
+		} 
+		if(data->type){
+			printf("HERE %s\n", name);
+			hash_table_insert(tableToUse, name, data);
+		}else{
+			printf("The type %s does not exist\n", (char*)type);
+			exit(0);
+		}
+	}else{
+		printf("%s identifier already exists\n", (char*)name);
+		exit(0);
 	}
 
 	return 0;
@@ -254,12 +275,8 @@ evaluatedNode * trav_node(Node * node){
 				<% } %>
 				<% if (key == nodeTypes.assign_var_name_iden.name) {%>
 					ret->strVal = var_name_iden_node->strVal;
-					if(local_struct_iden_table != NULL){
-						symbolTableIden * idenTableEntry = calloc(sizeof(*idenTableEntry), 1);
-						idenTableEntry->name = ret->strVal;
-						idenTableEntry->type = hash_table_retrieve(global_type_table, cur_assign_var_decl_type);
-						hash_table_insert(local_struct_iden_table, ret->strVal, idenTableEntry);
-					}
+
+					insert_symbol_table_iden_entry(var_name_iden_node->strVal, var_name_iden_node->intVal, cur_assign_var_decl_type);
 					//TODO what do with var name iden array decl val
 					//TODO what do with expr child
 				<% } %>
