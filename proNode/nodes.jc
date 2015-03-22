@@ -213,6 +213,10 @@ evaluatedNode * trav_node(Node * node){
 					local_struct_iden_table = hash_table_create(128, delete, hash, key_compare);
 				<% }; %>
 
+				<% if (key == nodeTypes.function_body.name) {%>
+					local_iden_table = hash_table_create(128, delete, hash, key_compare);
+				<% }; %>
+
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
 					evaluatedNode * <%- cEvNode %> = trav_node(node->children.<%- nodeTypes[key].name %>.<%- nodeTypes[key].children[child] %>);
 				<% }; %>
@@ -330,6 +334,10 @@ evaluatedNode * trav_node(Node * node){
 					cur_assign_var_decl_type;
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, cur_assign_var_decl_type);
 				<% } %>
+				<% if (key == nodeTypes.function_body.name) {%>
+					hash_table_destroy(local_iden_table);
+					local_iden_table = NULL;
+				<% }; %>
 
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
 					if(<%- cEvNode %>){
