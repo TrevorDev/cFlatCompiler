@@ -1,10 +1,8 @@
-typedef int foo[2];
-typedef int w;
-w x, y, z;
+typedef int foo;
 
 void main() {
 	int a;
 	int b;
-	
+	b = (a = 5);
 	return;
 }
