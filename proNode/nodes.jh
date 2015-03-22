@@ -30,11 +30,13 @@ typedef struct symbolTableType{
 
 void printSymbolTableType(symbolTableType * s);
 void printTypeTable(HashTable *h);
-
+int baseTypeToEnum(char * type);
 struct symbolTableIden;
 
 typedef struct functionArgs {
 	struct symbolTableIden *iden;
+	//type only used for function call params(see comma expr list)
+	int type;
 	struct functionArgs *next;
 } functionArgs;
 

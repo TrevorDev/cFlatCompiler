@@ -1,12 +1,13 @@
 typedef int foo;
 int glob;
-foo bar(){
+foo bar(float x){
 	return 5;
 }
 
 void main(int k, foo b) {
 	int a;
-	a = bar();
+	float oo;
+	oo = bar(3.0);
 
 	return;
 }

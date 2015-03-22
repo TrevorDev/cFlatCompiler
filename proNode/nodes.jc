@@ -58,6 +58,20 @@ void printSymbolTableIden(symbolTableIden *s)
 	}
 }
 
+int baseTypeToEnum(char * type){
+	int ret = 0;
+	if (strcmp(type, "char") == 0){
+		ret = CHARVAL;
+	}
+	else if (strcmp(type, "int") == 0){
+		ret = INTVAL;
+	}
+	else if (strcmp(type, "float") == 0){
+		ret = FLOATVAL;
+	}
+	return ret;
+}
+
 void printTypeTable(HashTable *h)
 {
 	symbolTableType *foo;
@@ -415,22 +429,34 @@ evaluatedNode * trav_node(Node * node){
 
 
 				<% if (key == nodeTypes.function_call.name) {%>
-					symbolTableIden *temp2 = retrieve_symbol_table_iden_entry(iden_node->strVal);
-					if (!temp2){
+					//printf("!!!!%d\n", expr_list_node->params->next->type);
+					
+					symbolTableIden *funcIden = retrieve_symbol_table_iden_entry(iden_node->strVal);
+					functionArgs * givenParamIter = expr_list_node->params;
+					functionArgs * paramIter = funcIden->args;
+					while(givenParamIter || paramIter){
+						if(paramIter && !givenParamIter){
+							printf("Not enouph params given\n");
+							exit(0);
+						}else if(givenParamIter && !paramIter){
+							printf("Too many params given\n");
+							exit(0);
+						}
+						if(givenParamIter->type != baseTypeToEnum(paramIter->iden->type->baseType)){
+							printf("Param types do not match\n");
+							exit(0);
+						}
+						givenParamIter = givenParamIter->next;
+						paramIter = paramIter->next;
+					}
+
+					if (!funcIden){
 						printf("Function '%s' not defined\n", iden_node->strVal);
 						exit(0);
 					}
-					symbolTableType *temp = temp2->type;
-
-					if (strcmp(temp->baseType, "char") == 0){
-						ret->type = CHARVAL;
-					}
-					else if (strcmp(temp->baseType, "int") == 0){
-						ret->type = INTVAL;
-					}
-					else if (strcmp(temp->baseType, "float") == 0){
-						ret->type = FLOATVAL;
-					}
+					symbolTableType *funcType = funcIden->type;
+					ret->type = baseTypeToEnum(funcType->baseType);
+					
 					ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
 				<% } %>
 
@@ -445,7 +471,12 @@ evaluatedNode * trav_node(Node * node){
 					ret->strVal = iden_node->strVal;
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 0, NULL,type_iden_node->strVal);
 				<% }; %>
-				<% if (key == nodeTypes.function_body.name) {%>
+				<% if (key == nodeTypes.comma_expr_list.name) {%>
+					ret->params = calloc(sizeof(*(ret->params)), 1);
+					if(comma_expr_list_node->params){
+						ret->params->next = comma_expr_list_node->params;
+					}
+					ret->params->type = expr_node->type;
 				<% }; %>
 				<% if (key == nodeTypes.function_body.name) {%>
 				<% }; %>
