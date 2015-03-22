@@ -33,16 +33,16 @@ void printTypeTable(HashTable *h);
 
 struct symbolTableIden;
 
-struct functionArgs {
+typedef struct functionArgs {
 	struct symbolTableIden *iden;
 	struct functionArgs *next;
-};
+} functionArgs;
 
 typedef struct symbolTableIden{
 	char * name;
 	symbolTableType * type;
 	int isFunc;
-	struct functionArgs *args;
+	functionArgs *args;
 	//THIS IS THE REAL ARRAY SIZE
 	int arraySize;
 } symbolTableIden;
@@ -54,6 +54,7 @@ typedef struct evaluatedNode{
 	float floatVal;
 	int deferEval;
 	int isArray;
+	functionArgs * params;
 } evaluatedNode;
 
 enum NodeType {
