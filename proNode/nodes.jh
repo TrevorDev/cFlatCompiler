@@ -61,7 +61,7 @@ enum NodeType {
 	<%- Object.keys(nodeTypes).map(function(val){return nodeTypes[val].enumType}).join(",\n\t") %>
 };
 
-int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, char * type);
+int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, functionArgs * args, char * type);
 
 typedef struct Node{
     int nodeType;
