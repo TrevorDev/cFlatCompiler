@@ -284,7 +284,10 @@ evaluatedNode * trav_node(Node * node){
 
 					if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
 						(strcmp(operator_node->strVal, "/") == 0))){
-
+						if(left_expr_node->isArray || right_expr_node->isArray){
+							printf("Cannot perform %s on array\n", operator_node->strVal);
+							exit(0);
+						}
 						if(left_expr_node->type == right_expr_node->type){
 							ret->type = right_expr_node->type;
 							if(ret->type == INTVAL || ret->type == CHARVAL){
@@ -298,6 +301,10 @@ evaluatedNode * trav_node(Node * node){
 							printf("Error incompatible types\n");
 							exit(0);
 						}
+					}else if(!operator_node->strVal){
+						//expr only evaluates to array if there is no operator on an array
+						ret->isArray = left_expr_node->isArray;
+						//TODO cause error when operator is performed on array
 					}
 				<% } %>
 				<% if (key == nodeTypes.operator.name) {%>
@@ -339,20 +346,20 @@ evaluatedNode * trav_node(Node * node){
 					//TODO what do with expr child
 				<% } %>
 				<% if (key == nodeTypes.variable.name) {%>
-					symbolTableIden *temp2 = retrieve_symbol_table_iden_entry(variable_node->strVal);
-					if (!temp2){
+					symbolTableIden *tableIden = retrieve_symbol_table_iden_entry(variable_node->strVal);
+					if (!tableIden){
 						printf("Variable '%s' not declared\n", variable_node->strVal);
 						exit(0);
 					}
-					symbolTableType *temp = temp2->type;
-
-					if (strcmp(temp->baseType, "char") == 0){
+					symbolTableType * typeRef = tableIden->type;
+					ret->isArray = tableIden->arraySize;
+					if (strcmp( typeRef->baseType, "char") == 0){
 						ret->type = CHARVAL;
 					}
-					else if (strcmp(temp->baseType, "int") == 0){
+					else if (strcmp( typeRef->baseType, "int") == 0){
 						ret->type = INTVAL;
 					}
-					else if (strcmp(temp->baseType, "float") == 0){
+					else if (strcmp( typeRef->baseType, "float") == 0){
 						ret->type = FLOATVAL;
 					}
 					ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
@@ -370,6 +377,10 @@ evaluatedNode * trav_node(Node * node){
 				<% if (key == nodeTypes.assignment.name) {%>
 					if (variable_node->type != expr_node->type){
 						printf("Cannot assign incompatible types\n");
+						exit(0);
+					}
+					if(expr_node->isArray){
+						printf("Expr of assignment cannot be array\n");
 						exit(0);
 					}
 					switch (expr_node->type){

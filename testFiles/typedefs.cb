@@ -1,17 +1,9 @@
 typedef int foo;
 float s;
 
-int bar(){
-	return 6;
-}
-
-int foo (int a, int b, float c)
-{
-	return 1;
-	
-}
-
 void main() {
-	
+	int j[3];
+	int b;
+	b = j;
 	return;
 }
