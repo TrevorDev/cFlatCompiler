@@ -1,8 +1,8 @@
 typedef int foo;
 
 void main() {
-	int b;
 	int a;
+	int b;
 	b = (a = 5);
 	return;
 }

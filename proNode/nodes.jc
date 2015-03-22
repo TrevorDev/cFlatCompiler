@@ -47,6 +47,37 @@ void printSymbolTableIden(symbolTableIden *s)
 	printf("----------------\nname: %s\narray size: %d\ntype: %s\nis func: %d\n", s->name, s->arraySize, s->type->name, s->isFunc);
 }
 
+void printTypeTable(HashTable *h)
+{
+	symbolTableType *foo;
+	foo = hash_table_retrieve_after(h, NULL);
+	if (foo) {
+		printSymbolTableType(foo);
+	}
+	while (foo) {
+		foo = hash_table_retrieve_after(h, foo);
+		if (foo) {
+			printSymbolTableType(foo);
+		}
+	}
+}
+
+void printSymbolTable(HashTable *h)
+{
+	symbolTableIden *foo2 = hash_table_retrieve_after(h, NULL);
+	if (foo2) {
+		printf("HERES\n");
+		printSymbolTableIden(foo2);
+		}
+	while (foo2) {
+		foo2 = hash_table_retrieve_after(h, foo2);
+		if (foo2) {
+			printSymbolTableIden(foo2);
+		}
+	}
+}
+
+
 int nodeId = 0;
 FILE* fp;
 int structCounter = 0;
@@ -213,6 +244,10 @@ evaluatedNode * trav_node(Node * node){
 					local_struct_iden_table = hash_table_create(128, delete, hash, key_compare);
 				<% }; %>
 
+				<% if (key == nodeTypes.function_body.name) {%>
+					local_iden_table = hash_table_create(128, delete, hash, key_compare);
+				<% }; %>
+
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
 					evaluatedNode * <%- cEvNode %> = trav_node(node->children.<%- nodeTypes[key].name %>.<%- nodeTypes[key].children[child] %>);
 				<% }; %>
@@ -330,6 +365,7 @@ evaluatedNode * trav_node(Node * node){
 					cur_assign_var_decl_type;
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, cur_assign_var_decl_type);
 				<% } %>
+
 				<% if (key == nodeTypes.assignment.name) {%>
 					if (variable_node->type != expr_node->type){
 						printf("Cannot assign incompatible types\n");
@@ -345,6 +381,11 @@ evaluatedNode * trav_node(Node * node){
 					}
 					ret->type = variable_node->type;
 				<% } %>
+
+				<% if (key == nodeTypes.function_body.name) {%>
+					hash_table_destroy(local_iden_table);
+					local_iden_table = NULL;
+				<% }; %>
 
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
 					if(<%- cEvNode %>){
