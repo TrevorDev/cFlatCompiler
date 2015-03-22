@@ -786,30 +786,12 @@ int main(int argc, char *argv[]) {
 
 	if (symbolTableOutput) {
 		printf("GLOBAL TYPE TABLE:\n");
-		symbolTableType *foo;
-		foo = hash_table_retrieve_after(global_type_table, NULL);
-		if (foo) {
-			printSymbolTableType(foo);
-		}
-		while (foo) {
-			foo = hash_table_retrieve_after(global_type_table, foo);
-			if (foo) {
-				printSymbolTableType(foo);
-			}
-		}
+		printTypeTable(global_type_table);
+		
 
 		printf("GLOBAL SYMBOL TABLE:\n\n");
-		symbolTableIden *foo2 = hash_table_retrieve_after(global_iden_table, NULL);
-		if (foo2) {
-			printf("HERES\n");
-			printSymbolTableIden(foo2);
-		}
-		while (foo2) {
-			foo2 = hash_table_retrieve_after(global_iden_table, foo2);
-			if (foo2) {
-				printSymbolTableIden(foo2);
-			}
-		}
+		printSymbolTable(global_iden_table);
+
 	}
 
 	hash_table_destroy(global_type_table);
