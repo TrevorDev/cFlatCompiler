@@ -1,5 +1,5 @@
 typedef int foo;
-
+int glob;
 foo bar(){
 	return 5;
 }

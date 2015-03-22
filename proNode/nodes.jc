@@ -90,7 +90,7 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, char 
 		exit(0);
 	}
 	HashTable * tableToUse = NULL;
-	if(local_iden_table){
+	if(local_iden_table && !isFunc){
 		tableToUse = local_iden_table;
 	}
 	else{
@@ -251,7 +251,7 @@ evaluatedNode * trav_node(Node * node){
 					local_struct_iden_table = hash_table_create(128, delete, hash, key_compare);
 				<% }; %>
 
-				<% if (key == nodeTypes.function_body.name) {%>
+				<% if (key == nodeTypes.function_def.name) {%>
 					local_iden_table = hash_table_create(128, delete, hash, key_compare);
 				<% }; %>
 
@@ -376,8 +376,11 @@ evaluatedNode * trav_node(Node * node){
 					ret->strVal = iden_node->strVal;
 				<% } %>
 				<% if (key == nodeTypes.function_def.name) {%>
-					printf("Function %s ended\n\n", iden_node->strVal);
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, cur_assign_var_decl_type);
+					printf("Function %s\n\n", iden_node->strVal);
+					printSymbolTable(local_iden_table);
+					hash_table_destroy(local_iden_table);
+					local_iden_table = NULL;
 				<% } %>
 
 				<% if (key == nodeTypes.assignment.name) {%>
@@ -399,12 +402,6 @@ evaluatedNode * trav_node(Node * node){
 					}
 					ret->type = variable_node->type;
 				<% } %>
-
-				<% if (key == nodeTypes.function_body.name) {%>
-					printSymbolTable(local_iden_table);
-					hash_table_destroy(local_iden_table);
-					local_iden_table = NULL;
-				<% }; %>
 
 
 				<% if (key == nodeTypes.function_call.name) {%>
