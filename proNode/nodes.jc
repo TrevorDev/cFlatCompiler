@@ -68,7 +68,7 @@ void printSymbolTable(HashTable *h)
 	if (foo2) {
 		printf("HERES\n");
 		printSymbolTableIden(foo2);
-		}
+	}
 	while (foo2) {
 		foo2 = hash_table_retrieve_after(h, foo2);
 		if (foo2) {

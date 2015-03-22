@@ -2,9 +2,20 @@ typedef int foo[2];
 typedef int w;
 w x, y, z;
 
+int foo (int a, int b, float c)
+{
+	if (c > 0.0) {
+		return a + b;
+	}
+	
+}
+
 void main() {
-	int a;
-	int b;
+	int a = 3;
+	int b = 4;
+	float c = 1.0;
+
+	a = foo(a, b, c);
 	
 	return;
 }
