@@ -31,10 +31,18 @@ typedef struct symbolTableType{
 void printSymbolTableType(symbolTableType * s);
 void printTypeTable(HashTable *h);
 
+struct symbolTableIden;
+
+struct functionArgs {
+	struct symbolTableIden *iden;
+	struct functionArgs *next;
+};
+
 typedef struct symbolTableIden{
 	char * name;
 	symbolTableType * type;
 	int isFunc;
+	struct functionArgs *args;
 	//THIS IS THE REAL ARRAY SIZE
 	int arraySize;
 } symbolTableIden;

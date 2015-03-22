@@ -5,9 +5,15 @@ int bar(){
 	return 6;
 }
 
+int foo (int a, int b, float c)
+{
+	if (c > 0.0) {
+		return a + b;
+	}
+	
+}
+
 void main() {
-	int a;
-	int j[12];
-	a = j;
+	
 	return;
 }
