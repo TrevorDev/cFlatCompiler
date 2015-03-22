@@ -1,8 +1,11 @@
 typedef int foo;
 
+foo bar(){
+	return 5;
+}
+
 void main() {
 	int a;
-	int b;
-	b = (a = 5);
+	a = bar();
 	return;
 }

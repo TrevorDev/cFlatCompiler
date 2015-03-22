@@ -66,7 +66,6 @@ void printSymbolTable(HashTable *h)
 {
 	symbolTableIden *foo2 = hash_table_retrieve_after(h, NULL);
 	if (foo2) {
-		printf("HERES\n");
 		printSymbolTableIden(foo2);
 		}
 	while (foo2) {
@@ -99,7 +98,7 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, char 
 		symbolTableIden * data = calloc(sizeof(*data), 1);
 		symbolTableType * typeRef = hash_table_retrieve(global_type_table, type);
 		if(!typeRef){
-			printf("Invalid type %s for identifier: %s\n", type, name);
+			printf("Invalid type '%s' for identifier '%s'\n", type, name);
 			exit(0);
 		}
 		data->name = name;
@@ -113,11 +112,13 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, char 
 		if(data->type){
 			//printf("HERE %s\n", name);
 			hash_table_insert(tableToUse, name, data);
-		}else{
+		}
+		else{
 			printf("The type %s does not exist\n", (char*) type);
 			exit(0);
 		}
-	}else{
+	}
+	else{
 		printf("%s identifier already exists\n", (char*) name);
 		exit(0);
 	}
@@ -215,9 +216,11 @@ void <%- key %>_p(Node * node, int parentId){
 		var cPrintSyn = "%s";
 		if(val.type == "int"){
 			cPrintSyn = "%d";
-		}else if(val.type == "float"){
+		}
+		else if(val.type == "float"){
 			cPrintSyn = "%f";
-		}else if(val.type == "char"){
+		}
+		else if(val.type == "char"){
 			cPrintSyn = "%c";
 		}
 		var top = "nodeId++;\n\ttemp = nodeId;\n\t"
@@ -361,8 +364,6 @@ evaluatedNode * trav_node(Node * node){
 					ret->strVal = iden_node->strVal;
 				<% } %>
 				<% if (key == nodeTypes.function_def.name) {%>
-					iden_node->strVal;
-					cur_assign_var_decl_type;
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, cur_assign_var_decl_type);
 				<% } %>
 
@@ -386,6 +387,27 @@ evaluatedNode * trav_node(Node * node){
 					hash_table_destroy(local_iden_table);
 					local_iden_table = NULL;
 				<% }; %>
+
+
+				<% if (key == nodeTypes.function_call.name) {%>
+					symbolTableIden *temp2 = retrieve_symbol_table_iden_entry(iden_node->strVal);
+					if (!temp2){
+						printf("Function '%s' not defined\n", iden_node->strVal);
+						exit(0);
+					}
+					symbolTableType *temp = temp2->type;
+
+					if (strcmp(temp->baseType, "char") == 0){
+						ret->type = CHARVAL;
+					}
+					else if (strcmp(temp->baseType, "int") == 0){
+						ret->type = INTVAL;
+					}
+					else if (strcmp(temp->baseType, "float") == 0){
+						ret->type = FLOATVAL;
+					}
+					ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
+				<% } %>
 
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
 					if(<%- cEvNode %>){

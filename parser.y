@@ -768,6 +768,11 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+		
+	if (syntaxAnalysisOutput){
+		printGraphString(rootNode);
+	}
+
 	global_type_table = hash_table_create(128, delete, hash, key_compare);
 	global_iden_table = hash_table_create(128, delete, hash, key_compare);
 	{
@@ -795,11 +800,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	hash_table_destroy(global_type_table);
-
-	
-	if (syntaxAnalysisOutput){
-		printGraphString(rootNode);
-	}
 
 	return errorCount ? 1 : 0;
 }
