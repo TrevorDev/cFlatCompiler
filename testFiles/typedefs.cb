@@ -7,5 +7,6 @@ foo bar(){
 void main() {
 	int a;
 	a = bar();
+
 	return;
 }
