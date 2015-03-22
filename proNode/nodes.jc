@@ -66,7 +66,7 @@ void printSymbolTable(HashTable *h)
 {
 	symbolTableIden *foo2 = hash_table_retrieve_after(h, NULL);
 	if (foo2) {
-		printf("HERES\n");
+		printf("New Iden Table\n");		
 		printSymbolTableIden(foo2);
 	}
 	while (foo2) {
@@ -361,11 +361,30 @@ evaluatedNode * trav_node(Node * node){
 					ret->strVal = iden_node->strVal;
 				<% } %>
 				<% if (key == nodeTypes.function_def.name) {%>
-					iden_node->strVal;
+					printf("Function %s ended\n\n", iden_node->strVal);
+					//iden_node->strVal;
 					cur_assign_var_decl_type;
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, cur_assign_var_decl_type);
 				<% } %>
+
+				<% if (key == nodeTypes.assignment.name) {%>
+					if (variable_node->type != expr_node->type){
+						printf("Cannot assign incompatible types\n");
+						exit(0);
+					}
+					switch (expr_node->type){
+						case CHARVAL:
+						case INTVAL:
+							ret->intVal = expr_node->intVal;
+							break;
+						case FLOATVAL:
+							ret->floatVal = expr_node->floatVal;
+					}
+					ret->type = variable_node->type;
+				<% } %>
+
 				<% if (key == nodeTypes.function_body.name) {%>
+					printSymbolTable(local_iden_table);
 					hash_table_destroy(local_iden_table);
 					local_iden_table = NULL;
 				<% }; %>
@@ -380,7 +399,7 @@ evaluatedNode * trav_node(Node * node){
 			break;
 		<% }; %>
 		default:
-			printf("BAD NOT TYPE????");
+			printf("SHOULDN'T BE HERE\n");
 			break;
 	}
 	return ret;

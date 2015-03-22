@@ -1,6 +1,4 @@
-typedef int foo[2];
-typedef int w;
-w x, y, z;
+typedef int foo;
 
 int foo (int a, int b, float c)
 {
@@ -11,11 +9,17 @@ int foo (int a, int b, float c)
 }
 
 void main() {
+<<<<<<< HEAD
 	int a = 3;
 	int b = 4;
 	float c = 1.0;
 
 	a = foo(a, b, c);
 	
+=======
+	int a;
+	int b;
+	b = (a = 5);
+>>>>>>> 922cf49c1238f07da84b107fc88af9750853ae24
 	return;
 }
