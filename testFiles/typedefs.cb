@@ -1,8 +1,13 @@
 typedef int foo;
+float s;
+
+int bar(){
+	return 6;
+}
 
 void main() {
 	int a;
-	int b;
-	b = (a = 5);
+	int j[12];
+	a = j;
 	return;
 }
