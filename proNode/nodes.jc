@@ -427,6 +427,28 @@ evaluatedNode * trav_node(Node * node){
 					ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
 				<% } %>
 
+				<% if (key == nodeTypes.param_list.name) {%>
+					ret->params = calloc(sizeof(*(ret->params)), 1);
+					if(param_list_node->params){
+						ret->params->next = param_list_node->params;
+					}
+					ret->params->iden = retrieve_symbol_table_iden_entry(param_node->strVal);
+				<% }; %>
+				<% if (key == nodeTypes.param.name) {%>
+					ret->strVal = iden_node->strVal;
+					insert_symbol_table_iden_entry(iden_node->strVal, 0, 0, type_iden_node->strVal);
+				<% }; %>
+				<% if (key == nodeTypes.function_body.name) {%>
+				<% }; %>
+				<% if (key == nodeTypes.function_body.name) {%>
+				<% }; %>
+				<% if (key == nodeTypes.function_body.name) {%>
+				<% }; %>
+				<% if (key == nodeTypes.function_body.name) {%>
+				<% }; %>
+				<% if (key == nodeTypes.function_body.name) {%>
+				<% }; %>
+
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
 					if(<%- cEvNode %>){
 						//free(<%- cEvNode %>->strVal);

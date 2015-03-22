@@ -4,7 +4,7 @@ foo bar(){
 	return 5;
 }
 
-void main() {
+void main(int k, foo b) {
 	int a;
 	a = bar();
 
