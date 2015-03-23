@@ -324,7 +324,7 @@ evaluatedNode * trav_node(Node * node){
 				<% if (key == nodeTypes.var_name_iden.name) {%>
 					ret->strVal = identifier_node->strVal;
 					if (array_decl_node->deferEval){
-						printf("Cannot define variable length array\n");
+						printf("Cannot define variable length array for '%s'\n", identifier_node->strVal);
 						exit(0);
 					}
 					ret->intVal = array_decl_node->intVal;
@@ -437,6 +437,11 @@ evaluatedNode * trav_node(Node * node){
 					ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
 				<% } %>
 				<% if (key == nodeTypes.non_rec_variable.name) {%>
+					symbolTableIden *tableIden = retrieve_symbol_table_iden_entry(iden_node->strVal);
+					if (!node->children.non_rec_variable.array_decl && tableIden->arraySize){
+						printf("Missing array index for variable '%s'\n", iden_node->strVal);
+						exit(0);
+					}
 					ret->strVal = iden_node->strVal;
 				<% } %>
 				<% if (key == nodeTypes.function_def.name) {%>
@@ -452,10 +457,7 @@ evaluatedNode * trav_node(Node * node){
 						printf("Cannot assign incompatible types\n");
 						exit(0);
 					}
-					if(expr_node->isArray){
-						printf("Expr of assignment cannot be array\n");
-						exit(0);
-					}
+
 					switch (expr_node->type){
 						case CHARVAL:
 						case INTVAL:
@@ -476,7 +478,8 @@ evaluatedNode * trav_node(Node * node){
 						if(paramIter && !givenParamIter){
 							printf("Less parameters given than expected for function '%s' call\n", iden_node->strVal);
 							exit(0);
-						}else if(givenParamIter && !paramIter){
+						}
+						else if(givenParamIter && !paramIter){
 							printf("More parameters given than expected for function '%s' call\n", iden_node->strVal);
 							exit(0);
 						}

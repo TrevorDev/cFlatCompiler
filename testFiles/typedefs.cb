@@ -1,8 +1,9 @@
 typedef int foo;
 int hey;
-int mark[5];
+int mark[1];
 
 foo bar(foo x){
-	mark = 1.0;
+	int a = mark[1];
+	mark[1] = mark[0];
 	return x;
 }
