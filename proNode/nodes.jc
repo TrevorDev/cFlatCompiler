@@ -12,7 +12,9 @@ HashTable *local_struct_iden_table;
 extern HashTable *global_iden_table;
 extern HashTable *local_iden_table;
 char * cur_assign_var_decl_type = NULL;
-int currentType = -1;
+char * functionType = NULL;
+int setFunctionType = 0;
+
 
 void insert_to_type_table(char * newTypeName, int array_size, char * refTypeName){
 	if(hash_table_retrieve(global_type_table, newTypeName)){
@@ -57,20 +59,6 @@ void printSymbolTableIden(symbolTableIden *s)
 		}
 		printf("\n");
 	}
-}
-
-int baseTypeToEnum(char * type){
-	int ret = 0;
-	if (strcmp(type, "char") == 0){
-		ret = CHARVAL;
-	}
-	else if (strcmp(type, "int") == 0){
-		ret = INTVAL;
-	}
-	else if (strcmp(type, "float") == 0){
-		ret = FLOATVAL;
-	}
-	return ret;
 }
 
 void printTypeTable(HashTable *h)
@@ -165,6 +153,33 @@ symbolTableIden *retrieve_symbol_table_iden_entry(char *key){
 		ret = hash_table_retrieve(global_iden_table, key);
 	}
 	
+	return ret;
+}
+
+
+int baseTypeToEnum(char * type){
+	int ret = 0;
+	
+	if (strcmp(type, "char") == 0){
+		return CHARVAL;
+	}
+	else if (strcmp(type, "int") == 0){
+		return INTVAL;
+	}
+	else if (strcmp(type, "float") == 0){
+		return FLOATVAL;
+	}
+	else if (strcmp(type, "void") == 0){
+		return NONEVAL;
+	}
+	else{
+		symbolTableType * typeRef = hash_table_retrieve(global_type_table, type);
+		if (!typeRef){
+			return -1;
+		}
+		return baseTypeToEnum(typeRef->baseType);
+	}
+
 	return ret;
 }
 
@@ -280,6 +295,12 @@ evaluatedNode * trav_node(Node * node){
 					local_iden_table = hash_table_create(128, delete, hash, key_compare);
 				<% }; %>
 
+				<% if (key == nodeTypes.assign_var_decl.name) {%>
+					if(node->children.assign_var_decl.comma_iden_assign_list->nodeType == function_def_t){
+						setFunctionType = 1;
+					}
+				<% }; %>
+				
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
 					evaluatedNode * <%- cEvNode %> = trav_node(node->children.<%- nodeTypes[key].name %>.<%- nodeTypes[key].children[child] %>);
 				<% }; %>
@@ -288,7 +309,13 @@ evaluatedNode * trav_node(Node * node){
 					ret->strVal = node->children.base_type_lit.iden;
 				<% } %>
 				<% if (key == nodeTypes.type_iden.name) {%>
-					cur_assign_var_decl_type = type_node->strVal;
+					if(setFunctionType){
+						functionType = type_node->strVal;
+						setFunctionType = 0;
+					}else{
+						cur_assign_var_decl_type = type_node->strVal;
+					}
+					
 					ret->strVal = type_node->strVal;
 				<% } %>
 				<% if (key == nodeTypes.identifier.name) {%>
@@ -401,7 +428,8 @@ evaluatedNode * trav_node(Node * node){
 					ret->strVal = iden_node->strVal;
 				<% } %>
 				<% if (key == nodeTypes.function_def.name) {%>
-					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, param_list_node->params, cur_assign_var_decl_type);
+					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, param_list_node->params, functionType);
+					printf("Function %s\n\n", iden_node->strVal);
 					printSymbolTable(local_iden_table);
 					hash_table_destroy(local_iden_table);
 					local_iden_table = NULL;
@@ -477,8 +505,8 @@ evaluatedNode * trav_node(Node * node){
 					ret->params->type = expr_node->type;
 				<% }; %>
 				<% if (key == nodeTypes.return_stmt.name) {%>
-					if (expr_node->type != baseTypeToEnum(cur_assign_var_decl_type)){
-						printf("Return type '%s' does not match function type%d\n", cur_assign_var_decl_type, expr_node->type);
+					if (expr_node->type != baseTypeToEnum(functionType)){
+						printf("Return type '%d' does not match expected return type '%s'\n", expr_node->type, functionType);
 						exit(0);
 					}
 				<% }; %>

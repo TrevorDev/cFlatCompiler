@@ -1,13 +1,10 @@
 typedef int foo;
+typedef foo hey;
 int glob;
-foo bar(float x){
-	return 5;
+
+
+foo bar(hey x){
+
+	return x;
 }
 
-void main(int k, foo b) {
-	int a;
-	float oo;
-	oo = bar(3.0);
-
-	return;
-}
