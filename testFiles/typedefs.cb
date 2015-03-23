@@ -8,6 +8,6 @@ int blah(){
 }
 
 foo bar(foo x){
-	int y = bar();
+	int y = bar(4);
 	return 1;
 }

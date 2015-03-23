@@ -293,6 +293,11 @@ evaluatedNode * trav_node(Node * node){
 
 				<% if (key == nodeTypes.function_def.name) {%>
 					local_iden_table = hash_table_create(128, delete, hash, key_compare);
+					
+					evaluatedNode * iden_node = trav_node(node->children.function_def.iden);
+					evaluatedNode * param_list_node = trav_node(node->children.function_def.param_list);
+					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, param_list_node->params, functionType);
+					evaluatedNode * function_body_node = trav_node(node->children.function_def.function_body);
 				<% }; %>
 
 				<% if (key == nodeTypes.assign_var_decl.name) {%>
@@ -302,7 +307,9 @@ evaluatedNode * trav_node(Node * node){
 				<% }; %>
 				
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
-					evaluatedNode * <%- cEvNode %> = trav_node(node->children.<%- nodeTypes[key].name %>.<%- nodeTypes[key].children[child] %>);
+					<% if(key != nodeTypes.function_def.name){ %>
+						evaluatedNode * <%- cEvNode %> = trav_node(node->children.<%- nodeTypes[key].name %>.<%- nodeTypes[key].children[child] %>);
+					<% } %>
 				<% }; %>
 
 				<% if (key == nodeTypes.base_type_lit.name) {%>
@@ -521,7 +528,6 @@ evaluatedNode * trav_node(Node * node){
 					ret->strVal = iden_node->strVal;
 				<% } %>
 				<% if (key == nodeTypes.function_def.name) {%>
-					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, param_list_node->params, functionType);
 					printf("Function %s\n\n", iden_node->strVal);
 					printSymbolTable(local_iden_table);
 					hash_table_destroy(local_iden_table);
