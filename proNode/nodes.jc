@@ -323,13 +323,20 @@ evaluatedNode * trav_node(Node * node){
 				<% } %>
 				<% if (key == nodeTypes.var_name_iden.name) {%>
 					ret->strVal = identifier_node->strVal;
-					//if(array_decl_node){
+					if (array_decl_node->deferEval){
+						printf("Cannot define variable length array\n");
+						exit(0);
+					}
 					ret->intVal = array_decl_node->intVal;
-					//}
+
 				<% } %>
 				<% if (key == nodeTypes.array_decl.name) {%>
-					//printf("HERE %d\n", expr_node->intVal);
+					if (expr_node->type != INTVAL){
+						printf("Array size must be integer value\n");
+						exit(0);
+					}
 					ret->intVal = expr_node->intVal;
+					ret->deferEval = expr_node->deferEval;
 				<% } %>
 				<% if (key == nodeTypes.type_decl.name) {%>
 					insert_to_type_table(var_name_iden_node->strVal, var_name_iden_node->intVal, type_iden_node->strVal);
@@ -340,6 +347,11 @@ evaluatedNode * trav_node(Node * node){
 						ret->intVal = left_expr_node->intVal;
 						ret->floatVal = left_expr_node->floatVal;
 					}
+
+					if (node->children.expr.right_expr)
+						ret->deferEval = (ret->deferEval || right_expr_node->deferEval);
+					if (node->children.expr.left_expr)
+						ret->deferEval = (ret->deferEval || left_expr_node->deferEval);
 
 					if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
 						(strcmp(operator_node->strVal, "/") == 0))){

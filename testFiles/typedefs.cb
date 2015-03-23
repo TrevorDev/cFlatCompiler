@@ -1,10 +1,8 @@
 typedef int foo;
-typedef foo hey;
-int glob;
+int hey;
+int mark[5];
 
-
-foo bar(hey x){
-
+foo bar(foo x){
+	mark = 1.0;
 	return x;
 }
-
