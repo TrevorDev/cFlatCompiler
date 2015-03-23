@@ -355,12 +355,13 @@ evaluatedNode * trav_node(Node * node){
 
 					if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
 						(strcmp(operator_node->strVal, "/") == 0))){
-						if(left_expr_node->isArray || right_expr_node->isArray){
-							printf("Cannot perform %s on array\n", operator_node->strVal);
+
+						if(left_expr_node->type != right_expr_node->type){
+							printf("Expression contains incompatible types\n");
 							exit(0);
 						}
-						if(left_expr_node->type == right_expr_node->type){
-							ret->type = right_expr_node->type;
+						ret->type = right_expr_node->type;
+						if (strcmp(operator_node->strVal, "+") == 0){
 							if(ret->type == INTVAL || ret->type == CHARVAL){
 								ret->intVal = left_expr_node->intVal + right_expr_node->intVal;
 							}
@@ -368,9 +369,29 @@ evaluatedNode * trav_node(Node * node){
 								ret->floatVal = left_expr_node->floatVal + right_expr_node->floatVal;
 							}
 						}
-						else {
-							printf("Error incompatible types\n");
-							exit(0);
+						else if (strcmp(operator_node->strVal, "-") == 0){
+							if(ret->type == INTVAL || ret->type == CHARVAL){
+								ret->intVal = left_expr_node->intVal - right_expr_node->intVal;
+							}
+							else if(ret->type == FLOATVAL){
+								ret->floatVal = left_expr_node->floatVal - right_expr_node->floatVal;
+							}
+						}
+						else if (strcmp(operator_node->strVal, "*") == 0){
+							if(ret->type == INTVAL || ret->type == CHARVAL){
+								ret->intVal = left_expr_node->intVal * right_expr_node->intVal;
+							}
+							else if(ret->type == FLOATVAL){
+								ret->floatVal = left_expr_node->floatVal * right_expr_node->floatVal;
+							}
+						}
+						else if (strcmp(operator_node->strVal, "/") == 0){
+							if(ret->type == INTVAL || ret->type == CHARVAL){
+								ret->intVal = left_expr_node->intVal / right_expr_node->intVal;
+							}
+							else if(ret->type == FLOATVAL){
+								ret->floatVal = left_expr_node->floatVal / right_expr_node->floatVal;
+							}
 						}
 					}
 					else if(!operator_node->strVal){

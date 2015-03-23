@@ -1,9 +1,8 @@
 typedef int foo;
-int hey;
-int mark[1];
+typedef foo hey;
+
+int mark[3*5];
 
 foo bar(foo x){
-	int a = mark[1];
-	mark[1] = mark[0];
-	return x;
+	return mark[mark[0]+mark[1]];
 }
