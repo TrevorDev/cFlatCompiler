@@ -12,6 +12,7 @@ HashTable *local_struct_iden_table;
 extern HashTable *global_iden_table;
 extern HashTable *local_iden_table;
 char * cur_assign_var_decl_type = NULL;
+int currentType = -1;
 
 void insert_to_type_table(char * newTypeName, int array_size, char * refTypeName){
 	if(hash_table_retrieve(global_type_table, newTypeName)){
@@ -401,7 +402,6 @@ evaluatedNode * trav_node(Node * node){
 				<% } %>
 				<% if (key == nodeTypes.function_def.name) {%>
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, param_list_node->params, cur_assign_var_decl_type);
-					printf("Function %s\n\n", iden_node->strVal);
 					printSymbolTable(local_iden_table);
 					hash_table_destroy(local_iden_table);
 					local_iden_table = NULL;
@@ -428,9 +428,7 @@ evaluatedNode * trav_node(Node * node){
 				<% } %>
 
 
-				<% if (key == nodeTypes.function_call.name) {%>
-					//printf("!!!!%d\n", expr_list_node->params->next->type);
-					
+				<% if (key == nodeTypes.function_call.name) {%>					
 					symbolTableIden *funcIden = retrieve_symbol_table_iden_entry(iden_node->strVal);
 					functionArgs * givenParamIter = expr_list_node->params;
 					functionArgs * paramIter = funcIden->args;
@@ -457,7 +455,6 @@ evaluatedNode * trav_node(Node * node){
 
 					symbolTableType *funcType = funcIden->type;
 					ret->type = baseTypeToEnum(funcType->baseType);
-					
 					ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
 				<% } %>
 
@@ -480,7 +477,10 @@ evaluatedNode * trav_node(Node * node){
 					ret->params->type = expr_node->type;
 				<% }; %>
 				<% if (key == nodeTypes.return_stmt.name) {%>
-
+					if (expr_node->type != baseTypeToEnum(cur_assign_var_decl_type)){
+						printf("Return type '%s' does not match function type%d\n", cur_assign_var_decl_type, expr_node->type);
+						exit(0);
+					}
 				<% }; %>
 				<% if (key == nodeTypes.function_body.name) {%>
 				<% }; %>
