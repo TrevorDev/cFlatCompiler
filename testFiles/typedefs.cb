@@ -3,6 +3,11 @@ typedef foo hey;
 
 int mark[3*5];
 
+int blah(){
+	return 3;
+}
+
 foo bar(foo x){
-	return mark[mark[0]+mark[1]];
+	int y = bar();
+	return 1;
 }

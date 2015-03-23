@@ -55,6 +55,7 @@ typedef struct evaluatedNode{
 	int intVal;
 	float floatVal;
 	int deferEval;
+	int isVar;
 	int isArray;
 	functionArgs * params;
 } evaluatedNode;
