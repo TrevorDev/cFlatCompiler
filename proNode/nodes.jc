@@ -436,14 +436,14 @@ evaluatedNode * trav_node(Node * node){
 					functionArgs * paramIter = funcIden->args;
 					while(givenParamIter || paramIter){
 						if(paramIter && !givenParamIter){
-							printf("Not enouph params given\n");
+							printf("Less parameters given than expected for function '%s' call\n", iden_node->strVal);
 							exit(0);
 						}else if(givenParamIter && !paramIter){
-							printf("Too many params given\n");
+							printf("More parameters given than expected for function '%s' call\n", iden_node->strVal);
 							exit(0);
 						}
 						if(givenParamIter->type != baseTypeToEnum(paramIter->iden->type->baseType)){
-							printf("Param types do not match\n");
+							printf("Given parameter type does not match expected type for function '%s' call\n", iden_node->strVal);
 							exit(0);
 						}
 						givenParamIter = givenParamIter->next;
@@ -454,6 +454,7 @@ evaluatedNode * trav_node(Node * node){
 						printf("Function '%s' not defined\n", iden_node->strVal);
 						exit(0);
 					}
+
 					symbolTableType *funcType = funcIden->type;
 					ret->type = baseTypeToEnum(funcType->baseType);
 					
@@ -478,7 +479,8 @@ evaluatedNode * trav_node(Node * node){
 					}
 					ret->params->type = expr_node->type;
 				<% }; %>
-				<% if (key == nodeTypes.function_body.name) {%>
+				<% if (key == nodeTypes.return_stmt.name) {%>
+
 				<% }; %>
 				<% if (key == nodeTypes.function_body.name) {%>
 				<% }; %>
