@@ -1,15 +1,13 @@
 typedef int foo;
 typedef foo hey;
 
-int mark[3*5];
 
-int blah(){
-	return 3;
-}
 
-foo bar(foo x){
-	int y;
 
-	y = sizeof(5);
+foo bar(int x[3]){
+	int f[3];
+	char a;
+	bar(f);
+	putc(a);
 	return 1;
 }
