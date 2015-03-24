@@ -365,9 +365,10 @@ evaluatedNode * trav_node(Node * node){
 						}
 						if(node->children.expr.operator &&  node->children.expr.right_expr && node->children.expr.left_expr == NULL){
 							//UNARY + - -- ++ on left side
-							ret->type = left_expr_node->type;
-							ret->intVal = left_expr_node->intVal;
-							ret->floatVal = left_expr_node->floatVal;
+							ret->type = right_expr_node->type;
+							ret->intVal = right_expr_node->intVal;
+							ret->floatVal = right_expr_node->floatVal;
+							ret->type = right_expr_node->type;
 							if(operator_node->strVal){
 								if(strcmp(operator_node->strVal, "+") == 0){
 
@@ -394,6 +395,7 @@ evaluatedNode * trav_node(Node * node){
 							ret->type = left_expr_node->type;
 							ret->intVal = left_expr_node->intVal;
 							ret->floatVal = left_expr_node->floatVal;
+							ret->type = left_expr_node->type;
 							if(operator_node->strVal){
 								if(strcmp(operator_node->strVal, "+") == 0){
 
@@ -412,6 +414,10 @@ evaluatedNode * trav_node(Node * node){
 								}
 							}
 						}else{
+							ret->type = left_expr_node->type;
+							ret->intVal = left_expr_node->intVal;
+							ret->floatVal = left_expr_node->floatVal;
+							ret->type = left_expr_node->type;
 							if (node->children.expr.right_expr){
 								ret->deferEval = (ret->deferEval || right_expr_node->deferEval);
 							}

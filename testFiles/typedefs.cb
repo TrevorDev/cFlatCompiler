@@ -8,6 +8,6 @@ foo bar(int x[3]){
 	int f[3];
 	char a;
 	bar(f);
-	putc(a);
+	puti(-1);
 	return 1;
 }
