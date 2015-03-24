@@ -37,6 +37,7 @@ typedef struct functionArgs {
 	struct symbolTableIden *iden;
 	//type only used for function call params(see comma expr list)
 	int type;
+	int isArray;
 	struct functionArgs *next;
 } functionArgs;
 

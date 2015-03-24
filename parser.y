@@ -348,10 +348,9 @@ param_list: param COMMA param_list
 				}
 ;
 
-param: type_iden IDENTIFIER
+param: type_iden non_rec_variable
 				{
-					Node * temp = create_identifier($2);
-					$$ = create_param($1, temp);
+					$$ = create_param($1, $2);
 				}
 ;
 

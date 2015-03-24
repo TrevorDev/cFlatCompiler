@@ -292,6 +292,7 @@ evaluatedNode * trav_node(Node * node){
 				<% }; %>
 
 				<% if (key == nodeTypes.function_def.name) {%>
+
 					local_iden_table = hash_table_create(128, delete, hash, key_compare);
 					
 					evaluatedNode * iden_node = trav_node(node->children.function_def.iden);
@@ -299,7 +300,6 @@ evaluatedNode * trav_node(Node * node){
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, param_list_node->params, functionType);
 					evaluatedNode * function_body_node = trav_node(node->children.function_def.function_body);
 				<% }; %>
-
 				<% if (key == nodeTypes.assign_var_decl.name) {%>
 					if(node->children.assign_var_decl.comma_iden_assign_list->nodeType == function_def_t){
 						setFunctionType = 1;
@@ -354,111 +354,120 @@ evaluatedNode * trav_node(Node * node){
 						ret->type = left_expr_node->type;
 						ret->intVal = left_expr_node->intVal;
 						ret->floatVal = left_expr_node->floatVal;
-					}else if(node->children.expr.operator &&  node->children.expr.right_expr && node->children.expr.left_expr == NULL){
-						//UNARY + - -- ++ on left side
-						ret->type = left_expr_node->type;
-						ret->intVal = left_expr_node->intVal;
-						ret->floatVal = left_expr_node->floatVal;
-						if(operator_node->strVal){
-							if(strcmp(operator_node->strVal, "+") == 0){
-
-							}else if(strcmp(operator_node->strVal, "-") == 0){
-								ret->floatVal = -ret->floatVal;
-								ret->intVal = -ret->intVal;
-							}else if(strcmp(operator_node->strVal, "++") == 0){
-								if(!right_expr_node->isVar){
-									printf("Cannot use ++/-- on non var\n");
-									exit(0);
-								}
-								ret->floatVal = ret->floatVal+1;
-								ret->intVal = ret->intVal+1;
-							}else if(strcmp(operator_node->strVal, "--") == 0){
-								if(!right_expr_node->isVar){
-									printf("Cannot use ++/-- on non var\n");
-									exit(0);
-								}
-								ret->floatVal = ret->floatVal-1;
-								ret->intVal = ret->intVal-1;
-							}
-						}
-					}else if(node->children.expr.operator &&  node->children.expr.right_expr == NULL && node->children.expr.left_expr){
-						ret->type = left_expr_node->type;
-						ret->intVal = left_expr_node->intVal;
-						ret->floatVal = left_expr_node->floatVal;
-						if(operator_node->strVal){
-							if(strcmp(operator_node->strVal, "+") == 0){
-
-							}else if(strcmp(operator_node->strVal, "-") == 0){
-
-							}else if(strcmp(operator_node->strVal, "++") == 0){
-								if(!left_expr_node->isVar){
-									printf("Cannot use ++/-- on non var\n");
-									exit(0);
-								}
-							}else if(strcmp(operator_node->strVal, "--") == 0){
-								if(!left_expr_node->isVar){
-									printf("Cannot use ++/-- on non var\n");
-									exit(0);
-								}
-							}
+						if(node->children.expr.left_expr->nodeType == variable_t){
+							//symbolTableIden * iden = retr
+							ret->isArray = left_expr_node->isArray;
 						}
 					}else{
-						if (node->children.expr.right_expr){
-							ret->deferEval = (ret->deferEval || right_expr_node->deferEval);
+						if(left_expr_node->isArray || right_expr_node->isArray){
+							printf("Cannot use operator on array\n");
+							exit(0);
 						}
+						if(node->children.expr.operator &&  node->children.expr.right_expr && node->children.expr.left_expr == NULL){
+							//UNARY + - -- ++ on left side
+							ret->type = left_expr_node->type;
+							ret->intVal = left_expr_node->intVal;
+							ret->floatVal = left_expr_node->floatVal;
+							if(operator_node->strVal){
+								if(strcmp(operator_node->strVal, "+") == 0){
 
-						if (node->children.expr.left_expr){
-							ret->deferEval = (ret->deferEval || left_expr_node->deferEval);
-						}
+								}else if(strcmp(operator_node->strVal, "-") == 0){
+									ret->floatVal = -ret->floatVal;
+									ret->intVal = -ret->intVal;
+								}else if(strcmp(operator_node->strVal, "++") == 0){
+									if(!right_expr_node->isVar){
+										printf("Cannot use ++/-- on non var\n");
+										exit(0);
+									}
+									ret->floatVal = ret->floatVal+1;
+									ret->intVal = ret->intVal+1;
+								}else if(strcmp(operator_node->strVal, "--") == 0){
+									if(!right_expr_node->isVar){
+										printf("Cannot use ++/-- on non var\n");
+										exit(0);
+									}
+									ret->floatVal = ret->floatVal-1;
+									ret->intVal = ret->intVal-1;
+								}
+							}
+						}else if(node->children.expr.operator &&  node->children.expr.right_expr == NULL && node->children.expr.left_expr){
+							ret->type = left_expr_node->type;
+							ret->intVal = left_expr_node->intVal;
+							ret->floatVal = left_expr_node->floatVal;
+							if(operator_node->strVal){
+								if(strcmp(operator_node->strVal, "+") == 0){
 
-						if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
-							(strcmp(operator_node->strVal, "/") == 0))){
+								}else if(strcmp(operator_node->strVal, "-") == 0){
 
-							if(left_expr_node->type != right_expr_node->type){
-								printf("Expression contains incompatible types\n");
-								exit(0);
-							}
-							ret->type = right_expr_node->type;
-							if (strcmp(operator_node->strVal, "+") == 0){
-								if(ret->type == INTVAL || ret->type == CHARVAL){
-									ret->intVal = left_expr_node->intVal + right_expr_node->intVal;
-								}
-								else if(ret->type == FLOATVAL){
-									ret->floatVal = left_expr_node->floatVal + right_expr_node->floatVal;
-								}
-							}
-							else if (strcmp(operator_node->strVal, "-") == 0){
-								if(ret->type == INTVAL || ret->type == CHARVAL){
-									ret->intVal = left_expr_node->intVal - right_expr_node->intVal;
-								}
-								else if(ret->type == FLOATVAL){
-									ret->floatVal = left_expr_node->floatVal - right_expr_node->floatVal;
+								}else if(strcmp(operator_node->strVal, "++") == 0){
+									if(!left_expr_node->isVar){
+										printf("Cannot use ++/-- on non var\n");
+										exit(0);
+									}
+								}else if(strcmp(operator_node->strVal, "--") == 0){
+									if(!left_expr_node->isVar){
+										printf("Cannot use ++/-- on non var\n");
+										exit(0);
+									}
 								}
 							}
-							else if (strcmp(operator_node->strVal, "*") == 0){
-								if(ret->type == INTVAL || ret->type == CHARVAL){
-									ret->intVal = left_expr_node->intVal * right_expr_node->intVal;
+						}else{
+							if (node->children.expr.right_expr){
+								ret->deferEval = (ret->deferEval || right_expr_node->deferEval);
+							}
+
+							if (node->children.expr.left_expr){
+								ret->deferEval = (ret->deferEval || left_expr_node->deferEval);
+							}
+
+							if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
+								(strcmp(operator_node->strVal, "/") == 0))){
+
+								if(left_expr_node->type != right_expr_node->type){
+									printf("Expression contains incompatible types\n");
+									exit(0);
 								}
-								else if(ret->type == FLOATVAL){
-									ret->floatVal = left_expr_node->floatVal * right_expr_node->floatVal;
+								ret->type = right_expr_node->type;
+								if (strcmp(operator_node->strVal, "+") == 0){
+									if(ret->type == INTVAL || ret->type == CHARVAL){
+										ret->intVal = left_expr_node->intVal + right_expr_node->intVal;
+									}
+									else if(ret->type == FLOATVAL){
+										ret->floatVal = left_expr_node->floatVal + right_expr_node->floatVal;
+									}
+								}
+								else if (strcmp(operator_node->strVal, "-") == 0){
+									if(ret->type == INTVAL || ret->type == CHARVAL){
+										ret->intVal = left_expr_node->intVal - right_expr_node->intVal;
+									}
+									else if(ret->type == FLOATVAL){
+										ret->floatVal = left_expr_node->floatVal - right_expr_node->floatVal;
+									}
+								}
+								else if (strcmp(operator_node->strVal, "*") == 0){
+									if(ret->type == INTVAL || ret->type == CHARVAL){
+										ret->intVal = left_expr_node->intVal * right_expr_node->intVal;
+									}
+									else if(ret->type == FLOATVAL){
+										ret->floatVal = left_expr_node->floatVal * right_expr_node->floatVal;
+									}
+								}
+								else if (strcmp(operator_node->strVal, "/") == 0){
+									if(ret->type == INTVAL || ret->type == CHARVAL){
+										ret->intVal = left_expr_node->intVal / right_expr_node->intVal;
+									}
+									else if(ret->type == FLOATVAL){
+										ret->floatVal = left_expr_node->floatVal / right_expr_node->floatVal;
+									}
 								}
 							}
-							else if (strcmp(operator_node->strVal, "/") == 0){
-								if(ret->type == INTVAL || ret->type == CHARVAL){
-									ret->intVal = left_expr_node->intVal / right_expr_node->intVal;
-								}
-								else if(ret->type == FLOATVAL){
-									ret->floatVal = left_expr_node->floatVal / right_expr_node->floatVal;
-								}
+							else if(!operator_node->strVal){
+								//expr only evaluates to array if there is no operator on an array
+								ret->isArray = left_expr_node->isArray;
+								//TODO cause error when operator is performed on array
 							}
-						}
-						else if(!operator_node->strVal){
-							//expr only evaluates to array if there is no operator on an array
-							ret->isArray = left_expr_node->isArray;
-							//TODO cause error when operator is performed on array
 						}
 					}
-
 					
 				<% } %>
 				<% if (key == nodeTypes.operator.name) {%>
@@ -521,10 +530,11 @@ evaluatedNode * trav_node(Node * node){
 				<% } %>
 				<% if (key == nodeTypes.non_rec_variable.name) {%>
 					symbolTableIden *tableIden = retrieve_symbol_table_iden_entry(iden_node->strVal);
-					if (!node->children.non_rec_variable.array_decl && tableIden->arraySize){
-						printf("Missing array index for variable '%s'\n", iden_node->strVal);
-						exit(0);
-					}
+					// if (!node->children.non_rec_variable.array_decl && tableIden && tableIden->arraySize){
+					// 	printf("Missing array index for variable '%s'\n", iden_node->strVal);
+					// 	exit(0);
+					// }
+					ret->intVal = array_decl_node->intVal;
 					ret->strVal = iden_node->strVal;
 				<% } %>
 				<% if (key == nodeTypes.function_def.name) {%>
@@ -580,7 +590,7 @@ evaluatedNode * trav_node(Node * node){
 								printf("More parameters given than expected for function '%s' call\n", iden_node->strVal);
 								exit(0);
 							}
-							if(givenParamIter->type != baseTypeToEnum(paramIter->iden->type->baseType)){
+							if(((givenParamIter->isArray > 0) != (paramIter->iden->arraySize > 0))|| givenParamIter->type != baseTypeToEnum(paramIter->iden->type->baseType)){
 								printf("Given parameter type does not match expected type for function '%s' call\n", iden_node->strVal);
 								exit(0);
 							}
@@ -606,10 +616,13 @@ evaluatedNode * trav_node(Node * node){
 						ret->params->next = param_list_node->params;
 					}
 					ret->params->iden = retrieve_symbol_table_iden_entry(param_node->strVal);
+					// if(ret->params->iden){
+					// 	ret->params->isArray = ret->params->iden->arraySize > 0;
+					// }
 				<% }; %>
 				<% if (key == nodeTypes.param.name) {%>
 					ret->strVal = iden_node->strVal;
-					insert_symbol_table_iden_entry(iden_node->strVal, 0, 0, NULL,type_iden_node->strVal);
+					insert_symbol_table_iden_entry(iden_node->strVal, iden_node->intVal, 0, NULL,type_iden_node->strVal);
 				<% }; %>
 				<% if (key == nodeTypes.comma_expr_list.name) {%>
 					ret->params = calloc(sizeof(*(ret->params)), 1);
@@ -617,6 +630,7 @@ evaluatedNode * trav_node(Node * node){
 						ret->params->next = comma_expr_list_node->params;
 					}
 					ret->params->type = expr_node->type;
+					ret->params->isArray = expr_node->isArray;
 				<% }; %>
 				<% if (key == nodeTypes.return_stmt.name) {%>
 					if (expr_node->type != baseTypeToEnum(functionType)){
