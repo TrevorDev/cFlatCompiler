@@ -511,6 +511,10 @@ evaluatedNode * trav_node(Node * node){
 					ret->strVal = var_name_iden_node->strVal;
 
 					insert_symbol_table_iden_entry(var_name_iden_node->strVal, var_name_iden_node->intVal, 0, NULL,cur_assign_var_decl_type);
+					if(node->children.assign_var_name_iden.expr && expr_node->type != baseTypeToEnum(cur_assign_var_decl_type)){
+						printf("Type mismatch in variable decleration assignment\n");
+						exit(0);
+					}
 					//TODO what do with var name iden array decl val
 					//TODO what do with expr child
 				<% } %>

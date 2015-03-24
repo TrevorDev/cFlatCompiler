@@ -5,9 +5,7 @@ typedef foo hey;
 
 
 foo bar(int x[3]){
-	int f[3];
-	char a;
-	bar(f);
-	puti(-1);
+
+	int i = 0.0;
 	return 1;
 }
