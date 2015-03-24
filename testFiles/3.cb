@@ -1,10 +1,9 @@
 typedef int km_per_hour;
-typedef int int; /* syntax error right here, baby */
+typedef float km_per_hour;
 
 int x;
 km_per_hour speed[2];
-fooooobar; /* another syntax error right here */
 
-main() { /* another syntax error right here */
+void main() {
 	return;
 }

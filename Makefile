@@ -38,26 +38,20 @@ run: all
 	./cflatc < testFiles/ints.txt
 
 runtests: all
-	@echo "\nCompiling 1.cb..."
-	@echo ""
-	./cflatc -a < testFiles/1.cb
-	dot -Tsvg graph.txt -o graph1.svg
+	@echo "\n\n\n\nCompiling 1.cb (should work)..."
+	./cflatc < testFiles/1.cb
 
-	@echo "\nCompiling 2.cb..."
-	@echo ""
-	-./cflatc -c < testFiles/2.cb
+	@echo "\n\n\n\nCompiling 2.cb (shouldn't work)..."
+	-./cflatc < testFiles/2.cb
 
-	@echo "\nCompiling 3.cb..."
-	@echo ""
-	-./cflatc -c < testFiles/3.cb
+	@echo "\n\n\n\nCompiling 3.cb (shouldn't work)..."
+	-./cflatc < testFiles/3.cb
 
-	@echo "\nCompiling 4.cb..."
-	@echo ""
-	-./cflatc -c < testFiles/4.cb
+	@echo "\n\n\n\nCompiling 4.cb (shouldn't work)..."
+	-./cflatc < testFiles/4.cb
 
-	@echo "\nCompiling 5.cb..."
-	@echo ""
-	-./cflatc -c < testFiles/5.cb
+	@echo "\n\n\n\nCompiling 5.cb (shouldn't work)..."
+	-./cflatc < testFiles/5.cb
 
 graph: all
 	-rm -f graph.txt graph.png

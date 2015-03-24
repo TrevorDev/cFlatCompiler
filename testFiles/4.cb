@@ -1,10 +1,5 @@
-typedef int km_per_hour;
-typedef int int; /* syntax error right here, baby */
-
-int x;
-km_per_hour speed[2];
-fooooobar; /* another syntax error right here */
+void foo() { return; }
 
 int main() { 
-	return x == -5 ? 1 : 0;/* another syntax error right here */
+	return foo(); /* semantic error */
 }
