@@ -56,7 +56,6 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %token <sval> LOGICAL_OR
 %token <sval> NOT
 %token <sval> ASSIGNMENT
-%token SIZE_OF
 %token IF
 %token ELSE
 %token FOR
@@ -89,7 +88,7 @@ int syntaxAnalysisOutput, symbolTableOutput, intermediateOutput, asmOutput;
 %left GREATER_THAN GREATER_THAN_OR_EQUAL_TO LESS_THAN LESS_THAN_OR_EQUAL_TO
 %left MINUS PLUS
 %left STAR SLASH MODULUS
-%right SIZE_OF NOT 
+%right NOT 
 %precedence NEG
 
 %nonassoc LOWER_THAN_ELSE

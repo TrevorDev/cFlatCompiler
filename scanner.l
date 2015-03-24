@@ -150,12 +150,6 @@ CHARACTER ['].[']
 	return ASSIGNMENT;
 }
 
-"sizeof"	{
-    tokenlen = yyleng;
-    tokenpos += yyleng;	
-	return SIZE_OF;
-}
-
 "if"	{
 	tokenlen = yyleng;
 	tokenpos += yyleng;

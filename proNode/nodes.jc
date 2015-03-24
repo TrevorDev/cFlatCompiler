@@ -552,39 +552,52 @@ evaluatedNode * trav_node(Node * node){
 				<% } %>
 
 
-				<% if (key == nodeTypes.function_call.name) {%>					
-					symbolTableIden *funcIden = retrieve_symbol_table_iden_entry(iden_node->strVal);
-					if(!funcIden){
-						printf("Function '%s' does not exitst\n", iden_node->strVal);
-						exit(0);
-					}
-					functionArgs * givenParamIter = expr_list_node->params;
-					functionArgs * paramIter = funcIden->args;
-					while(givenParamIter || paramIter){
-						if(paramIter && !givenParamIter){
-							printf("Less parameters given than expected for function '%s' call\n", iden_node->strVal);
-							exit(0);
-						}
-						else if(givenParamIter && !paramIter){
-							printf("More parameters given than expected for function '%s' call\n", iden_node->strVal);
-							exit(0);
-						}
-						if(givenParamIter->type != baseTypeToEnum(paramIter->iden->type->baseType)){
-							printf("Given parameter type does not match expected type for function '%s' call\n", iden_node->strVal);
-							exit(0);
-						}
-						givenParamIter = givenParamIter->next;
-						paramIter = paramIter->next;
-					}
+				<% if (key == nodeTypes.function_call.name) {%>
 
-					if (!funcIden){
-						printf("Function '%s' not defined\n", iden_node->strVal);
-						exit(0);
+					if (strcmp(iden_node->strVal, "sizeof") == 0){
+						functionArgs * givenParamIter = expr_list_node->params;
+						if (givenParamIter->next){
+							printf("Invalid use of sizeof() operator\n");
+							exit(0);
+						}
+						ret->type = INTVAL;
 					}
+					else{
+						symbolTableIden *funcIden;funcIden = retrieve_symbol_table_iden_entry(iden_node->strVal);
 
-					symbolTableType *funcType = funcIden->type;
-					ret->type = baseTypeToEnum(funcType->baseType);
-					ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
+						if(!funcIden){
+							printf("Function '%s' does not exitst\n", iden_node->strVal);
+							exit(0);
+						}
+						functionArgs * givenParamIter = expr_list_node->params;
+						functionArgs * paramIter = funcIden->args;
+						while(givenParamIter || paramIter){
+							if(paramIter && !givenParamIter){
+								printf("Less parameters given than expected for function '%s' call\n", iden_node->strVal);
+								exit(0);
+							}
+							else if(givenParamIter && !paramIter){
+								printf("More parameters given than expected for function '%s' call\n", iden_node->strVal);
+								exit(0);
+							}
+							if(givenParamIter->type != baseTypeToEnum(paramIter->iden->type->baseType)){
+								printf("Given parameter type does not match expected type for function '%s' call\n", iden_node->strVal);
+								exit(0);
+							}
+							givenParamIter = givenParamIter->next;
+							paramIter = paramIter->next;
+						}
+
+						if (!funcIden){
+							printf("Function '%s' not defined\n", iden_node->strVal);
+							exit(0);
+						}
+
+						symbolTableType *funcType = funcIden->type;
+						ret->type = baseTypeToEnum(funcType->baseType);
+						ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
+					}					
+
 				<% } %>
 
 				<% if (key == nodeTypes.param_list.name) {%>
