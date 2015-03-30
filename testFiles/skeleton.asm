@@ -60,34 +60,3 @@ putf:
     lw      $fp, 4($fp)
 
     jr      $ra
-
-main:
-    move    $fp,$sp
-    #stack frame pushing
-    sub     $sp,$sp,4
-    sw      $ra,4($sp)
-
-    sub     $sp,$sp,4
-    li.s    $f12,1234.5678      #x = 4
-    s.s     $f12,4($sp)
-
-    #function call - arguments push
-    sub     $sp,$sp,4
-    move    $v0,$fp
-    addi    $v0,$v0,-4
-    sw      $v0,4($sp)
-
-    #frame pointer push
-    sub     $sp,$sp,4
-    sw      $fp,4($sp)
-
-    jal     putf
-
-    #stack pop
-    addi    $sp,$sp,12
-
-    #jal     putc
-
-
-    lw      $ra, 0($fp)
-    jr      $ra
