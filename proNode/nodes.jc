@@ -305,8 +305,7 @@ evaluatedNode * trav_node(Node * node){
 		<% for (var key in nodeTypes) { %>
 		case <%- nodeTypes[key].enumType %>:
 			{
-				//printf("%s\n", "<%- nodeTypes[key].enumType %>");
-
+				// PRE RECURSION
 				<% if (key == nodeTypes.struct_def.name) {%>
 					local_struct_iden_table = hash_table_create(128, delete, hash, key_compare);
 				<% }; %>
@@ -320,6 +319,7 @@ evaluatedNode * trav_node(Node * node){
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, param_list_node->params, functionType);
 					evaluatedNode * function_body_node = trav_node(node->children.function_def.function_body);
 				<% }; %>
+				
 				<% if (key == nodeTypes.assign_var_decl.name) {%>
 					if(node->children.assign_var_decl.comma_iden_assign_list->nodeType == function_def_t){
 						setFunctionType = 1;
@@ -331,7 +331,7 @@ evaluatedNode * trav_node(Node * node){
 						evaluatedNode * <%- cEvNode %> = trav_node(node->children.<%- nodeTypes[key].name %>.<%- nodeTypes[key].children[child] %>);
 					<% } %>
 				<% }; %>
-
+				//POST RECURSION
 				<% if (key == nodeTypes.base_type_lit.name) {%>
 					ret->strVal = node->children.base_type_lit.iden;
 				<% } %>
