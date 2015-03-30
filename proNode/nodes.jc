@@ -313,8 +313,12 @@ evaluatedNode * trav_node(Node * node){
 
 				<% if (key == nodeTypes.function_def.name) {%>
 					if(inGlobal){
-						append_assembler("lw      $ra, 0($fp)\n");
-						append_assembler("jr		$ra\n");
+						append_assembler("#frame pointer push for func call");
+						append_assembler("sub     $sp,$sp,4");
+						append_assembler("sw      $fp,4($sp)");
+						append_assembler("jal     __main");
+						append_assembler("lw      $ra, 0($fp)");
+						append_assembler("jr		$ra");
 					}
 					inGlobal = 0;
 					local_iden_table = hash_table_create(128, delete, hash, key_compare);
@@ -324,10 +328,25 @@ evaluatedNode * trav_node(Node * node){
 					if(strcmp(asmFuncName, "main") == 0){
 						asmFuncName = "__main";
 					}
-					append_assembler("%s:\n", asmFuncName);
+					append_assembler("\n\n%s:", asmFuncName);
+					append_assembler("#setup framepointer and save ra");
+					append_assembler("move    $fp,$sp");
+					append_assembler("sub     $sp,$sp,4");
+					append_assembler("sw      $ra,4($sp)");
+    
 					evaluatedNode * param_list_node = trav_node(node->children.function_def.param_list);
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, 0, param_list_node->params, functionType);
 					evaluatedNode * function_body_node = trav_node(node->children.function_def.function_body);
+
+					 
+				    
+
+				    
+					append_assembler("#reset sp and fp and return");
+					append_assembler("move    $sp,$fp");
+					append_assembler("lw      $fp, 4($fp)");
+					append_assembler("lw      $ra, 0($fp)");
+					append_assembler("jr      $ra");
 				<% }; %>
 
 				<% if (key == nodeTypes.assign_var_decl.name) {%>
@@ -603,6 +622,11 @@ evaluatedNode * trav_node(Node * node){
 
 
 				<% if (key == nodeTypes.function_call.name) {%>
+
+					append_assembler("#frame pointer push for func call");
+					append_assembler("sub     $sp,$sp,4");
+					append_assembler("sw      $fp,4($sp)");
+					append_assembler("jal		%s", iden_node->strVal);
 
 					if (strcmp(iden_node->strVal, "sizeof") == 0 || strcmp(iden_node->strVal, "putc") == 0 || strcmp(iden_node->strVal, "puti") == 0 || strcmp(iden_node->strVal, "putf") == 0){
 						functionArgs * givenParamIter = expr_list_node->params;

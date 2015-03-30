@@ -43,6 +43,8 @@ syscall
 move    $sp,$fp
 lw      $fp, 4($fp)
 jr      $ra
+
+
 main:
 move	$gp, $sp
 move   $fp, $sp
@@ -51,23 +53,43 @@ sub     $sp,$sp,4
 sw      $ra,4($sp)
 #push stack pointer forward for var a
 sub     $gp,$gp,4
+#frame pointer push for func call
+sub     $sp,$sp,4
+sw      $fp,4($sp)
+jal     __main
 lw      $ra, 0($fp)
-
 jr		$ra
 
-bar:
 
 foo:
-
+#setup framepointer and save ra
+move    $fp,$sp
+sub     $sp,$sp,4
+sw      $ra,4($sp)
 #push stack pointer forward for var a
 sub     $sp,$sp,4
-__main:
+#reset sp and fp and return
+move    $sp,$fp
+lw      $fp, 4($fp)
+lw      $ra, 0($fp)
+jr      $ra
 
+
+__main:
+#setup framepointer and save ra
+move    $fp,$sp
+sub     $sp,$sp,4
+sw      $ra,4($sp)
 #push stack pointer forward for var j
 sub     $sp,$sp,4
 #push stack pointer forward for var x
 sub     $sp,$sp,4
-#push stack pointer forward for var a
-sub     $sp,$sp,8
-#push stack pointer forward for var y
+#frame pointer push for func call
 sub     $sp,$sp,4
+sw      $fp,4($sp)
+jal		foo
+#reset sp and fp and return
+move    $sp,$fp
+lw      $fp, 4($fp)
+lw      $ra, 0($fp)
+jr      $ra

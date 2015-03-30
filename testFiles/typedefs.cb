@@ -1,10 +1,5 @@
 int a = 8;
 
-int bar()
-{
-    return 5;
-}
-
 int foo()
 {
 	int a = 5;
@@ -13,9 +8,7 @@ int foo()
 
 int main(int j)
 {
-    int x = bar();
-    int a[2];
-    int y = 3;
+	int x;
     foo();
     return x;
 }
