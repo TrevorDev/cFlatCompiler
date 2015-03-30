@@ -48,11 +48,21 @@ move	$gp, $sp
 move   $fp, $sp
 #push stack pointer forward for var a
 sub     $gp,$gp,4
+jr		$ra
+
+bar:
+
+foo:
+
+#push stack pointer forward for var a
+sub     $sp,$sp,4
+__main:
+
+#push stack pointer forward for var j
+sub     $sp,$sp,4
 #push stack pointer forward for var x
 sub     $sp,$sp,4
 #push stack pointer forward for var a
 sub     $sp,$sp,8
 #push stack pointer forward for var y
 sub     $sp,$sp,4
-jr		$ra
-

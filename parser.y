@@ -780,9 +780,5 @@ int main(int argc, char *argv[]) {
 	}
 
 	hash_table_destroy(global_type_table);
-
-
-	printf("%s", codeOutput);
-	append_assembler("jr		$ra\n");
 	return errorCount ? 1 : 0;
 }

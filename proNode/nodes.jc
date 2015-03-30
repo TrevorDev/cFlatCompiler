@@ -16,7 +16,7 @@ extern char * codeOutput;
 char * cur_assign_var_decl_type = NULL;
 char * functionType = NULL;
 int setFunctionType = 0;
-
+int inGlobal = 1;
 
 void insert_to_type_table(char * newTypeName, int array_size, char * refTypeName){
 	if(hash_table_retrieve(global_type_table, newTypeName)){
@@ -311,15 +311,23 @@ evaluatedNode * trav_node(Node * node){
 				<% }; %>
 
 				<% if (key == nodeTypes.function_def.name) {%>
-
+					if(inGlobal){
+						append_assembler("jr		$ra\n");
+					}
+					inGlobal = 0;
 					local_iden_table = hash_table_create(128, delete, hash, key_compare);
-					
+					localFpOffset = 0;
 					evaluatedNode * iden_node = trav_node(node->children.function_def.iden);
+					char * asmFuncName = iden_node->strVal;
+					if(strcmp(asmFuncName, "main") == 0){
+						asmFuncName = "__main";
+					}
+					append_assembler("%s:\n", asmFuncName);
 					evaluatedNode * param_list_node = trav_node(node->children.function_def.param_list);
 					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, param_list_node->params, functionType);
 					evaluatedNode * function_body_node = trav_node(node->children.function_def.function_body);
 				<% }; %>
-				
+
 				<% if (key == nodeTypes.assign_var_decl.name) {%>
 					if(node->children.assign_var_decl.comma_iden_assign_list->nodeType == function_def_t){
 						setFunctionType = 1;
