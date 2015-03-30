@@ -136,14 +136,17 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, funct
 			if(!isFunc){
 
 				int offset = (arraySize == 0) ? typeRef->size : typeRef->size * arraySize;
+				char * pType = "sp";
 				if(local_iden_table){
 					data->fpOffset = localFpOffset;
 					localFpOffset += offset;
 				}else{
+					pType = "gp";
 					data->fpOffset = globalFpOffset;
 					globalFpOffset += offset;
 				}
-				//append_assembler("sub     $sp,$sp,%d\n", offset);
+
+				append_assembler("sub     $%s,$%s,%d\n", pType, pType, offset);
 			}
 			hash_table_insert(tableToUse, name, data);
 		}

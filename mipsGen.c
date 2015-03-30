@@ -79,7 +79,11 @@ void append_assembler(char *instruction, ...)
 				    "lw      $fp, 4($fp)\n"
 
 				    "jr      $ra\n"
-				    "main:\n");
+				    "main:\n"
+				    "move	$gp, $sp\n"
+				    "move   $fp, $sp\n"
+
+				    );
 	}
 
 	//fprintf(fp, "%s\n", instruction);

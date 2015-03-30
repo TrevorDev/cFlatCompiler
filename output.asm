@@ -44,5 +44,15 @@ move    $sp,$fp
 lw      $fp, 4($fp)
 jr      $ra
 main:
+move	$gp, $sp
+move   $fp, $sp
+sub     $gp,$gp,4
+
+sub     $sp,$sp,4
+
+sub     $sp,$sp,8
+
+sub     $sp,$sp,4
+
 jr		$ra
 

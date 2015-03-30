@@ -1,3 +1,5 @@
+int a = 8;
+
 int bar()
 {
     return 5;
