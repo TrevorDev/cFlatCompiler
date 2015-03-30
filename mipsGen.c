@@ -31,7 +31,8 @@ void append_assembler(char *instruction, ...)
 
     				"\t#reset sp and fp, return\n"
     				"\tmove    $sp,$fp\n"
-    				"\tlw      $fp, 4($fp)\n"
+    				"\tlw	   $ra,0($fp)\n"
+    				"\tlw      $fp,4($fp)\n"
     				"\tjr      $ra\n"
 
 					"\t#putc function - args: int c\n"
@@ -48,10 +49,11 @@ void append_assembler(char *instruction, ...)
 
 				    "\t#reset sp and fp, return\n"
 				    "\tmove    $sp,$fp\n"
+				    "\tlw	   $ra,0($fp)\n"
 				    "\tlw      $fp, 4($fp)\n"
 				    "\tjr      $ra\n"
 
-					"\t#puti function - args: float f\n"
+					"\t#putf function - args: float f\n"
 					"\tputf:\n"
 				    "\t#store ra\n"
 				    "\tmove    $fp,$sp\n"
@@ -65,6 +67,7 @@ void append_assembler(char *instruction, ...)
 
 				    "\t#reset sp and fp, return\n"
 				    "\tmove    $sp,$fp\n"
+				    "\tlw	   $ra,0($fp)\n"
 				    "\tlw      $fp, 4($fp)\n"
 				    "\tjr      $ra\n"
 				    "\n\nmain:\n"
