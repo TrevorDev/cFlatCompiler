@@ -11,6 +11,8 @@ int foo()
 int baz()
 {
     int x = bar();
+    int a[2];
+    int y = 3;
     foo();
     return x;
 }

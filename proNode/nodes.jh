@@ -48,6 +48,7 @@ typedef struct symbolTableIden{
 	functionArgs *args;
 	//THIS IS THE REAL ARRAY SIZE
 	int arraySize;
+	int fpOffset;
 } symbolTableIden;
 
 typedef struct evaluatedNode{

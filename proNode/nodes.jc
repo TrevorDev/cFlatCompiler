@@ -50,7 +50,7 @@ void printSymbolTableType(symbolTableType * s){
 
 void printSymbolTableIden(symbolTableIden *s)
 {
-	printf("----------------\nname: %s\narray size: %d\ntype: %s\nis func: %d\n", s->name, s->arraySize, s->type->name, s->isFunc);
+	printf("----------------\nname: %s\narray size: %d\ntype: %s\nFP offset: %d\nis func: %d\n", s->name, s->arraySize, s->type->name, s->fpOffset, s->isFunc);
 	if(s->isFunc){
 		printf("params: ");
 		functionArgs * itr = s->args;
@@ -97,6 +97,10 @@ int nodeId = 0;
 FILE* fp;
 int structCounter = 0;
 
+
+int localFpOffset = 0;
+int globalFpOffset = 0;
+int VAR_SIZE = 4;
 int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, functionArgs * args, char * type){
 	if(!isFunc && strcmp(type, "void") == 0){
 		printf("Non function %s cannot have type void\n", name);
@@ -128,7 +132,17 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, funct
 			exit(0);
 		} 
 		if(data->type){
-			//printf("HERE %s\n", name);
+			if(!isFunc){
+
+				int offset = (arraySize == 0) ? typeRef->size : typeRef->size * arraySize;
+				if(local_iden_table){
+					data->fpOffset = localFpOffset;
+					localFpOffset += offset;
+				}else{
+					data->fpOffset = globalFpOffset;
+					globalFpOffset += offset;
+				}
+			}
 			hash_table_insert(tableToUse, name, data);
 		}
 		else{
