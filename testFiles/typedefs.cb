@@ -1,11 +1,16 @@
-typedef int foo;
-typedef foo hey;
+int bar()
+{
+    return 5;
+}
 
+int foo()
+{
+    return 5;
+}
 
-
-
-foo bar(int x[3]){
-
-	int i = 0.0;
-	return 1;
+int baz()
+{
+    int x = bar();
+    foo();
+    return x;
 }

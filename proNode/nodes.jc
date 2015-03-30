@@ -11,6 +11,7 @@ extern HashTable *global_type_table;
 HashTable *local_struct_iden_table;
 extern HashTable *global_iden_table;
 extern HashTable *local_iden_table;
+extern char * codeOutput;
 char * cur_assign_var_decl_type = NULL;
 char * functionType = NULL;
 int setFunctionType = 0;

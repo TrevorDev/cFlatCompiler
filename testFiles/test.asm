@@ -3,7 +3,7 @@ puti:
     sub     $sp,$sp,4
     sw      $ra,4($sp)
 
-    lw      $v0,4($fp)
+    lw      $v0,8($fp)
     lw      $v1,0($v0)
 
 
@@ -14,35 +14,8 @@ puti:
     #jal     putc
 
     move    $sp,$fp
-    lw      $fp,4($sp)  # pop fp
-    lw      $ra,8($sp)  # pop ra
+    lw    $fp, 4($fp)
     jr      $ra
-
-#putc:
-#    sub     $sp,$sp,4
-#    sw      $ra,4($sp)
-
- #   li      $v0, 11
- #   li      $a0, 'a'
- #   syscall
- #   jal     putf
-
- #   lw      $ra,4($sp)  # pop ra
- #   addi    $sp,$sp,4
- #   jr      $ra
-
-
-#putf:
-#    sub     $sp,$sp,4
-#    sw      $ra,4($sp)
-
-#    li      $v0, 2
-#    li.s    $f12, 4.5
-#    syscall
-
- #   lw      $ra,4($sp)  # pop ra
- #   addi    $sp,$sp,4
- #   jr      $ra
 
 
 main:
@@ -58,16 +31,19 @@ main:
     #function call - arguments push
     sub     $sp,$sp,4
     move    $v0,$fp
-    addi    $v0,$v0,12
+    addi    $v0,$v0,-4
     sw      $v0,4($sp)
 
     #frame pointer push
     sub     $sp,$sp,4
     sw      $fp,4($sp)
 
-    jal     puti
+    # lw      $v0,8($sp)
+    # lw      $v1,0($v0)
+    # move    $a0,$v1
+    # li      $v0, 1
+    # syscall
 
-    #stack frame popping
-    lw      $ra,4($sp)  # pop ra
-    addi    $sp,$sp,4
+    jal     puti
+    lw      $ra, 0($fp)
     jr      $ra

@@ -690,6 +690,8 @@ unsigned int hash2 (void *v)
 	return(h);
 }
 
+char * codeOutput = NULL;
+
 int main(int argc, char *argv[]) {
 	int x;
 
@@ -697,27 +699,6 @@ int main(int argc, char *argv[]) {
 	symbolTableOutput = 1;
 	intermediateOutput = 0;
 	asmOutput = 0;
-
-/*
-	HashTable *h = hash_table_create(100, NULL, hash2, key_compare2);
-	hash_table_insert(h, "trevor", "1");
-	hash_table_insert(h, "eric", "2");
-	hash_table_insert(h, "murray", "3");
-	hash_table_insert(h, "foo", "4");
-	hash_table_insert(h, "li", "5");
-
-	char *foo;
-	foo = hash_table_retrieve_after(h, NULL);
-	printf("initial: %s\n", foo);
-	do {
-		foo = hash_table_retrieve_after(h, foo);
-		printf("%s\n", foo);
-	} while (foo);
-	exit(0);
-	//void *hash_table_retrieve_after(HashTable *h, void *data);
-*/
-
-
 
 	if (argc > 2) { // only one command line argument permitted
 		fprintf(stderr, "Usage: cflatc -[asic]\n");
@@ -799,5 +780,7 @@ int main(int argc, char *argv[]) {
 
 	hash_table_destroy(global_type_table);
 
+
+	printf("%s", codeOutput);
 	return errorCount ? 1 : 0;
 }
