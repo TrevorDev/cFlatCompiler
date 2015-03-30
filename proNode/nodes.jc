@@ -145,8 +145,8 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, funct
 					data->fpOffset = globalFpOffset;
 					globalFpOffset += offset;
 				}
-
-				append_assembler("sub     $%s,$%s,%d\n", pType, pType, offset);
+				append_assembler("#push stack pointer forward for var %s", data->name);
+				append_assembler("sub     $%s,$%s,%d", pType, pType, offset);
 			}
 			hash_table_insert(tableToUse, name, data);
 		}
