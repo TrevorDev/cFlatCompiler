@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include "mipsGen.h"
 
-void append_assembler(char *instruction)
+
+
+void append_assembler(char *instruction, ...)
 {
 	static FILE *fp = NULL;
+
 
 	if (!fp) {
 		fp = fopen("output.asm", "wb+");
@@ -78,6 +82,11 @@ void append_assembler(char *instruction)
 				    "main:\n");
 	}
 
-	fprintf(fp, "%s\n", instruction);
+	//fprintf(fp, "%s\n", instruction);
+	va_list args;
+    va_start( args, instruction );
+    vfprintf( fp, format, args );
+    va_end( args );
+
 	fflush(fp);
 }
