@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "nodes.h"
+#include "mipsGen.h"
 
 extern int symbolTableOutput;
 
@@ -142,6 +143,7 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, funct
 					data->fpOffset = globalFpOffset;
 					globalFpOffset += offset;
 				}
+				//append_assembler("sub     $sp,$sp,%d\n", offset);
 			}
 			hash_table_insert(tableToUse, name, data);
 		}

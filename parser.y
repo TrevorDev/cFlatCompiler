@@ -7,6 +7,7 @@
 //#include "graph.h"
 #include "nodes.h"
 #include "hashtable.h"
+#include "mipsGen.h"
 
 extern int yylineno, commentsOn, tokenpos, tokenlen;
 void yyerror(const char *msg);
@@ -782,5 +783,6 @@ int main(int argc, char *argv[]) {
 
 
 	printf("%s", codeOutput);
+	append_assembler("jr		$ra\n");
 	return errorCount ? 1 : 0;
 }

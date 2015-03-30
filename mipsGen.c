@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "mipsGen.h"
 
 void append_assembler(char *instruction)
@@ -6,73 +7,75 @@ void append_assembler(char *instruction)
 	static FILE *fp = NULL;
 
 	if (!fp) {
-		fp = fopen("output.asm", "ab+");
+		fp = fopen("output.asm", "wb+");
 		if (!fp) {
 			fprintf(stderr, "ERROR OUTPUTTING ASM\n");
 			exit(1);
 		}
-		fprintf(fp, "putc:"
-    				"move    $fp,$sp"
+		fprintf(fp, 
+					"putc:\n"
+    				"move    $fp,$sp\n"
 
-				    "sub     $sp,$sp,4"
-				    "sw      $ra,4($sp)"
+				    "sub     $sp,$sp,4\n"
+				    "sw      $ra,4($sp)\n"
 
-				    "#load and deref param"
-				    "lw      $v0,8($fp)"
-				    "lw      $v1,0($v0)"
+				    "#load and deref param\n"
+				    "lw      $v0,8($fp)\n"
+				    "lw      $v1,0($v0)\n"
 
-				    "#display to screen"
-				    "move    $a0,$v1"
-				    "li      $v0, 11"
-				    "syscall"
+				    "#display to screen\n"
+				    "move    $a0,$v1\n"
+				    "li      $v0, 11\n"
+				    "syscall\n"
 
-				    "#reset sp and fp"
-				    "move    $sp,$fp"
-				    "lw      $fp, 4($fp)"
+				    "#reset sp and fp\n"
+				    "move    $sp,$fp\n"
+				    "lw      $fp, 4($fp)\n"
 
-				    "jr      $ra"
+				    "jr      $ra\n"
 
-					"puti:"
-				    "move    $fp,$sp"
+					"puti:\n"
+				    "move    $fp,$sp\n"
 
-				    "sub     $sp,$sp,4"
-				    "sw      $ra,4($sp)"
+				    "sub     $sp,$sp,4\n"
+				    "sw      $ra,4($sp)\n"
 
-				    "#load and deref param"
-				    "lw      $v0,8($fp)"
-				    "lw      $v1,0($v0)"
+				    "#load and deref param\n"
+				    "lw      $v0,8($fp)\n"
+				    "lw      $v1,0($v0)\n"
 
-				    "#display to screen"
-				    "move    $a0,$v1"
-				    "li      $v0, 1"
-				    "syscall"
+				    "#display to screen\n"
+				    "move    $a0,$v1\n"
+				    "li      $v0, 1\n"
+				    "syscall\n"
 
-				    "#reset sp and fp"
-				    "move    $sp,$fp"
-				    "lw      $fp, 4($fp)"
+				    "#reset sp and fp\n"
+				    "move    $sp,$fp\n"
+				    "lw      $fp, 4($fp)\n"
 
-				    "jr      $ra"
+				    "jr      $ra\n"
 
-					"putf:"
-				    "move    $fp,$sp"
+					"putf:\n"
+				    "move    $fp,$sp\n"
 
-				    "sub     $sp,$sp,4"
-				    "sw      $ra,4($sp)"
+				    "sub     $sp,$sp,4\n"
+				    "sw      $ra,4($sp)\n"
 
-				    "#load and deref param"
-				    "lw      $a0,8($fp)"
-				    "l.s    $f12,($a0)"
+				    "#load and deref param\n"
+				    "lw      $a0,8($fp)\n"
+				    "l.s    $f12,($a0)\n"
 
-				    "#display to screen"
-				    "#move    $a0,$v1"
-				    "li      $v0, 2"
-				    "syscall"
+				    "#display to screen\n"
+				    "#move    $a0,$v1\n"
+				    "li      $v0, 2\n"
+				    "syscall\n"
 
-				    "#reset sp and fp"
-				    "move    $sp,$fp"
-				    "lw      $fp, 4($fp)"
+				    "#reset sp and fp\n"
+				    "move    $sp,$fp\n"
+				    "lw      $fp, 4($fp)\n"
 
-				    "jr      $ra");
+				    "jr      $ra\n"
+				    "main:\n");
 	}
 
 	fprintf(fp, "%s\n", instruction);
