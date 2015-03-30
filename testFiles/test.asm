@@ -1,20 +1,22 @@
 puti:
     move    $fp,$sp
+
     sub     $sp,$sp,4
     sw      $ra,4($sp)
 
+    #load and deref param
     lw      $v0,8($fp)
     lw      $v1,0($v0)
 
-
+    #display to screen
     move    $a0,$v1
-
     li      $v0, 1
     syscall
-    #jal     putc
 
+    #reset sp and fp
     move    $sp,$fp
     lw    $fp, 4($fp)
+
     jr      $ra
 
 
@@ -37,12 +39,6 @@ main:
     #frame pointer push
     sub     $sp,$sp,4
     sw      $fp,4($sp)
-
-    # lw      $v0,8($sp)
-    # lw      $v1,0($v0)
-    # move    $a0,$v1
-    # li      $v0, 1
-    # syscall
 
     jal     puti
     lw      $ra, 0($fp)
