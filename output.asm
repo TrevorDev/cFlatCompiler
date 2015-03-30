@@ -46,8 +46,13 @@ jr      $ra
 main:
 move	$gp, $sp
 move   $fp, $sp
+#stack frame pushing
+sub     $sp,$sp,4
+sw      $ra,4($sp)
 #push stack pointer forward for var a
 sub     $gp,$gp,4
+lw      $ra, 0($fp)
+
 jr		$ra
 
 bar:

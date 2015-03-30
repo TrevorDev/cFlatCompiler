@@ -82,7 +82,9 @@ void append_assembler(char *instruction, ...)
 				    "main:\n"
 				    "move	$gp, $sp\n"
 				    "move   $fp, $sp\n"
-
+					"#stack frame pushing\n"
+					"sub     $sp,$sp,4\n"
+					"sw      $ra,4($sp)\n"
 				    );
 	}
 

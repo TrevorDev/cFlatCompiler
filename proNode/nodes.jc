@@ -312,6 +312,7 @@ evaluatedNode * trav_node(Node * node){
 
 				<% if (key == nodeTypes.function_def.name) {%>
 					if(inGlobal){
+						append_assembler("lw      $ra, 0($fp)\n");
 						append_assembler("jr		$ra\n");
 					}
 					inGlobal = 0;
