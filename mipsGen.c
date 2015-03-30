@@ -85,7 +85,7 @@ void append_assembler(char *instruction, ...)
 	//fprintf(fp, "%s\n", instruction);
 	va_list args;
     va_start( args, instruction );
-    vfprintf( fp, format, args );
+    vfprintf( fp, instruction, args );
     va_end( args );
     fprintf(fp, "\n");
 
