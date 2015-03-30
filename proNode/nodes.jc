@@ -51,7 +51,7 @@ void printSymbolTableType(symbolTableType * s){
 
 void printSymbolTableIden(symbolTableIden *s)
 {
-	printf("----------------\nname: %s\narray size: %d\ntype: %s\nFP offset: %d\nis func: %d\n", s->name, s->arraySize, s->type->name, s->fpOffset, s->isFunc);
+	printf("----------------\nname: %s\narray size: %d\ntype: %s\nFP offset: %d\nis func: %d\nis param:%d\n", s->name, s->arraySize, s->type->name, s->fpOffset, s->isFunc, s->isParam);
 	if(s->isFunc){
 		printf("params: ");
 		functionArgs * itr = s->args;
@@ -102,7 +102,7 @@ int structCounter = 0;
 int localFpOffset = 0;
 int globalFpOffset = 0;
 int VAR_SIZE = 4;
-int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, functionArgs * args, char * type){
+int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, int isParam, functionArgs * args, char * type){
 	if(!isFunc && strcmp(type, "void") == 0){
 		printf("Non function %s cannot have type void\n", name);
 		exit(0);
@@ -127,6 +127,7 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, funct
 		data->type = typeRef;
 		data->isFunc = isFunc;
 		data->args = args;
+		data->isParam = isParam;
 		data->arraySize = arraySize > 0 ? arraySize : typeRef->array_size;
 		if(arraySize > 0 && typeRef->array_size > 0){
 			printf("Multi dimensional arrays not supported\n");
@@ -324,7 +325,7 @@ evaluatedNode * trav_node(Node * node){
 					}
 					append_assembler("%s:\n", asmFuncName);
 					evaluatedNode * param_list_node = trav_node(node->children.function_def.param_list);
-					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, param_list_node->params, functionType);
+					insert_symbol_table_iden_entry(iden_node->strVal, 0, 1, 0, param_list_node->params, functionType);
 					evaluatedNode * function_body_node = trav_node(node->children.function_def.function_body);
 				<% }; %>
 
@@ -538,7 +539,7 @@ evaluatedNode * trav_node(Node * node){
 				<% if (key == nodeTypes.assign_var_name_iden.name) {%>
 					ret->strVal = var_name_iden_node->strVal;
 
-					insert_symbol_table_iden_entry(var_name_iden_node->strVal, var_name_iden_node->intVal, 0, NULL,cur_assign_var_decl_type);
+					insert_symbol_table_iden_entry(var_name_iden_node->strVal, var_name_iden_node->intVal, 0, 0, NULL,cur_assign_var_decl_type);
 					if(node->children.assign_var_name_iden.expr && expr_node->type != baseTypeToEnum(cur_assign_var_decl_type)){
 						printf("Type mismatch in variable decleration assignment\n");
 						exit(0);
@@ -677,7 +678,7 @@ evaluatedNode * trav_node(Node * node){
 				<% }; %>
 				<% if (key == nodeTypes.param.name) {%>
 					ret->strVal = iden_node->strVal;
-					insert_symbol_table_iden_entry(iden_node->strVal, iden_node->intVal, 0, NULL,type_iden_node->strVal);
+					insert_symbol_table_iden_entry(iden_node->strVal, iden_node->intVal, 0, 1, NULL,type_iden_node->strVal);
 				<% }; %>
 				<% if (key == nodeTypes.comma_expr_list.name) {%>
 					ret->params = calloc(sizeof(*(ret->params)), 1);

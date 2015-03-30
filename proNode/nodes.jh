@@ -49,6 +49,7 @@ typedef struct symbolTableIden{
 	//THIS IS THE REAL ARRAY SIZE
 	int arraySize;
 	int fpOffset;
+	int isParam;
 } symbolTableIden;
 
 typedef struct evaluatedNode{
@@ -66,7 +67,7 @@ enum NodeType {
 	<%- Object.keys(nodeTypes).map(function(val){return nodeTypes[val].enumType}).join(",\n\t") %>
 };
 
-int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, functionArgs * args, char * type);
+int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, int isParam, functionArgs * args, char * type);
 
 typedef struct Node{
     int nodeType;
