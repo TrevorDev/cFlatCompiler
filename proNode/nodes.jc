@@ -318,6 +318,7 @@ evaluatedNode * trav_node(Node * node){
 						append_assembler("sw      $fp,4($sp)");
 						append_assembler("jal     __main");
 						append_assembler("lw      $ra, 0($fp)");
+						append_assembler("lw      $fp, 4($fp)");
 						append_assembler("jr		$ra");
 					}
 					inGlobal = 0;
@@ -344,8 +345,8 @@ evaluatedNode * trav_node(Node * node){
 				    
 					append_assembler("#reset sp and fp and return");
 					append_assembler("move    $sp,$fp");
-					append_assembler("lw      $fp, 4($fp)");
 					append_assembler("lw      $ra, 0($fp)");
+					append_assembler("lw      $fp, 4($fp)");
 					append_assembler("jr      $ra");
 				<% }; %>
 

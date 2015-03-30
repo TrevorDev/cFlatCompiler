@@ -1,48 +1,45 @@
-putc:
-move    $fp,$sp
-sub     $sp,$sp,4
-sw      $ra,4($sp)
-#load and deref param
-lw      $v0,8($fp)
-lw      $v1,0($v0)
-#display to screen
-move    $a0,$v1
-li      $v0, 11
-syscall
-#reset sp and fp
-move    $sp,$fp
-lw      $fp, 4($fp)
-jr      $ra
+#puti function - args: int i
 puti:
-move    $fp,$sp
-sub     $sp,$sp,4
-sw      $ra,4($sp)
-#load and deref param
-lw      $v0,8($fp)
-lw      $v1,0($v0)
-#display to screen
-move    $a0,$v1
-li      $v0, 1
-syscall
-#reset sp and fp
-move    $sp,$fp
-lw      $fp, 4($fp)
-jr      $ra
-putf:
-move    $fp,$sp
-sub     $sp,$sp,4
-sw      $ra,4($sp)
-#load and deref param
-lw      $a0,8($fp)
-l.s    $f12,($a0)
-#display to screen
-#move    $a0,$v1
-li      $v0, 2
-syscall
-#reset sp and fp
-move    $sp,$fp
-lw      $fp, 4($fp)
-jr      $ra
+	#store ra
+	move    $fp,$sp
+	sub     $sp,$sp,4
+	sw      $ra,4($sp)
+	#load param
+	lw      $a0,8($fp)
+	li      $v0, 1
+	syscall
+	#reset sp and fp, return
+	move    $sp,$fp
+	lw      $fp, 4($fp)
+	jr      $ra
+	#putc function - args: int c
+	putc:
+	#store ra
+	move    $fp,$sp
+	sub     $sp,$sp,4
+	sw      $ra,4($sp)
+	#load param
+	lw      $a0,8($fp)
+	li      $v0, 11
+	syscall
+	#reset sp and fp, return
+	move    $sp,$fp
+	lw      $fp, 4($fp)
+	jr      $ra
+	#puti function - args: float f
+	putf:
+	#store ra
+	move    $fp,$sp
+	sub     $sp,$sp,4
+	sw      $ra,4($sp)
+	#load param
+	l.s     $f12,8($fp)
+	li      $v0, 2
+	syscall
+	#reset sp and fp, return
+	move    $sp,$fp
+	lw      $fp, 4($fp)
+	jr      $ra
 
 
 main:
@@ -58,6 +55,7 @@ sub     $sp,$sp,4
 sw      $fp,4($sp)
 jal     __main
 lw      $ra, 0($fp)
+lw      $fp, 4($fp)
 jr		$ra
 
 
@@ -68,10 +66,15 @@ sub     $sp,$sp,4
 sw      $ra,4($sp)
 #push stack pointer forward for var a
 sub     $sp,$sp,4
+
+li      $a0, 4
+li      $v0, 1
+syscall
+
 #reset sp and fp and return
 move    $sp,$fp
-lw      $fp, 4($fp)
 lw      $ra, 0($fp)
+lw      $fp, 4($fp)
 jr      $ra
 
 
@@ -88,8 +91,12 @@ sub     $sp,$sp,4
 sub     $sp,$sp,4
 sw      $fp,4($sp)
 jal		foo
+#frame pointer push for func call
+sub     $sp,$sp,4
+sw      $fp,4($sp)
+jal		foo
 #reset sp and fp and return
 move    $sp,$fp
-lw      $fp, 4($fp)
 lw      $ra, 0($fp)
+lw      $fp, 4($fp)
 jr      $ra
