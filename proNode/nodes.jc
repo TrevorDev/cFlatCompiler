@@ -193,7 +193,10 @@ void setIdenValue(char * name, int intVal, int floatVal){
 }
 
 void setIdenValueToIdenVal(char * dest, char * src){
-	
+	symbolTableIden * idenDest = retrieve_symbol_table_iden_entry(dest);
+	symbolTableIden * idenSrc = retrieve_symbol_table_iden_entry(src);
+	append_assembler("lw	$a0,-%d($fp)", idenSrc->fpOffset);
+	append_assembler("sw	$a0, -%d($fp)", idenDest->fpOffset);
 }
 
 
