@@ -192,6 +192,10 @@ void setIdenValue(char * name, int intVal, int floatVal){
 	}
 }
 
+void setIdenValueToIdenVal(char * dest, char * src){
+	
+}
+
 
 
 int baseTypeToEnum(char * type){
