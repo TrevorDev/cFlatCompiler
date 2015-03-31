@@ -10,7 +10,8 @@ puti:
 	syscall
 	#reset sp and fp, return
 	move    $sp,$fp
-	lw      $fp, 4($fp)
+	lw	   $ra,0($fp)
+	lw      $fp,4($fp)
 	jr      $ra
 	#putc function - args: int c
 	putc:
@@ -24,9 +25,10 @@ puti:
 	syscall
 	#reset sp and fp, return
 	move    $sp,$fp
+	lw	   $ra,0($fp)
 	lw      $fp, 4($fp)
 	jr      $ra
-	#puti function - args: float f
+	#putf function - args: float f
 	putf:
 	#store ra
 	move    $fp,$sp
@@ -38,6 +40,7 @@ puti:
 	syscall
 	#reset sp and fp, return
 	move    $sp,$fp
+	lw	   $ra,0($fp)
 	lw      $fp, 4($fp)
 	jr      $ra
 
@@ -50,6 +53,8 @@ sub     $sp,$sp,4
 sw      $ra,4($sp)
 #push stack pointer forward for var a
 sub     $gp,$gp,4
+#push stack pointer forward for var b
+sub     $gp,$gp,12
 #frame pointer push for func call
 sub     $sp,$sp,4
 sw      $fp,4($sp)
@@ -66,11 +71,6 @@ sub     $sp,$sp,4
 sw      $ra,4($sp)
 #push stack pointer forward for var a
 sub     $sp,$sp,4
-
-li      $a0, 4
-li      $v0, 1
-syscall
-
 #reset sp and fp and return
 move    $sp,$fp
 lw      $ra, 0($fp)

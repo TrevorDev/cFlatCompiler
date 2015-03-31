@@ -1,4 +1,6 @@
-int a = 8;
+int a;
+
+int b[a + 3];
 
 int foo()
 {
@@ -8,6 +10,8 @@ int foo()
 
 int main(int j)
 {
+	a = 8 + 7 + 9;
+	
 	int x;
     foo();
     foo();

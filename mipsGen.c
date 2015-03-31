@@ -89,3 +89,16 @@ void append_assembler(char *instruction, ...)
 
 	fflush(fp);
 }
+
+
+// a = 8 + 7 + 9;
+// 	li	$a0, 8
+// 	li	$a1, 7
+// 	add $a0, $a0, $a1
+// 	sub     $sp,$sp,4
+// 	sw	$a0, 4($sp)
+// 	lw	$a0, 4($sp)
+// 	addi     $sp,$sp,4
+// 	li	$a1, 9
+// 	add $a0, $a0, $a1
+// 	sw	$a0, aoff($gp)
