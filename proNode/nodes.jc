@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#define localFpOffsetStart 4
 #include "nodes.h"
 #include "mipsGen.h"
 
@@ -17,6 +17,12 @@ char * cur_assign_var_decl_type = NULL;
 char * functionType = NULL;
 int setFunctionType = 0;
 int inGlobal = 1;
+int tempCount = 0;
+
+int localFpOffset = localFpOffsetStart;
+int globalFpOffset = 0;
+int VAR_SIZE = 4;
+
 
 void insert_to_type_table(char * newTypeName, int array_size, char * refTypeName){
 	if(hash_table_retrieve(global_type_table, newTypeName)){
@@ -99,9 +105,7 @@ FILE* fp;
 int structCounter = 0;
 
 
-int localFpOffset = 0;
-int globalFpOffset = 0;
-int VAR_SIZE = 4;
+
 int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, int isParam, functionArgs * args, char * type){
 	if(!isFunc && strcmp(type, "void") == 0){
 		printf("Non function %s cannot have type void\n", name);
@@ -176,6 +180,18 @@ symbolTableIden *retrieve_symbol_table_iden_entry(char *key){
 	
 	return ret;
 }
+
+void setIdenValue(char * name, int intVal, int floatVal){
+	symbolTableIden * iden = retrieve_symbol_table_iden_entry(name);
+	if(strcmp(iden->type->baseType, "float") == 0){
+		append_assembler("li.s	$f0,%f", floatVal);
+		append_assembler("sw	$f0, -%d($fp)", iden->fpOffset);
+	}else{
+		append_assembler("li	$a0,%d", intVal);
+		append_assembler("sw	$a0, -%d($fp)", iden->fpOffset);
+	}
+}
+
 
 
 int baseTypeToEnum(char * type){
@@ -323,7 +339,7 @@ evaluatedNode * trav_node(Node * node){
 					}
 					inGlobal = 0;
 					local_iden_table = hash_table_create(128, delete, hash, key_compare);
-					localFpOffset = 0;
+					localFpOffset = localFpOffsetStart;
 					evaluatedNode * iden_node = trav_node(node->children.function_def.iden);
 					char * asmFuncName = iden_node->strVal;
 					if(strcmp(asmFuncName, "main") == 0){
@@ -400,6 +416,8 @@ evaluatedNode * trav_node(Node * node){
 				<% } %>
 				<% if (key == nodeTypes.expr.name) {%>
 					if(node->children.expr.right_expr == NULL && node->children.expr.operator == NULL){
+
+
 						//SINGLE VAR/NUMBER/CHAR
 						ret->type = left_expr_node->type;
 						ret->intVal = left_expr_node->intVal;
@@ -408,6 +426,24 @@ evaluatedNode * trav_node(Node * node){
 							//symbolTableIden * iden = retr
 							ret->isArray = left_expr_node->isArray;
 						}
+						if(node->children.expr.left_expr->nodeType == int_val_t || node->children.expr.left_expr->nodeType == float_val_t || node->children.expr.left_expr->nodeType == char_val_t){
+							char buf[20];
+							sprintf(buf, "___temp%d",tempCount++);
+							char*name = strdup(buf);
+							insert_symbol_table_iden_entry(name, 0, 0, 0, NULL, ret->type == INTVAL ? "int" : (ret->type == CHARVAL ? "char" : "float"));
+							setIdenValue(name, left_expr_node->intVal, left_expr_node->floatVal);
+							// ret-
+							// if(ret->type == FLOATVAL){
+							// 	append_assembler("li.s	$f0,%f", left_expr_node->floatVal);
+							// 	append_assembler("sub     $sp,$sp,4");
+							// 	append_assembler("sw	$f0, 4($sp)");
+							// }else{
+							// 	append_assembler("li	$a0,%d", left_expr_node->intVal);
+							// 	append_assembler("sub     $sp,$sp,4");
+							// 	append_assembler("sw	$a0, 4($sp)");
+							// }
+						}
+
 					}else{
 						if(left_expr_node->isArray || right_expr_node->isArray){
 							printf("Cannot use operator on array\n");
