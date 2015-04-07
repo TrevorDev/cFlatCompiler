@@ -729,7 +729,7 @@ evaluatedNode * trav_node(Node * node){
 						}
 						if(strcmp(iden_node->strVal, "putc")==0){
 							append_assembler("#Inline putf");
-							append_assembler("lw      $a0,-%f(%s)", givenParamIter->iden->fpOffset, hash_table_retrieve(local_iden_table, givenParamIter->iden->name) ? "$fp" : "$gp");
+							append_assembler("lw      $a0,-%d(%s)", givenParamIter->iden->fpOffset, hash_table_retrieve(local_iden_table, givenParamIter->iden->name) ? "$fp" : "$gp");
 							append_assembler("li      $v0, 11");
 							append_assembler("syscall");
 						}
