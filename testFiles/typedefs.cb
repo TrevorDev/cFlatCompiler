@@ -1,6 +1,6 @@
 float a; 
 char d;
-int ff;
+
 
 
 void printfloats(float x, float y, float z){
@@ -9,11 +9,19 @@ void printfloats(float x, float y, float z){
 	putf(z);
 }
 
+void printchars(char x, char y, char z){
+	putc(x);
+	putc(y);
+	putc(z);
+}
+
 
 int main()
 {
+
 	float b;
 	float c;
+
 	char e;
 	char f;
 
@@ -29,7 +37,8 @@ int main()
 
 
 	printfloats(a, b, c);
+	printchars(d,e,f);
 
 
-    return ff;
+    return 1;
 }

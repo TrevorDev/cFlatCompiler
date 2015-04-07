@@ -20,7 +20,7 @@ int inGlobal = 1;
 int tempCount = 0;
 
 int localFpOffset = localFpOffsetStart;
-int globalFpOffset = 0;
+int globalFpOffset = 4;
 int VAR_SIZE = 4;
 
 
@@ -151,10 +151,7 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, int i
 					globalFpOffset += offset;
 				}
 				append_assembler("#push stack pointer forward for var %s", data->name);
-				append_assembler("sub     $%s,$%s,%d", pType, pType, offset);
-				if(strcmp(pType, "gp")==0){
-					append_assembler("sub     $sp,$sp,%d", offset);
-				}
+				append_assembler("sub     $sp,$sp,%d", offset);
 			}
 			hash_table_insert(tableToUse, name, data);
 		}

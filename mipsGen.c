@@ -16,61 +16,7 @@ void append_assembler(char *instruction, ...)
 			fprintf(stderr, "ERROR OUTPUTTING ASM\n");
 			exit(1);
 		}
-		fprintf(fp, 
-					"#puti function - args: int i\n"
-					"puti:\n"
-					"\t#store ra\n"
-					"\tmove    $fp,$sp\n"
-    				"\tsub     $sp,$sp,4\n"
-    				"\tsw      $ra,4($sp)\n"
-
-    				"\t#load param\n"
-    				"\tlw      $a0,8($fp)\n"
-    				"\tli      $v0, 1\n"
-    				"\tsyscall\n"
-
-    				"\t#reset sp and fp, return\n"
-    				"\tmove    $sp,$fp\n"
-    				"\tlw	   $ra,0($fp)\n"
-    				"\tlw      $fp,4($fp)\n"
-    				"\tjr      $ra\n"
-
-					"\t#putc function - args: int c\n"
-					"\tputc:\n"
-				    "\t#store ra\n"
-				    "\tmove    $fp,$sp\n"
-				    "\tsub     $sp,$sp,4\n"
-				    "\tsw      $ra,4($sp)\n"
-
-				   "\t#load param\n"
-				    "\tlw      $a0,8($fp)\n"
-				    "\tli      $v0, 11\n"
-				    "\tsyscall\n"
-
-				    "\t#reset sp and fp, return\n"
-				    "\tmove    $sp,$fp\n"
-				    "\tlw	   $ra,0($fp)\n"
-				    "\tlw      $fp, 4($fp)\n"
-				    "\tjr      $ra\n"
-
-					"\t#putf function - args: float f\n"
-					"\tputf:\n"
-				    "\t#store ra\n"
-				    "\tmove    $fp,$sp\n"
-				    "\tsub     $sp,$sp,4\n"
-				    "\tsw      $ra,4($sp)\n"
-
-				    "\t#load param\n"
-				    "\tl.s     $f12,8($fp)\n"
-				    "\tli      $v0, 2\n"
-				    "\tsyscall\n"
-
-				    "\t#reset sp and fp, return\n"
-				    "\tmove    $sp,$fp\n"
-				    "\tlw	   $ra,0($fp)\n"
-				    "\tlw      $fp, 4($fp)\n"
-				    "\tjr      $ra\n"
-				    "\n\nmain:\n"
+		fprintf(fp, "\n\nmain:\n"
 				    "move	$gp, $sp\n"
 				    "move   $fp, $sp\n"
 					"#stack frame pushing\n"
