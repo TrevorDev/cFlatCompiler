@@ -714,13 +714,19 @@ evaluatedNode * trav_node(Node * node){
 						}
 
 						//TODO inlice putc etc
+						if(strcmp(iden_node->strVal, "puti")==0){
+							append_assembler("#Doing inline puti");
+							append_assembler("lw      $a0,-%d(%s)", givenParamIter->iden->fpOffset, hash_table_retrieve(local_iden_table, givenParamIter->iden->name) ? "$fp" : "$gp");
+							append_assembler("li      $v0, 1");
+							append_assembler("syscall");
+						}
 					}else{
 						append_assembler("#frame pointer push for func call");
 						append_assembler("sub     $sp,$sp,4");
 						append_assembler("sw      $fp,4($sp)");
 						append_assembler("#store the stack pointer as it is now");
 						append_assembler("move $k0,$sp");
-
+						append_assembler("sub     $sp,$sp,4");
 
 						symbolTableIden *funcIden;funcIden = retrieve_symbol_table_iden_entry(iden_node->strVal);
 

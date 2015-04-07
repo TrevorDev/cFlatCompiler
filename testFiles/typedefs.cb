@@ -1,15 +1,21 @@
 int a;
 
-int foo(int x)
+int foo(int x, int y, int z)
 {
+	puti(x);
+	puti(y);
+	puti(z);
+	puti(a);
     return a;
 }
 
 int main()
 {
 	int b;
-
-	a = 5;
-	foo(a);
+	b = 5;
+	a = 6;
+	puti(a);
+	foo(b, 1, 2);
+	puti(a);
     return a;
 }
