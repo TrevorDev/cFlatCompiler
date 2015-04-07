@@ -1,9 +1,41 @@
-char a;
+float a; 
+char d;
+
+
+void printfloats(float x, float y, float z){
+	putf(x);
+	putf(y);
+	putf(z);
+}
+
+void printchars(char x, char y, char z){
+	putc(x);
+	putc(y);
+	putc(z);
+}
+
 
 int main()
 {
+	float b;
 	float c;
-	c = 1337.0;
-	putf(c);
+	char e;
+	char f;
+
+
+
+	a = 1.0;
+	b = 2.0;
+	c = 3.0;
+
+	d = 'A';
+	e = 'B';
+	f = 'C';
+
+
+	printfloats(a, b, c);
+	printchars(d, e, f);
+
+
     return 1;
 }

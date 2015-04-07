@@ -54,6 +54,9 @@ sw      $ra,4($sp)
 #push stack pointer forward for var a
 sub     $gp,$gp,4
 sub     $sp,$sp,4
+#push stack pointer forward for var d
+sub     $gp,$gp,4
+sub     $sp,$sp,4
 #frame pointer push for func call
 sub     $sp,$sp,4
 sw      $fp,4($sp)
@@ -63,29 +66,45 @@ lw      $fp, 4($fp)
 jr		$ra
 
 
-__main:
+printfloats:
 #setup framepointer and save ra
 move    $fp,$sp
 sub     $sp,$sp,4
 sw      $ra,4($sp)
-#push stack pointer forward for var c
+#push stack pointer forward for var x
 sub     $sp,$sp,4
-#push stack pointer forward for var ___temp0
+#push stack pointer forward for var y
 sub     $sp,$sp,4
-li.s	$f0,1337.000000
-s.s	$f0, -8($fp)
-lw	$a0,-8($fp)	#load local variable ___temp0 to register $a0
-sw	$a0, -4($fp)	#store variable ___temp0 in local variable c
+#push stack pointer forward for var z
+sub     $sp,$sp,4
 #Inline putc
 l.s      $f12,-4($fp)
 li      $v0, 2
 syscall
-#push stack pointer forward for var ___temp1
-sub     $sp,$sp,4
-li	$a0,1
-sw	$a0, -12($fp)
+#Inline putc
+l.s      $f12,-8($fp)
+li      $v0, 2
+syscall
+#Inline putc
+l.s      $f12,-12($fp)
+li      $v0, 2
+syscall
 #reset sp and fp and return
 move    $sp,$fp
 lw      $ra, 0($fp)
 lw      $fp, 4($fp)
 jr      $ra
+
+
+printchars:
+#setup framepointer and save ra
+move    $fp,$sp
+sub     $sp,$sp,4
+sw      $ra,4($sp)
+#push stack pointer forward for var x
+sub     $sp,$sp,4
+#push stack pointer forward for var y
+sub     $sp,$sp,4
+#push stack pointer forward for var z
+sub     $sp,$sp,4
+#Inline putf
