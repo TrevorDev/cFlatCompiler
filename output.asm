@@ -93,6 +93,12 @@ sw	$a0, -0($gp)	#store variable ___temp0 in global variable a
 #frame pointer push for func call
 sub     $sp,$sp,4
 sw      $fp,4($sp)
+#store the stack pointer as it is now
+move $k0,$sp
+sub     $sp,$sp,4
+lw	$a0,-0($gp)
+sw 	$a0,4($sp)
+move $sp,$k0 #restore stack pointer
 jal		foo
 #reset sp and fp and return
 move    $sp,$fp

@@ -461,6 +461,8 @@ evaluatedNode * trav_node(Node * node){
 							// 	append_assembler("sub     $sp,$sp,4");
 							// 	append_assembler("sw	$a0, 4($sp)");
 							// }
+						}else{
+							ret->strVal = left_expr_node->strVal;
 						}
 
 					}else{
@@ -683,10 +685,7 @@ evaluatedNode * trav_node(Node * node){
 
 				<% if (key == nodeTypes.function_call.name) {%>
 
-					append_assembler("#frame pointer push for func call");
-					append_assembler("sub     $sp,$sp,4");
-					append_assembler("sw      $fp,4($sp)");
-					append_assembler("jal		%s", iden_node->strVal);
+					
 
 					if (strcmp(iden_node->strVal, "sizeof") == 0 || strcmp(iden_node->strVal, "putc") == 0 || strcmp(iden_node->strVal, "puti") == 0 || strcmp(iden_node->strVal, "putf") == 0){
 						functionArgs * givenParamIter = expr_list_node->params;
@@ -713,7 +712,16 @@ evaluatedNode * trav_node(Node * node){
 						}else if(strcmp(iden_node->strVal, "sizeof") == 0){
 							ret->type = INTVAL;
 						}
+
+						//TODO inlice putc etc
 					}else{
+						append_assembler("#frame pointer push for func call");
+						append_assembler("sub     $sp,$sp,4");
+						append_assembler("sw      $fp,4($sp)");
+						append_assembler("#store the stack pointer as it is now");
+						append_assembler("move $k0,$sp");
+
+
 						symbolTableIden *funcIden;funcIden = retrieve_symbol_table_iden_entry(iden_node->strVal);
 
 						if(!funcIden){
@@ -739,6 +747,27 @@ evaluatedNode * trav_node(Node * node){
 							paramIter = paramIter->next;
 						}
 
+						//store values of parameters in next stack frame
+						givenParamIter = expr_list_node->params;
+						while (givenParamIter) {
+							int argSize;
+							printf("%p, %p\n", givenParamIter, givenParamIter->iden);
+							argSize = givenParamIter->iden->type->size;
+
+							if (givenParamIter->iden->arraySize != 0) {
+								argSize *= givenParamIter->iden->arraySize;
+							}
+
+							// TODO: push array values onto stack
+
+							append_assembler("sub     $sp,$sp,%d", argSize);
+
+							append_assembler("lw	$a0,-%d(%s)", givenParamIter->iden->fpOffset,
+							  hash_table_retrieve(local_iden_table, givenParamIter->iden->name) ? "$fp" : "$gp");
+							append_assembler("sw 	$a0,4($sp)");
+							givenParamIter = givenParamIter->next;
+						}
+
 						if (!funcIden){
 							printf("Function '%s' not defined\n", iden_node->strVal);
 							exit(0);
@@ -747,6 +776,9 @@ evaluatedNode * trav_node(Node * node){
 						symbolTableType *funcType = funcIden->type;
 						ret->type = baseTypeToEnum(funcType->baseType);
 						ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
+
+						append_assembler("move $sp,$k0 #restore stack pointer");
+						append_assembler("jal		%s", iden_node->strVal);
 					}					
 
 				<% } %>
@@ -772,6 +804,7 @@ evaluatedNode * trav_node(Node * node){
 					}
 					ret->params->type = expr_node->type;
 					ret->params->isArray = expr_node->isArray;
+					ret->params->iden = retrieve_symbol_table_iden_entry(expr_node->strVal);
 				<% }; %>
 				<% if (key == nodeTypes.return_stmt.name) {%>
 					if (expr_node->type != baseTypeToEnum(functionType)){
