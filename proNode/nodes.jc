@@ -188,8 +188,8 @@ void setIdenValue(char * name, int intVal, int floatVal){
 	symbolTableIden * iden = retrieve_symbol_table_iden_entry(name);
 
 	if (strcmp(iden->type->baseType, "float") == 0) {
-		append_assembler("li.s	$s0,%f", floatVal);
-		append_assembler("sw	$s0, -%d(%s)", iden->fpOffset, hash_table_retrieve(local_iden_table, name) ? "$fp" : "$gp");
+		append_assembler("li.s	$f0,%f", floatVal);
+		append_assembler("s.s	$f0, -%d(%s)", iden->fpOffset, hash_table_retrieve(local_iden_table, name) ? "$fp" : "$gp");
 	}
 	else{
 		append_assembler("li	$a0,%d", intVal);
@@ -715,9 +715,21 @@ evaluatedNode * trav_node(Node * node){
 
 						//TODO inlice putc etc
 						if(strcmp(iden_node->strVal, "puti")==0){
-							append_assembler("#Doing inline puti");
+							append_assembler("#Inline puti");
 							append_assembler("lw      $a0,-%d(%s)", givenParamIter->iden->fpOffset, hash_table_retrieve(local_iden_table, givenParamIter->iden->name) ? "$fp" : "$gp");
 							append_assembler("li      $v0, 1");
+							append_assembler("syscall");
+						}
+						if(strcmp(iden_node->strVal, "putf")==0){
+							append_assembler("#Inline putc");
+							append_assembler("l.s      $f12,-%d(%s)", givenParamIter->iden->fpOffset, hash_table_retrieve(local_iden_table, givenParamIter->iden->name) ? "$fp" : "$gp");
+							append_assembler("li      $v0, 2");
+							append_assembler("syscall");
+						}
+						if(strcmp(iden_node->strVal, "putc")==0){
+							append_assembler("#Inline putf");
+							append_assembler("lw      $a0,-%f(%s)", givenParamIter->iden->fpOffset, hash_table_retrieve(local_iden_table, givenParamIter->iden->name) ? "$fp" : "$gp");
+							append_assembler("li      $v0, 11");
 							append_assembler("syscall");
 						}
 					}else{

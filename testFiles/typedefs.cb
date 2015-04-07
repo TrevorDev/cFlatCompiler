@@ -1,21 +1,15 @@
-int a;
+char a;
 
-int foo(int x, int y, int z)
+int foo(float ericIsDome)
 {
-	puti(x);
-	puti(y);
-	puti(z);
-	puti(a);
-    return a;
+	putf(ericIsDome);
+    return 1;
 }
 
 int main()
 {
-	int b;
-	b = 5;
-	a = 6;
-	puti(a);
-	foo(b, 1, 2);
-	puti(a);
-    return a;
+	float c;
+	c = 1337.0;
+	foo(c);
+    return 1;
 }
