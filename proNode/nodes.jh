@@ -81,7 +81,7 @@ typedef struct Node{
 		<% }; %>
     }children;
 }Node;
-void setIdenValue(char * name, int intVal, int floatVal);
+void setIdenValue(char * name, int intVal, float floatVal);
 void printTree(Node *node, int parentId);
 void printGraphString(Node * root);
 Node *create_Node(enum NodeType t, void (*printNode)(struct Node *node, int parentId));

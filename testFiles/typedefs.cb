@@ -1,15 +1,9 @@
 char a;
 
-int foo(float ericIsDome)
-{
-	putf(ericIsDome);
-    return 1;
-}
-
 int main()
 {
 	float c;
 	c = 1337.0;
-	foo(c);
+	putf(c);
     return 1;
 }

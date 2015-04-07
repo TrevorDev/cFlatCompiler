@@ -184,7 +184,7 @@ symbolTableIden *retrieve_symbol_table_iden_entry(char *key){
 	return ret;
 }
 
-void setIdenValue(char * name, int intVal, int floatVal){
+void setIdenValue(char * name, int intVal, float floatVal){
 	symbolTableIden * iden = retrieve_symbol_table_iden_entry(name);
 
 	if (strcmp(iden->type->baseType, "float") == 0) {
@@ -451,6 +451,7 @@ evaluatedNode * trav_node(Node * node){
 							ret->strVal = name;
 							insert_symbol_table_iden_entry(name, 0, 0, 0, NULL, ret->type == INTVAL ? "int" : (ret->type == CHARVAL ? "char" : "float"));
 							setIdenValue(name, left_expr_node->intVal, left_expr_node->floatVal);
+
 							// ret-
 							// if(ret->type == FLOATVAL){
 							// 	append_assembler("li.s	$f0,%f", left_expr_node->floatVal);
