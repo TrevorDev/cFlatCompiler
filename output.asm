@@ -53,6 +53,7 @@ sub     $sp,$sp,4
 sw      $ra,4($sp)
 #push stack pointer forward for var a
 sub     $gp,$gp,4
+sub     $sp,$sp,4
 #frame pointer push for func call
 sub     $sp,$sp,4
 sw      $fp,4($sp)
@@ -67,6 +68,8 @@ foo:
 move    $fp,$sp
 sub     $sp,$sp,4
 sw      $ra,4($sp)
+#push stack pointer forward for var x
+sub     $sp,$sp,4
 #reset sp and fp and return
 move    $sp,$fp
 lw      $ra, 0($fp)
@@ -79,16 +82,14 @@ __main:
 move    $fp,$sp
 sub     $sp,$sp,4
 sw      $ra,4($sp)
-#push stack pointer forward for var j
+#push stack pointer forward for var b
 sub     $sp,$sp,4
 #push stack pointer forward for var ___temp0
 sub     $sp,$sp,4
 li	$a0,5
 sw	$a0, -8($fp)
-#frame pointer push for func call
-sub     $sp,$sp,4
-sw      $fp,4($sp)
-jal		foo
+lw	$a0,-8($fp)	#load local variable ___temp0 to register $a0
+sw	$a0, -0($gp)	#store variable ___temp0 in global variable a
 #frame pointer push for func call
 sub     $sp,$sp,4
 sw      $fp,4($sp)

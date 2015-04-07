@@ -739,6 +739,10 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
+	if (syntaxAnalysisOutput){
+		printGraphString(rootNode);
+	}
+
 	if (asmOutput) {
 		if (errorCount == 0) {
 			printf("valid C flat code\n");
@@ -749,9 +753,7 @@ int main(int argc, char *argv[]) {
 	}
 
 		
-	if (syntaxAnalysisOutput){
-		printGraphString(rootNode);
-	}
+	
 
 	global_type_table = hash_table_create(128, delete, hash, key_compare);
 	global_iden_table = hash_table_create(128, delete, hash, key_compare);

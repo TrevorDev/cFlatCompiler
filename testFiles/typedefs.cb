@@ -1,14 +1,20 @@
 int a;
 
-int foo()
+int foo(int x)
 {
     return a;
 }
 
-int main(int j)
+int main()
 {
+	int b;
+
 	a = 5;
+	foo(a);
+	/*b = a;
+
     foo();
     foo();
+    */
     return a;
 }

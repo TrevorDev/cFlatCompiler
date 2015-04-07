@@ -152,6 +152,9 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, int i
 				}
 				append_assembler("#push stack pointer forward for var %s", data->name);
 				append_assembler("sub     $%s,$%s,%d", pType, pType, offset);
+				if(strcmp(pType, "gp")==0){
+					append_assembler("sub     $sp,$sp,%d", offset);
+				}
 			}
 			hash_table_insert(tableToUse, name, data);
 		}
@@ -170,11 +173,11 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, int i
 
 symbolTableIden *retrieve_symbol_table_iden_entry(char *key){
 	symbolTableIden * ret = NULL;
-	if(local_iden_table){
+	if(local_iden_table) {
 		ret = hash_table_retrieve(local_iden_table, key);
 	}
 
-	if (!ret){
+	if (!ret) {
 		ret = hash_table_retrieve(global_iden_table, key);
 	}
 	
@@ -183,20 +186,28 @@ symbolTableIden *retrieve_symbol_table_iden_entry(char *key){
 
 void setIdenValue(char * name, int intVal, int floatVal){
 	symbolTableIden * iden = retrieve_symbol_table_iden_entry(name);
-	if(strcmp(iden->type->baseType, "float") == 0){
-		append_assembler("li.s	$f0,%f", floatVal);
-		append_assembler("sw	$f0, -%d($fp)", iden->fpOffset);
-	}else{
+
+	if (strcmp(iden->type->baseType, "float") == 0) {
+		append_assembler("li.s	$s0,%f", floatVal);
+		append_assembler("sw	$s0, -%d(%s)", iden->fpOffset, hash_table_retrieve(local_iden_table, name) ? "$fp" : "$gp");
+	}
+	else{
 		append_assembler("li	$a0,%d", intVal);
-		append_assembler("sw	$a0, -%d($fp)", iden->fpOffset);
+		append_assembler("sw	$a0, -%d(%s)", iden->fpOffset, hash_table_retrieve(local_iden_table, name) ? "$fp" : "$gp");
 	}
 }
 
 void setIdenValueToIdenVal(char * dest, char * src){
+	//printf("%s HERERERE\n", src);
 	symbolTableIden * idenDest = retrieve_symbol_table_iden_entry(dest);
 	symbolTableIden * idenSrc = retrieve_symbol_table_iden_entry(src);
-	append_assembler("lw	$a0,-%d($fp)", idenSrc->fpOffset);
-	append_assembler("sw	$a0, -%d($fp)", idenDest->fpOffset);
+	append_assembler("lw	$a0,-%d(%s)\t#load %s variable %s to register $a0",
+	  idenSrc->fpOffset, hash_table_retrieve(local_iden_table, src) ? "$fp" : "$gp",
+	  hash_table_retrieve(local_iden_table, src) ? "local" : "global", src);
+
+	append_assembler("sw	$a0, -%d(%s)\t#store variable %s in %s variable %s",
+	  idenDest->fpOffset, hash_table_retrieve(local_iden_table, dest) ? "$fp" : "$gp",
+	  src, hash_table_retrieve(local_iden_table, dest) ? "local" : "global", dest);
 }
 
 
@@ -204,19 +215,19 @@ void setIdenValueToIdenVal(char * dest, char * src){
 int baseTypeToEnum(char * type){
 	int ret = 0;
 	
-	if (strcmp(type, "char") == 0){
+	if (strcmp(type, "char") == 0) {
 		return CHARVAL;
 	}
-	else if (strcmp(type, "int") == 0){
+	else if (strcmp(type, "int") == 0) {
 		return INTVAL;
 	}
-	else if (strcmp(type, "float") == 0){
+	else if (strcmp(type, "float") == 0) {
 		return FLOATVAL;
 	}
-	else if (strcmp(type, "void") == 0){
+	else if (strcmp(type, "void") == 0) {
 		return NONEVAL;
 	}
-	else{
+	else {
 		symbolTableType * typeRef = hash_table_retrieve(global_type_table, type);
 		if (!typeRef){
 			return -1;
@@ -437,6 +448,7 @@ evaluatedNode * trav_node(Node * node){
 							char buf[20];
 							sprintf(buf, "___temp%d",tempCount++);
 							char*name = strdup(buf);
+							ret->strVal = name;
 							insert_symbol_table_iden_entry(name, 0, 0, 0, NULL, ret->type == INTVAL ? "int" : (ret->type == CHARVAL ? "char" : "float"));
 							setIdenValue(name, left_expr_node->intVal, left_expr_node->floatVal);
 							// ret-
@@ -628,6 +640,7 @@ evaluatedNode * trav_node(Node * node){
 					else if (strcmp( typeRef->baseType, "float") == 0){
 						ret->type = FLOATVAL;
 					}
+					ret->strVal = variable_node->strVal;
 					ret->isVar = 1;
 					ret->deferEval = 1; // Encountered a variable - cannot evaluate expression now
 				<% } %>
@@ -652,6 +665,9 @@ evaluatedNode * trav_node(Node * node){
 						printf("Cannot assign incompatible types\n");
 						exit(0);
 					}
+					
+					
+					setIdenValueToIdenVal(variable_node->strVal, expr_node->strVal);
 
 					switch (expr_node->type){
 						case CHARVAL:
