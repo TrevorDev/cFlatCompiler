@@ -292,6 +292,16 @@ void printNode(char *label, int myNodeId, int parentId) {
 	}
 }
 
+char *new_iden(int type)
+{
+	char buf[20];
+	sprintf(buf, "___temp%d",tempCount++);
+	char *name = strdup(buf);
+	
+	insert_symbol_table_iden_entry(name, 0, 0, 0, NULL, type == INTVAL ? "int" : (type == CHARVAL ? "char" : "float"));
+	return name;
+}
+
 <% for (var key in nodeTypes) { %>
 Node *create_<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node *"+val}).concat(nodeTypes[key].val.map(function(val){return val.type+" "+val.name})).join(", ") %>) {
 	Node *ret = create_Node(<%- key+"_t" %>, &<%- key+"_p" %>);
@@ -430,10 +440,11 @@ evaluatedNode * trav_node(Node * node){
 					insert_to_type_table(var_name_iden_node->strVal, var_name_iden_node->intVal, type_iden_node->strVal);
 				<% } %>
 				<% if (key == nodeTypes.expr.name) {%>
+					//SINGLE VAR/NUMBER/CHAR
 					if(node->children.expr.right_expr == NULL && node->children.expr.operator == NULL){
 
 
-						//SINGLE VAR/NUMBER/CHAR
+						
 						ret->type = left_expr_node->type;
 						ret->intVal = left_expr_node->intVal;
 						ret->floatVal = left_expr_node->floatVal;
@@ -442,28 +453,16 @@ evaluatedNode * trav_node(Node * node){
 							ret->isArray = left_expr_node->isArray;
 						}
 						if(node->children.expr.left_expr->nodeType == int_val_t || node->children.expr.left_expr->nodeType == float_val_t || node->children.expr.left_expr->nodeType == char_val_t){
-							char buf[20];
-							sprintf(buf, "___temp%d",tempCount++);
-							char*name = strdup(buf);
+							char *name = new_iden(ret->type);
 							ret->strVal = name;
-							insert_symbol_table_iden_entry(name, 0, 0, 0, NULL, ret->type == INTVAL ? "int" : (ret->type == CHARVAL ? "char" : "float"));
 							setIdenValue(name, left_expr_node->intVal, left_expr_node->floatVal);
-
-							// ret-
-							// if(ret->type == FLOATVAL){
-							// 	append_assembler("li.s	$f0,%f", left_expr_node->floatVal);
-							// 	append_assembler("sub     $sp,$sp,4");
-							// 	append_assembler("sw	$f0, 4($sp)");
-							// }else{
-							// 	append_assembler("li	$a0,%d", left_expr_node->intVal);
-							// 	append_assembler("sub     $sp,$sp,4");
-							// 	append_assembler("sw	$a0, 4($sp)");
-							// }
-						}else{
+						}
+						else{
 							ret->strVal = left_expr_node->strVal;
 						}
 
-					}else{
+					}
+					else{
 						if(left_expr_node->isArray || right_expr_node->isArray){
 							printf("Cannot use operator on array\n");
 							exit(0);
@@ -518,7 +517,7 @@ evaluatedNode * trav_node(Node * node){
 									}
 								}
 							}
-						}else{
+						}else{ // binary operation
 							ret->type = left_expr_node->type;
 							ret->intVal = left_expr_node->intVal;
 							ret->floatVal = left_expr_node->floatVal;
@@ -666,8 +665,10 @@ evaluatedNode * trav_node(Node * node){
 						exit(0);
 					}
 					
-					
-					setIdenValueToIdenVal(variable_node->strVal, expr_node->strVal);
+					if(expr_node->strVal){
+						//DO THIS FOR RUNTIME EXPR
+						setIdenValueToIdenVal(variable_node->strVal, expr_node->strVal);
+					}
 
 					switch (expr_node->type){
 						case CHARVAL:
