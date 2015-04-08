@@ -1,27 +1,13 @@
 int main()
 {
-	int i;
-	i = 0;
-	puti(6.0 < 0.0);
-	puti(0.0 < 6.0);
-	puti(0.0 > 6.0);
-	puti(6.0 > 0.0);
-	puti(6.0 <= 0.0);
-	puti(6.0 <= 6.0);
-	puti(0.0 >= 6.0);
-	puti(6.0 >= 6.0);
-	puti(5%3);
-	puti(-3%5);
-	puti(100%10);
-	puti((1 > 0 && 2 > 2) || (5.0 < 6.5));
+	float i;
+	i = +50.0;
 	++i;
 	++i;
+	putf(+i);
+	putf(+i);
 	--i;
 	--i;
-	--i;
-	--i;
-	--i;
-	--i;
-	puti(++i);
+	putf(-(-(--i)));
     return 1;
 }
