@@ -11,5 +11,6 @@ int main()
 	puti(5%3);
 	puti(3%5);
 	puti(100%10);
+	puti((1 > 0 && 2 > 2) || (5.0 < 6.5));
     return 1;
 }
