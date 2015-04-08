@@ -632,6 +632,9 @@ evaluatedNode * trav_node(Node * node){
 							ret->intVal = left_expr_node->intVal;
 							ret->floatVal = left_expr_node->floatVal;
 							ret->type = left_expr_node->type;
+							char * tempVar = new_iden(ret->type);
+							ret->strVal = tempVar;
+
 							if(operator_node->strVal){
 								if(strcmp(operator_node->strVal, "+") == 0){
 
@@ -641,6 +644,19 @@ evaluatedNode * trav_node(Node * node){
 									if(!left_expr_node->isVar){
 										printf("Cannot use ++/-- on non-variable\n");
 										exit(0);
+									}
+									if (ret->type == INTVAL || ret->type == CHARVAL){
+										load_arguments(NULL, left_expr_node->strVal, INTVAL);
+										setIdenFromReg(tempVar, "$a1", INTVAL);
+										append_assembler("addi $a0, $a1, 1");
+										setIdenFromReg(left_expr_node->strVal, "$a0", INTVAL);
+									}
+									else if (ret->type == FLOATVAL){
+										load_arguments(NULL, left_expr_node->strVal, FLOATVAL);
+										setIdenFromReg(tempVar, "$f1", FLOATVAL);
+										append_assembler("li.s $f0, 1.0");
+										append_assembler("add.s $f0, $f0, $f1");
+										setIdenFromReg(left_expr_node->strVal, "$f0", FLOATVAL);
 									}
 								}else if(strcmp(operator_node->strVal, "--") == 0){
 									if(!left_expr_node->isVar){
