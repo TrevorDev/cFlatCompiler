@@ -310,6 +310,23 @@ char *new_iden(int type)
 	return name;
 }
 
+void load_arguments(char *leftArg, char *rightArg, int type)
+{
+	symbolTableIden *leftIden = NULL, *rightIden = NULL;
+	if (leftArg) {
+		leftIden = retrieve_symbol_table_iden_entry(leftArg);
+		append_assembler("lw	$a0,-%d(%s)\t#load %s variable %s to register $a0",
+	  	  leftIden->fpOffset, hash_table_retrieve(local_iden_table, leftIden->name) ? "$fp" : "$gp",
+	       hash_table_retrieve(local_iden_table, leftIden) ? "local" : "global", leftIden->name);
+	}
+	if (rightArg) {
+		rightIden = retrieve_symbol_table_iden_entry(rightArg);
+		append_assembler("lw	$a1,-%d(%s)\t#load %s variable %s to register $a0",
+	      rightIden->fpOffset, hash_table_retrieve(local_iden_table, rightIden->name) ? "$fp" : "$gp",
+	      hash_table_retrieve(local_iden_table, rightIden) ? "local" : "global", rightIden->name);
+	}	
+}
+
 <% for (var key in nodeTypes) { %>
 Node *create_<%- key %>(<%- nodeTypes[key].children.map(function(val){return "Node *"+val}).concat(nodeTypes[key].val.map(function(val){return val.type+" "+val.name})).join(", ") %>) {
 	Node *ret = create_Node(<%- key+"_t" %>, &<%- key+"_p" %>);
@@ -551,25 +568,11 @@ evaluatedNode * trav_node(Node * node){
 								char * tempVar = new_iden(ret->type);
 								ret->strVal = tempVar;
 
-								if (strcmp(operator_node->strVal, "+") == 0){
+								if (strcmp(operator_node->strVal, "+") == 0) {
 									if(ret->type == INTVAL || ret->type == CHARVAL){
 										ret->intVal = left_expr_node->intVal + right_expr_node->intVal;
 
-										//gen assembly
-										
-										
-
-										symbolTableIden * leftIden = retrieve_symbol_table_iden_entry(left_expr_node->strVal);
-										symbolTableIden * rightIden = retrieve_symbol_table_iden_entry(right_expr_node->strVal);
-
-										append_assembler("lw	$a0,-%d(%s)\t#load %s variable %s to register $a0",
-										  leftIden->fpOffset, hash_table_retrieve(local_iden_table, leftIden->name) ? "$fp" : "$gp",
-										  hash_table_retrieve(local_iden_table, leftIden) ? "local" : "global", leftIden->name);
-
-										append_assembler("lw	$a1,-%d(%s)\t#load %s variable %s to register $a0",
-										  rightIden->fpOffset, hash_table_retrieve(local_iden_table, rightIden->name) ? "$fp" : "$gp",
-										  hash_table_retrieve(local_iden_table, rightIden) ? "local" : "global", rightIden->name);
-
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
 										append_assembler("add $a0,$a0,$a1");
 										setIdenFromReg(tempVar, "$a0");
 
