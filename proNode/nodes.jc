@@ -694,7 +694,10 @@ evaluatedNode * trav_node(Node * node){
 									}
 									else if (ret->type == FLOATVAL) {
 										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
-										append_assembler("c.eq.s $f0, $f1 #FUCK");
+										append_assembler("c.eq.s $f0, $f1");
+										append_assembler("cfc1   $t0, $25");
+										append_assembler("andi   $t0, 1");
+										setIdenFromReg(tempVar, "$t0", INTVAL);
 
 										ret->type = INTVAL;
 									}
@@ -708,6 +711,12 @@ evaluatedNode * trav_node(Node * node){
 										setIdenFromReg(tempVar, "$t2", INTVAL);
 									}
 									else if (ret->type == FLOATVAL) {
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
+										append_assembler("c.eq.s $f0, $f1");
+										append_assembler("cfc1   $t0, $25");
+										append_assembler("andi   $t0, 1");
+										append_assembler("xori	 $t0,$t0,1");
+										setIdenFromReg(tempVar, "$t0", INTVAL);
 
 										ret->type = INTVAL;
 									}
