@@ -1,14 +1,7 @@
 int main()
 {
 
-	float z, x,y;
-
-	x = 15.0;
-	y = 3.0;
-
-	z = (x/y)*y*y;
-
-	putf(z);
+	puti(6.0 >= 5.0);
 
     return 1;
 }

@@ -581,7 +581,8 @@ evaluatedNode * trav_node(Node * node){
 							}
 
 							if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
-								(strcmp(operator_node->strVal, "/") == 0))){
+								(strcmp(operator_node->strVal, "/") == 0 || !strcmp(operator_node->strVal, ">") || !strcmp(operator_node->strVal, "<") || !strcmp(operator_node->strVal, "==") ||
+								!strcmp(operator_node->strVal, "!=") || !strcmp(operator_node->strVal, ">=") || !strcmp(operator_node->strVal, "<=")))){
 
 								if(left_expr_node->type != right_expr_node->type){
 									printf("Expression contains incompatible types\n");
@@ -662,6 +663,75 @@ evaluatedNode * trav_node(Node * node){
 										//
 									}
 								}
+								else if (strcmp(operator_node->strVal, "<") == 0) {
+									if (ret->type == INTVAL || ret->type == CHARVAL) {
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+										append_assembler("slt $a0,$a0,$a1");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
+									}
+									else if (ret->type == FLOATVAL) {
+
+									}
+								}
+								else if (strcmp(operator_node->strVal, ">") == 0) {
+									if (ret->type == INTVAL || ret->type == CHARVAL) {
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+										append_assembler("slt $a0,$a1,$a0");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
+									}
+									else if (ret->type == FLOATVAL) {
+
+									}
+								}
+								else if (!strcmp(operator_node->strVal, "==")) {
+									if (ret->type == INTVAL || ret->type == CHARVAL) {
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+										append_assembler("subu $t2,$a0,$a1");
+										append_assembler("sltu $t2,$zero,$t2");
+										append_assembler("xori $t2, $t2, 1");
+										setIdenFromReg(tempVar, "$t2", INTVAL);
+									}
+									else if (ret->type == FLOATVAL) {
+
+									}
+								}
+								else if (!strcmp(operator_node->strVal, "!=")) {
+									if (ret->type == INTVAL || ret->type == CHARVAL) {
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+										append_assembler("subu $t2,$a0,$a1");
+										append_assembler("sltu $t2,$zero,$t2");
+										//append_assembler("xori $t2, $t2, 1");
+										setIdenFromReg(tempVar, "$t2", INTVAL);
+									}
+									else if (ret->type == FLOATVAL) {
+
+									}
+								}
+								else if (!strcmp(operator_node->strVal, ">=")) {
+									if (ret->type == INTVAL || ret->type == CHARVAL) {
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+										append_assembler("sge $a0,$a0,$a1");
+										//append_assembler("sltu $t2,$zero,$t2");
+										//append_assembler("xori $t2, $t2, 1");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
+									}
+									else if (ret->type == FLOATVAL) {
+
+									}
+								}
+								else if (!strcmp(operator_node->strVal, "<=")) {
+									if (ret->type == INTVAL || ret->type == CHARVAL) {
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+										append_assembler("sle $a0,$a0,$a1");
+										//append_assembler("sltu $t2,$zero,$t2");
+										//append_assembler("xori $t2, $t2, 1");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
+									}
+									else if (ret->type == FLOATVAL) {
+
+									}
+								}
+
 							}
 							else if(!operator_node->strVal){
 								//expr only evaluates to array if there is no operator on an array
