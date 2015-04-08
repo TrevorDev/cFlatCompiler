@@ -670,8 +670,12 @@ evaluatedNode * trav_node(Node * node){
 										setIdenFromReg(tempVar, "$a0", INTVAL);
 									}
 									else if (ret->type == FLOATVAL) {
-
 										ret->type = INTVAL;
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
+										append_assembler("c.lt.s $f0, $f1");
+										append_assembler("cfc1   $t0, $25");
+										append_assembler("andi   $t0, 1");
+										setIdenFromReg(tempVar, "$t0", INTVAL);
 									}
 								}
 								else if (strcmp(operator_node->strVal, ">") == 0) {
@@ -681,7 +685,12 @@ evaluatedNode * trav_node(Node * node){
 										setIdenFromReg(tempVar, "$a0", INTVAL);
 									}
 									else if (ret->type == FLOATVAL) {
-
+										ret->type = INTVAL;
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
+										append_assembler("c.lt.s $f1, $f0");
+										append_assembler("cfc1   $t0, $25");
+										append_assembler("andi   $t0, 1");
+										setIdenFromReg(tempVar, "$t0", INTVAL);
 									}
 								}
 								else if (!strcmp(operator_node->strVal, "==")) {
@@ -731,6 +740,11 @@ evaluatedNode * trav_node(Node * node){
 									}
 									else if (ret->type == FLOATVAL) {
 										ret->type = INTVAL;
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
+										append_assembler("c.le.s $f1, $f0");
+										append_assembler("cfc1   $t0, $25");
+										append_assembler("andi   $t0, 1");
+										setIdenFromReg(tempVar, "$t0", INTVAL);
 									}
 								}
 								else if (!strcmp(operator_node->strVal, "<=")) {
@@ -742,8 +756,12 @@ evaluatedNode * trav_node(Node * node){
 										setIdenFromReg(tempVar, "$a0", INTVAL);
 									}
 									else if (ret->type == FLOATVAL) {
-
 										ret->type = INTVAL;
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
+										append_assembler("c.le.s $f0, $f1");
+										append_assembler("cfc1   $t0, $25");
+										append_assembler("andi   $t0, 1");
+										setIdenFromReg(tempVar, "$t0", INTVAL);
 									}
 								}
 
