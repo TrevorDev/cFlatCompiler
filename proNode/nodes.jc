@@ -318,6 +318,16 @@ char *new_iden(int type)
 	return name;
 }
 
+char *genBranchLabel()
+{
+	static int labelCount = 0;
+	char buf[20];
+	sprintf(buf, "___label%d", labelCount++);
+	char *name = strdup(buf);
+	printf("GENERATED LABEL (%s) (%d)\n", name, labelCount);
+	return name;
+}
+
 void load_arguments(char *leftArg, char *rightArg, int type)
 {
 	symbolTableIden *leftIden = NULL, *rightIden = NULL;
@@ -445,9 +455,24 @@ evaluatedNode * trav_node(Node * node){
 						setFunctionType = 1;
 					}
 				<% }; %>
+
+				<% if (key == nodeTypes.select_stmt.name) {%>
+					evaluatedNode * expr_node = trav_node(node->children.select_stmt.expr);
+					//TODO FLOATS
+					char *labelElse = genBranchLabel();
+					char *labelEnd = genBranchLabel();
+
+					load_arguments(expr_node->strVal, NULL, INTVAL);
+					append_assembler("beq	$zero, $a0, %s", labelElse);
+					evaluatedNode * if_block_node = trav_node(node->children.select_stmt.if_block);
+					append_assembler("j %s ", labelEnd);
+					append_assembler("%s: ", labelElse);
+					evaluatedNode * else_block_node = trav_node(node->children.select_stmt.else_block);
+					append_assembler("%s: ", labelEnd);
+				<% }; %>
 				
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
-					<% if(key != nodeTypes.function_def.name){ %>
+					<% if(key != nodeTypes.function_def.name && key != nodeTypes.select_stmt.name){ %>
 						evaluatedNode * <%- cEvNode %> = trav_node(node->children.<%- nodeTypes[key].name %>.<%- nodeTypes[key].children[child] %>);
 					<% } %>
 				<% }; %>
