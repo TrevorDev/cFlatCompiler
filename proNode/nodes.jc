@@ -642,17 +642,24 @@ evaluatedNode * trav_node(Node * node){
 								else if (strcmp(operator_node->strVal, "/") == 0){
 									if(ret->type == INTVAL || ret->type == CHARVAL){
 										// TODO: FIX DIVISION - CURRENTLY GET A RUNTIME EXCEPTION OF DIVIDE BY 0!!!
-										//ret->intVal = left_expr_node->intVal / right_expr_node->intVal;
+										if (right_expr_node->intVal == 0){
+											right_expr_node->intVal = 1;
+										}
+										ret->intVal = left_expr_node->intVal / right_expr_node->intVal;
 										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
 										append_assembler("div $a0,$a1");
 										append_assembler("mflo $a0");
 										setIdenFromReg(tempVar, "$a0", INTVAL);
 									}
 									else if(ret->type == FLOATVAL){
+										if (right_expr_node->floatVal == 0.0){
+											right_expr_node->floatVal = 1.0;
+										}
+										ret->floatVal = left_expr_node->floatVal / right_expr_node->floatVal;
 										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
 										append_assembler("div.s $f0,$f0,$f1");
 										setIdenFromReg(tempVar, "$f0", FLOATVAL);
-										//ret->floatVal = left_expr_node->floatVal / right_expr_node->floatVal;
+										//
 									}
 								}
 							}
