@@ -207,12 +207,20 @@ void setIdenValueToIdenVal(char * dest, char * src){
 	  src, hash_table_retrieve(local_iden_table, dest) ? "local" : "global", dest);
 }
 
-void setIdenFromReg(char *dest, char *reg)
+void setIdenFromReg(char *dest, char *reg, int type)
 {
 	symbolTableIden *idenDest = retrieve_symbol_table_iden_entry(dest);
-	append_assembler("sw	%s, -%d(%s)\t#store variable %s in %s variable %s", reg,
-	  idenDest->fpOffset, hash_table_retrieve(local_iden_table, dest) ? "$fp" : "$gp",
-	  dest, hash_table_retrieve(local_iden_table, dest) ? "local" : "global", dest);
+	if (type == FLOATVAL){
+		append_assembler("s.s	%s, -%d(%s)\t#store variable %s in %s variable %s", reg,
+			idenDest->fpOffset, hash_table_retrieve(local_iden_table, dest) ? "$fp" : "$gp",
+			dest, hash_table_retrieve(local_iden_table, dest) ? "local" : "global", dest);
+	}
+	else{
+		append_assembler("sw	%s, -%d(%s)\t#store variable %s in %s variable %s", reg,
+			idenDest->fpOffset, hash_table_retrieve(local_iden_table, dest) ? "$fp" : "$gp",
+			dest, hash_table_retrieve(local_iden_table, dest) ? "local" : "global", dest);
+	}
+
 }
 
 
@@ -315,15 +323,31 @@ void load_arguments(char *leftArg, char *rightArg, int type)
 	symbolTableIden *leftIden = NULL, *rightIden = NULL;
 	if (leftArg) {
 		leftIden = retrieve_symbol_table_iden_entry(leftArg);
-		append_assembler("lw	$a0,-%d(%s)\t#load %s variable %s to register $a0",
-	  	  leftIden->fpOffset, hash_table_retrieve(local_iden_table, leftIden->name) ? "$fp" : "$gp",
-	       hash_table_retrieve(local_iden_table, leftIden) ? "local" : "global", leftIden->name);
+		if (type == FLOATVAL){
+			append_assembler("l.s	$f0,-%d(%s)\t#load %s variable %s to register $f0",
+	  			leftIden->fpOffset, hash_table_retrieve(local_iden_table, leftIden->name) ? "$fp" : "$gp",
+	    		hash_table_retrieve(local_iden_table, leftIden) ? "local" : "global", leftIden->name);
+		}
+		else{
+			append_assembler("lw	$a0,-%d(%s)\t#load %s variable %s to register $a0",
+	  			leftIden->fpOffset, hash_table_retrieve(local_iden_table, leftIden->name) ? "$fp" : "$gp",
+	    		hash_table_retrieve(local_iden_table, leftIden) ? "local" : "global", leftIden->name);
+		}
+
 	}
 	if (rightArg) {
 		rightIden = retrieve_symbol_table_iden_entry(rightArg);
-		append_assembler("lw	$a1,-%d(%s)\t#load %s variable %s to register $a0",
-	      rightIden->fpOffset, hash_table_retrieve(local_iden_table, rightIden->name) ? "$fp" : "$gp",
-	      hash_table_retrieve(local_iden_table, rightIden) ? "local" : "global", rightIden->name);
+		if (type == FLOATVAL){
+			append_assembler("l.s	$f1,-%d(%s)\t#load %s variable %s to register $f1",
+		      rightIden->fpOffset, hash_table_retrieve(local_iden_table, rightIden->name) ? "$fp" : "$gp",
+		      hash_table_retrieve(local_iden_table, rightIden) ? "local" : "global", rightIden->name);
+		}
+		else{
+			append_assembler("lw	$a1,-%d(%s)\t#load %s variable %s to register $a1",
+	    		rightIden->fpOffset, hash_table_retrieve(local_iden_table, rightIden->name) ? "$fp" : "$gp",
+	    		hash_table_retrieve(local_iden_table, rightIden) ? "local" : "global", rightIden->name);
+		}
+
 	}	
 }
 
@@ -574,12 +598,15 @@ evaluatedNode * trav_node(Node * node){
 
 										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
 										append_assembler("add $a0,$a0,$a1");
-										setIdenFromReg(tempVar, "$a0");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
 
 									}
 									else if(ret->type == FLOATVAL){
 										ret->floatVal = left_expr_node->floatVal + right_expr_node->floatVal;
-									}
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
+										append_assembler("add.s $f0,$f0,$f1");
+										setIdenFromReg(tempVar, "$f0", FLOATVAL);
+									}	
 								}
 								else if (strcmp(operator_node->strVal, "-") == 0){
 									if(ret->type == INTVAL || ret->type == CHARVAL){
@@ -587,10 +614,13 @@ evaluatedNode * trav_node(Node * node){
 
 										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
 										append_assembler("sub $a0,$a0,$a1");
-										setIdenFromReg(tempVar, "$a0");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
 									}
 									else if(ret->type == FLOATVAL){
 										ret->floatVal = left_expr_node->floatVal - right_expr_node->floatVal;
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
+										append_assembler("sub.s $f0,$f0,$f1");
+										setIdenFromReg(tempVar, "$f0", FLOATVAL);
 									}
 								}
 								else if (strcmp(operator_node->strVal, "*") == 0){
@@ -600,21 +630,28 @@ evaluatedNode * trav_node(Node * node){
 										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
 										append_assembler("mult $a0,$a1");
 										append_assembler("mflo $a0");
-										setIdenFromReg(tempVar, "$a0");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
 									}
 									else if(ret->type == FLOATVAL){
 										ret->floatVal = left_expr_node->floatVal * right_expr_node->floatVal;
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
+										append_assembler("mul.s $f0,$f0,$f1");
+										setIdenFromReg(tempVar, "$f0", FLOATVAL);
 									}
 								}
 								else if (strcmp(operator_node->strVal, "/") == 0){
 									if(ret->type == INTVAL || ret->type == CHARVAL){
+										// TODO: FIX DIVISION - CURRENTLY GET A RUNTIME EXCEPTION OF DIVIDE BY 0!!!
 										//ret->intVal = left_expr_node->intVal / right_expr_node->intVal;
 										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
 										append_assembler("div $a0,$a1");
 										append_assembler("mflo $a0");
-										setIdenFromReg(tempVar, "$a0");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
 									}
 									else if(ret->type == FLOATVAL){
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
+										append_assembler("div.s $f0,$f0,$f1");
+										setIdenFromReg(tempVar, "$f0", FLOATVAL);
 										//ret->floatVal = left_expr_node->floatVal / right_expr_node->floatVal;
 									}
 								}
