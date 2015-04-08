@@ -207,6 +207,14 @@ void setIdenValueToIdenVal(char * dest, char * src){
 	  src, hash_table_retrieve(local_iden_table, dest) ? "local" : "global", dest);
 }
 
+void setIdenFromReg(char *dest, char *reg)
+{
+	symbolTableIden *idenDest = retrieve_symbol_table_iden_entry(dest);
+	append_assembler("sw	%s, -%d(%s)\t#store variable %s in %s variable %s", reg,
+	  idenDest->fpOffset, hash_table_retrieve(local_iden_table, dest) ? "$fp" : "$gp",
+	  dest, hash_table_retrieve(local_iden_table, dest) ? "local" : "global", dest);
+}
+
 
 
 int baseTypeToEnum(char * type){
@@ -458,6 +466,7 @@ evaluatedNode * trav_node(Node * node){
 							setIdenValue(name, left_expr_node->intVal, left_expr_node->floatVal);
 						}
 						else{
+							printf("<<<<<<<<< %s %d\n", left_expr_node->strVal, node->children.expr.left_expr->nodeType);
 							ret->strVal = left_expr_node->strVal;
 						}
 
@@ -538,9 +547,32 @@ evaluatedNode * trav_node(Node * node){
 									exit(0);
 								}
 								ret->type = right_expr_node->type;
+
+								char * tempVar = new_iden(ret->type);
+								ret->strVal = tempVar;
+
 								if (strcmp(operator_node->strVal, "+") == 0){
 									if(ret->type == INTVAL || ret->type == CHARVAL){
 										ret->intVal = left_expr_node->intVal + right_expr_node->intVal;
+
+										//gen assembly
+										
+										
+
+										symbolTableIden * leftIden = retrieve_symbol_table_iden_entry(left_expr_node->strVal);
+										symbolTableIden * rightIden = retrieve_symbol_table_iden_entry(right_expr_node->strVal);
+
+										append_assembler("lw	$a0,-%d(%s)\t#load %s variable %s to register $a0",
+										  leftIden->fpOffset, hash_table_retrieve(local_iden_table, leftIden->name) ? "$fp" : "$gp",
+										  hash_table_retrieve(local_iden_table, leftIden) ? "local" : "global", leftIden->name);
+
+										append_assembler("lw	$a1,-%d(%s)\t#load %s variable %s to register $a0",
+										  rightIden->fpOffset, hash_table_retrieve(local_iden_table, rightIden->name) ? "$fp" : "$gp",
+										  hash_table_retrieve(local_iden_table, rightIden) ? "local" : "global", rightIden->name);
+
+										append_assembler("add $a0,$a0,$a1");
+										setIdenFromReg(tempVar, "$a0");
+
 									}
 									else if(ret->type == FLOATVAL){
 										ret->floatVal = left_expr_node->floatVal + right_expr_node->floatVal;

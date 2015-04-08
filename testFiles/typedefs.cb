@@ -1,12 +1,12 @@
 int main()
 {
 
-	int x, y, z;
+	int z, x,y;
 
 	x = 1;
-	y = 2;
+	y=2;
 
-	z = x + y;
+	z = x+y;
 
 	puti(z);
 
