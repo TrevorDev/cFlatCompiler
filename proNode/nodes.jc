@@ -671,6 +671,7 @@ evaluatedNode * trav_node(Node * node){
 									}
 									else if (ret->type == FLOATVAL) {
 
+										ret->type = INTVAL;
 									}
 								}
 								else if (strcmp(operator_node->strVal, ">") == 0) {
@@ -692,7 +693,10 @@ evaluatedNode * trav_node(Node * node){
 										setIdenFromReg(tempVar, "$t2", INTVAL);
 									}
 									else if (ret->type == FLOATVAL) {
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, FLOATVAL);
+										append_assembler("c.eq.s $f0, $f1 #FUCK");
 
+										ret->type = INTVAL;
 									}
 								}
 								else if (!strcmp(operator_node->strVal, "!=")) {
@@ -705,6 +709,7 @@ evaluatedNode * trav_node(Node * node){
 									}
 									else if (ret->type == FLOATVAL) {
 
+										ret->type = INTVAL;
 									}
 								}
 								else if (!strcmp(operator_node->strVal, ">=")) {
@@ -716,7 +721,7 @@ evaluatedNode * trav_node(Node * node){
 										setIdenFromReg(tempVar, "$a0", INTVAL);
 									}
 									else if (ret->type == FLOATVAL) {
-
+										ret->type = INTVAL;
 									}
 								}
 								else if (!strcmp(operator_node->strVal, "<=")) {
@@ -729,6 +734,7 @@ evaluatedNode * trav_node(Node * node){
 									}
 									else if (ret->type == FLOATVAL) {
 
+										ret->type = INTVAL;
 									}
 								}
 

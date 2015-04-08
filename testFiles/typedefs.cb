@@ -1,7 +1,6 @@
 int main()
 {
-
-	puti(6.0 >= 5.0);
+	puti(6.0 == 6.0);
 
     return 1;
 }
