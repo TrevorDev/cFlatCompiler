@@ -3,14 +3,13 @@ int main()
 
 	int z, x,y;
 
-	x = 1;
-	y=2;
+	x = 15;
+	y = 3;
 
-	z = x+y;
+	z = (x/y);
 
 	puti(z);
-
-
+	putc(10);
 
     return 1;
 }

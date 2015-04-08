@@ -584,6 +584,10 @@ evaluatedNode * trav_node(Node * node){
 								else if (strcmp(operator_node->strVal, "-") == 0){
 									if(ret->type == INTVAL || ret->type == CHARVAL){
 										ret->intVal = left_expr_node->intVal - right_expr_node->intVal;
+
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+										append_assembler("sub $a0,$a0,$a1");
+										setIdenFromReg(tempVar, "$a0");
 									}
 									else if(ret->type == FLOATVAL){
 										ret->floatVal = left_expr_node->floatVal - right_expr_node->floatVal;
@@ -592,6 +596,11 @@ evaluatedNode * trav_node(Node * node){
 								else if (strcmp(operator_node->strVal, "*") == 0){
 									if(ret->type == INTVAL || ret->type == CHARVAL){
 										ret->intVal = left_expr_node->intVal * right_expr_node->intVal;
+
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+										append_assembler("mult $a0,$a1");
+										append_assembler("mflo $a0");
+										setIdenFromReg(tempVar, "$a0");
 									}
 									else if(ret->type == FLOATVAL){
 										ret->floatVal = left_expr_node->floatVal * right_expr_node->floatVal;
@@ -599,10 +608,14 @@ evaluatedNode * trav_node(Node * node){
 								}
 								else if (strcmp(operator_node->strVal, "/") == 0){
 									if(ret->type == INTVAL || ret->type == CHARVAL){
-										ret->intVal = left_expr_node->intVal / right_expr_node->intVal;
+										//ret->intVal = left_expr_node->intVal / right_expr_node->intVal;
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+										append_assembler("div $a0,$a1");
+										append_assembler("mflo $a0");
+										setIdenFromReg(tempVar, "$a0");
 									}
 									else if(ret->type == FLOATVAL){
-										ret->floatVal = left_expr_node->floatVal / right_expr_node->floatVal;
+										//ret->floatVal = left_expr_node->floatVal / right_expr_node->floatVal;
 									}
 								}
 							}
