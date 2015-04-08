@@ -8,5 +8,8 @@ int main()
 	puti(6.0 <= 6.0);
 	puti(0.0 >= 6.0);
 	puti(6.0 >= 6.0);
+	puti(5%3);
+	puti(3%5);
+	puti(100%10);
     return 1;
 }

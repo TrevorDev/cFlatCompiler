@@ -582,7 +582,7 @@ evaluatedNode * trav_node(Node * node){
 
 							if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
 								(strcmp(operator_node->strVal, "/") == 0 || !strcmp(operator_node->strVal, ">") || !strcmp(operator_node->strVal, "<") || !strcmp(operator_node->strVal, "==") ||
-								!strcmp(operator_node->strVal, "!=") || !strcmp(operator_node->strVal, ">=") || !strcmp(operator_node->strVal, "<=")))){
+								!strcmp(operator_node->strVal, "!=") || !strcmp(operator_node->strVal, ">=") || !strcmp(operator_node->strVal, "<=") || !strcmp(operator_node->strVal, "%")))){
 
 								if(left_expr_node->type != right_expr_node->type){
 									printf("Expression contains incompatible types\n");
@@ -762,6 +762,18 @@ evaluatedNode * trav_node(Node * node){
 										append_assembler("cfc1   $t0, $25");
 										append_assembler("andi   $t0, 1");
 										setIdenFromReg(tempVar, "$t0", INTVAL);
+									}
+								}
+								else if (!strcmp(operator_node->strVal, "%")) {
+									if (ret->type == INTVAL || ret->type == CHARVAL) {
+										load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+										append_assembler("div $a0,$a1");
+										append_assembler("mfhi $a0");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
+									}
+									else if (ret->type == FLOATVAL) {
+										printf("Modulus operator does not support float\n");
+										exit(0);
 									}
 								}
 
