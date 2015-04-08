@@ -523,26 +523,51 @@ evaluatedNode * trav_node(Node * node){
 							ret->intVal = right_expr_node->intVal;
 							ret->floatVal = right_expr_node->floatVal;
 							ret->type = right_expr_node->type;
+							char * tempVar = new_iden(ret->type);
+							ret->strVal = tempVar;
 							if(operator_node->strVal){
 								if(strcmp(operator_node->strVal, "+") == 0){
 
 								}else if(strcmp(operator_node->strVal, "-") == 0){
 									ret->floatVal = -ret->floatVal;
 									ret->intVal = -ret->intVal;
+									if (ret->type == INTVAL){
+										load_arguments(NULL, right_expr_node->strVal, INTVAL);
+										append_assembler("li $a0, -1");
+										append_assembler("mult $a0,$a1");
+										append_assembler("mflo $a0");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
+									}
+									else if (ret->type == FLOATVAL){
+
+									}
+
 								}else if(strcmp(operator_node->strVal, "++") == 0){
 									if(!right_expr_node->isVar){
-										printf("Cannot use ++/-- on non var\n");
+										printf("Cannot use ++/-- on non-variable\n");
 										exit(0);
 									}
 									ret->floatVal = ret->floatVal+1;
 									ret->intVal = ret->intVal+1;
+
+									load_arguments(NULL, right_expr_node->strVal, INTVAL);
+									append_assembler("addi $a0, $a1, 1");
+									setIdenFromReg(right_expr_node->strVal, "$a0", INTVAL);
+									ret->strVal = right_expr_node->strVal;
+
 								}else if(strcmp(operator_node->strVal, "--") == 0){
 									if(!right_expr_node->isVar){
-										printf("Cannot use ++/-- on non var\n");
+										printf("Cannot use ++/-- on non-variable\n");
 										exit(0);
 									}
 									ret->floatVal = ret->floatVal-1;
 									ret->intVal = ret->intVal-1;
+
+
+									load_arguments(NULL, right_expr_node->strVal, INTVAL);
+									append_assembler("addi $a0, $a1, -1");
+									setIdenFromReg(right_expr_node->strVal, "$a0", INTVAL);
+									ret->strVal = right_expr_node->strVal;
 								}
 							}
 						}else if(node->children.expr.operator &&  node->children.expr.right_expr == NULL && node->children.expr.left_expr){
@@ -557,12 +582,12 @@ evaluatedNode * trav_node(Node * node){
 
 								}else if(strcmp(operator_node->strVal, "++") == 0){
 									if(!left_expr_node->isVar){
-										printf("Cannot use ++/-- on non var\n");
+										printf("Cannot use ++/-- on non-variable\n");
 										exit(0);
 									}
 								}else if(strcmp(operator_node->strVal, "--") == 0){
 									if(!left_expr_node->isVar){
-										printf("Cannot use ++/-- on non var\n");
+										printf("Cannot use ++/-- on non-variable\n");
 										exit(0);
 									}
 								}
