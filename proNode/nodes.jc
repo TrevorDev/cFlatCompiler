@@ -582,7 +582,8 @@ evaluatedNode * trav_node(Node * node){
 
 							if (operator_node->strVal && ((strcmp(operator_node->strVal, "+") == 0) || (strcmp(operator_node->strVal, "-") == 0) || (strcmp(operator_node->strVal, "*") == 0) ||
 								(strcmp(operator_node->strVal, "/") == 0 || !strcmp(operator_node->strVal, ">") || !strcmp(operator_node->strVal, "<") || !strcmp(operator_node->strVal, "==") ||
-								!strcmp(operator_node->strVal, "!=") || !strcmp(operator_node->strVal, ">=") || !strcmp(operator_node->strVal, "<=")))){
+								!strcmp(operator_node->strVal, "!=") || !strcmp(operator_node->strVal, ">=") || !strcmp(operator_node->strVal, "<=") || !strcmp(operator_node->strVal, "&&") ||
+								!strcmp(operator_node->strVal, "||") || !strcmp(operator_node->strVal, "!")))){
 
 								if(left_expr_node->type != right_expr_node->type){
 									printf("Expression contains incompatible types\n");
@@ -763,6 +764,19 @@ evaluatedNode * trav_node(Node * node){
 										append_assembler("andi   $t0, 1");
 										setIdenFromReg(tempVar, "$t0", INTVAL);
 									}
+								}
+								else if (!strcmp(operator_node->strVal, "&&")) {
+									ret->type = INTVAL;
+									load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+									append_assembler("and 	$a0,$a0,$a1");
+									setIdenFromReg(tempVar, "$a0", INTVAL);
+
+								}
+								else if (!strcmp(operator_node->strVal, "||")) {
+									ret->type = INTVAL;
+									load_arguments(left_expr_node->strVal, right_expr_node->strVal, INTVAL);
+									append_assembler("or 	$a0,$a0,$a1");
+									setIdenFromReg(tempVar, "$a0", INTVAL);
 								}
 
 							}
