@@ -4,6 +4,7 @@
 #include <string.h>
 #define localFpOffsetStart 4
 #include "nodes.h"
+#include "stack.h"
 #include "mipsGen.h"
 
 extern int symbolTableOutput;
@@ -151,7 +152,8 @@ int insert_symbol_table_iden_entry(char * name, int arraySize, int isFunc, int i
 					globalFpOffset += offset;
 				}
 				append_assembler("#push stack pointer forward for var %s", data->name);
-				append_assembler("sub     $sp,$sp,%d", offset);
+				//MOVE MEM ALOCATION TO BEFORE FUNCTION CALLS
+				//append_assembler("sub     $sp,$sp,%d", offset);
 			}
 			hash_table_insert(tableToUse, name, data);
 		}
@@ -1034,6 +1036,7 @@ evaluatedNode * trav_node(Node * node){
 						}
 					}else{
 						append_assembler("#frame pointer push for func call");
+						append_assembler("addi     $sp,$fp,-%d", localFpOffset);
 						append_assembler("sub     $sp,$sp,4");
 						append_assembler("sw      $fp,4($sp)");
 						append_assembler("#store the stack pointer as it is now");
@@ -1097,6 +1100,12 @@ evaluatedNode * trav_node(Node * node){
 
 						append_assembler("move $sp,$k0 #restore stack pointer");
 						append_assembler("jal		%s", iden_node->strVal);
+
+						//TODO FLOAT
+						append_assembler("#storing return val in temp");
+						char * tempVar = new_iden(ret->type);
+						setIdenFromReg(tempVar, "$a0", ret->type);
+						ret->strVal = tempVar;
 					}					
 
 				<% } %>
@@ -1129,6 +1138,8 @@ evaluatedNode * trav_node(Node * node){
 						printf("Return type '%d' does not match expected return type '%s'\n", expr_node->type, functionType);
 						exit(0);
 					}
+					//TODO FLOAT
+					load_arguments(expr_node->strVal, NULL, INTVAL);
 				<% }; %>
 				<% if (key == nodeTypes.function_body.name) {%>
 				<% }; %>

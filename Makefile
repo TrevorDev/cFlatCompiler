@@ -19,7 +19,8 @@ cflatc: scanner
 	cc -g -c nodes.c -o nodes.o  
 	cc -g -c hashtable.c -o hashtable.o 
 	cc -g -c mipsGen.c -o mipsGen.o 
-	cc parser.o lex.yy.o nodes.o mipsGen.o hashtable.o -o cflatc $(LIBS) -g
+	cc -g -c stack.c -o stack.o 
+	cc parser.o lex.yy.o nodes.o mipsGen.o hashtable.o stack.o -o cflatc $(LIBS) -g
 
 nodeGen:
 	cd proNode; node app.js; cd ..;
