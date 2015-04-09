@@ -544,6 +544,7 @@ evaluatedNode * trav_node(Node * node){
 						ret->floatVal = left_expr_node->floatVal;
 						if(node->children.expr.left_expr->nodeType == variable_t){
 							//symbolTableIden * iden = retr
+							ret->strVal = left_expr_node->strVal;
 							ret->isArray = left_expr_node->isArray;
 						}
 						if(node->children.expr.left_expr->nodeType == int_val_t || node->children.expr.left_expr->nodeType == float_val_t || node->children.expr.left_expr->nodeType == char_val_t){
@@ -969,6 +970,11 @@ evaluatedNode * trav_node(Node * node){
 						printf("Type mismatch in variable decleration assignment\n");
 						exit(0);
 					}
+
+					if (expr_node->strVal){
+						setIdenValueToIdenVal(var_name_iden_node->strVal, expr_node->strVal);
+					}
+
 					//TODO what do with var name iden array decl val
 					//TODO what do with expr child
 				<% } %>
@@ -1018,6 +1024,7 @@ evaluatedNode * trav_node(Node * node){
 					if(expr_node->strVal){
 						//DO THIS FOR RUNTIME EXPR
 						setIdenValueToIdenVal(variable_node->strVal, expr_node->strVal);
+						ret->strVal = variable_node->strVal;
 					}
 
 					switch (expr_node->type){
