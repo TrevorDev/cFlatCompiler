@@ -1,0 +1,4 @@
+/* there's no main in this file! */
+int foo() {
+	return 1;
+}
