@@ -24,6 +24,14 @@ int localFpOffset = localFpOffsetStart;
 int globalFpOffset = 4;
 int VAR_SIZE = 4;
 
+void appendReturnFromFunction(){
+	append_assembler("#reset sp and fp and return");
+	append_assembler("move    $sp,$fp");
+	append_assembler("lw      $ra, 0($fp)");
+	append_assembler("lw      $fp, 4($fp)");
+	append_assembler("jr      $ra");
+}
+
 
 void insert_to_type_table(char * newTypeName, int array_size, char * refTypeName){
 	if(hash_table_retrieve(global_type_table, newTypeName)){
@@ -445,11 +453,7 @@ evaluatedNode * trav_node(Node * node){
 				    
 
 				    
-					append_assembler("#reset sp and fp and return");
-					append_assembler("move    $sp,$fp");
-					append_assembler("lw      $ra, 0($fp)");
-					append_assembler("lw      $fp, 4($fp)");
-					append_assembler("jr      $ra");
+					appendReturnFromFunction();
 				<% }; %>
 
 				<% if (key == nodeTypes.assign_var_decl.name) {%>
@@ -650,7 +654,9 @@ evaluatedNode * trav_node(Node * node){
 									ret->intVal = !ret->intVal;
 									if (ret->type == INTVAL || ret->type == CHARVAL){
 										load_arguments(NULL, right_expr_node->strVal, INTVAL);
-										append_assembler("andi $a0, $a1, 1");
+										append_assembler("slt $a0, $a1, $zero");
+										append_assembler("slt $a2, $zero, $a1");
+										append_assembler("or $a0,$a0,$a2");
 										append_assembler("xori $a0, $a0, 1");
 										setIdenFromReg(tempVar, "$a0", INTVAL);
 									}
@@ -1158,7 +1164,7 @@ evaluatedNode * trav_node(Node * node){
 						//TODO FLOAT
 						append_assembler("#storing return val in temp");
 						char * tempVar = new_iden(ret->type);
-						setIdenFromReg(tempVar, "$a0", ret->type);
+						setIdenFromReg(tempVar, ret->type == FLOATVAL ? "$f0" :"$a0", ret->type);
 						ret->strVal = tempVar;
 					}					
 
@@ -1194,6 +1200,7 @@ evaluatedNode * trav_node(Node * node){
 					}
 					//TODO FLOAT
 					load_arguments(expr_node->strVal, NULL, INTVAL);
+					appendReturnFromFunction();
 				<% }; %>
 				<% if (key == nodeTypes.function_body.name) {%>
 				<% }; %>
