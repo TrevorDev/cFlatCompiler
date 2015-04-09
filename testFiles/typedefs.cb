@@ -1,9 +1,7 @@
+/* Recursively determine then return the factorial of n */
 int factorial(int n)
 {
 	int ret;
-
-	puti(n);
-	putc(' ');
 
 	if (n > 0) {
 		ret = factorial(n - 1) * n;
@@ -14,27 +12,65 @@ int factorial(int n)
 	return ret;
 }
 
-int fucked_factorial(int n)
+/* The super computer sciencey recurive Ackermann function */
+int ackermann(int m, int n)
+{
+	int ret;
+    if (m == 0) {
+    	ret = n + 1;
+    }
+    else if (n == 0) {
+    	ret = ackermann(m - 1, 1);
+    }
+    else {
+    	ret = ackermann(m - 1, ackermann(m, n - 1));
+    }
+    return ret;
+}
+
+/* Recursively generate the nth Fibonacci number */
+int fibonacci(int n)
 {
 	int ret;
 
-	puti(n);
-	putc(' ');
+	if (n == 0)			ret = 0;
+	else if (n == 1)	ret = 1;
+	else 				ret = fibonacci(n - 1) + fibonacci(n - 2);
 
-	if (n <= 0) {
-		ret = 1;
-	}
-	else {
-		putc(' ');
-		puti(n);
-		fucked_factorial(n - 1);
-		ret = fucked_factorial(n - 1) * n;
-	}
 	return ret;
+} 
+
+int multiply(int a, int b, int c, int d, int e)
+{
+	return a * b * c * d * e;
 }
 
 int main()
 {
-	puti(fucked_factorial(5));
+	int a;
+
+	a = 5;
+	puti(a);
+	putc('!');
+	putc(' ');
+	putc('=');
+	puti(factorial(5));
+
+	putc(' ');
+	putc(' ');
+	putc(' ');
+	puti(multiply(1, 2, 3, 4, 5));
+
+	putc(' ');
+	putc(' ');
+	putc(' ');
+
+	puti(ackermann(3, 2));
+
+	putc(' ');
+	putc(' ');
+	putc(' ');
+	puti(fibonacci(8));
+
     return 1;
 }
