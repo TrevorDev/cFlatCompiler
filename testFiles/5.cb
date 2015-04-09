@@ -1,3 +1,12 @@
+int factorial(int n)
+{
+	int i, ret = 1;
+	for (i = 1; i <= n; i++) {
+		ret = ret * i;
+	}
+	return ret;
+}
+
 int main() {
-	int i;
+	puti(factorial(5));
 }

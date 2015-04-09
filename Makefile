@@ -40,45 +40,75 @@ run: all
 	./cflatc < testFiles/ints.txt
 
 runtests: all
-	@echo "\n\n\n\nCompiling and running 1.cb (should work)..."
+	@echo ""
+	@echo ""
+	@echo ""
+	@read -n1 -r -p "Press a key to compile 1.cb" key
 	./cflatc < testFiles/1.cb
 	dot -Tpng graph.txt -o graph.png
 	spim -file output.asm
 
-	@echo "\n\n\n\nCompiling and running 2.cb (should work)..."
+	@echo ""
+	@echo ""
+	@echo ""
+	@read -n1 -r -p "Press a key to compile 2.cb" key
 	./cflatc < testFiles/2.cb
 	dot -Tpng graph.txt -o graph.png
 	spim -file output.asm
 
-	@echo "\n\n\n\nCompiling and running 3.cb (should work)..."
+	@echo ""
+	@echo ""
+	@echo ""
+	@read -n1 -r -p "Press a key to compile 3.cb" key
 	./cflatc < testFiles/3.cb
 	dot -Tpng graph.txt -o graph.png
 	spim -file output.asm
 
-	@echo "\n\n\n\nCompiling and running 4.cb (should work)..."
+	@echo ""
+	@echo ""
+	@echo ""
+	@read -n1 -r -p "Press a key to compile 4.cb" key
 	./cflatc < testFiles/4.cb
 	dot -Tpng graph.txt -o graph.png
 	spim -file output.asm
 
-	@echo "\n\n\n\nCompiling and running 5.cb (should work)..."
+	@echo ""
+	@echo ""
+	@echo ""
+	@read -n1 -r -p "Press a key to compile 5.cb" key
 	-./cflatc < testFiles/5.cb
 	dot -Tpng graph.txt -o graph.png
 	spim -file output.asm
 
-	@echo "\n\n\n\nCompiling and running 6.cb (should not work)..."
+	@echo ""
+	@echo ""
+	@echo ""
+	@read -n1 -r -p "Press a key to (fail to) compile 6.cb" key
 	-./cflatc < testFiles/6.cb
 
-	@echo "\n\n\n\nCompiling and running 7.cb (should not work)..."
+	@echo ""
+	@echo ""
+	@echo ""
+	@read -n1 -r -p "Press a key to (fail to) compile 7.cb" key
 	-./cflatc < testFiles/7.cb
 
-	@echo "\n\n\n\nCompiling and running 8.cb (should not work)..."
-	-./cflatc < testFiles/6.cb
+	@echo ""
+	@echo ""
+	@echo ""
+	@read -n1 -r -p "Press a key to (fail to) compile 8.cb" key
+	-./cflatc < testFiles/8.cb
 	
-	@echo "\n\n\n\nCompiling and running 9.cb (should not work)..."
-	-./cflatc < testFiles/6.cb
+	@echo ""
+	@echo ""
+	@echo ""
+	@read -n1 -r -p "Press a key to (fail to) compile 9.cb" key
+	-./cflatc < testFiles/9.cb
 
-	@echo "\n\n\n\nCompiling and running 10.cb (should not work)..."
-	-./cflatc < testFiles/6.cb
+	@echo ""
+	@echo ""
+	@echo ""
+	@read -n1 -r -p "Press a key to (fail to) compile 10.cb" key
+	-./cflatc < testFiles/10.cb
 
 clean: 
 	rm -f *.o
