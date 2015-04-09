@@ -1,10 +1,38 @@
+/*Multiplication table*/
 int main()
 {
+	int x;
+	int j;
+	int size = 3;
+	putc(' ');
+	putc(' ');
+	putc(' ');
+	for(x = 1;x <= size;x++){
+		puti(x);
+		putc(' ');
+		putc(' ');
+	}
 	putc('\n');
+	putc(' ');
+	putc(' ');
+	putc(' ');
+	for(x = 1;x <= size;x++){
+		putc('_');
+		putc(' ');
+		putc(' ');
+	}
 	putc('\n');
-	putc('\n');
-	putc('\n');
-
-	
+	for(x = 1;x <= size;x++){
+		puti(x);
+		putc(' ');
+		putc('|');
+		for(j = 1;j <= size;j++){
+			
+			puti(j*x);
+			putc(' ');
+			putc(' ');			
+		}
+		putc('\n');
+	}	
     return 1;
 }
