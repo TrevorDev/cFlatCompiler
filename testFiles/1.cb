@@ -41,10 +41,21 @@ int fibonacci(int n)
 int main()
 {
 	integer i;
+
 	for (i = 0; i < 5; i++) {
 		puti(fibonacci(i));
 		putc(' ');
 	}
+
+	putc(' ');
+	putc(' ');
+	putc(' ');
+	puti(factorial(5));
+
+	putc(' ');
+	putc(' ');
+	putc(' ');
+	puti(ackermann(2, 2));
 
 	
     return 1;
