@@ -653,7 +653,9 @@ evaluatedNode * trav_node(Node * node){
 									ret->intVal = !ret->intVal;
 									if (ret->type == INTVAL || ret->type == CHARVAL){
 										load_arguments(NULL, right_expr_node->strVal, INTVAL);
-										append_assembler("andi $a0, $a1, 1");
+										append_assembler("slt $a0, $a1, $zero");
+										append_assembler("slt $a2, $zero, $a1");
+										append_assembler("or $a0,$a0,$a2");
 										append_assembler("xori $a0, $a0, 1");
 										setIdenFromReg(tempVar, "$a0", INTVAL);
 									}

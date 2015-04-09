@@ -42,18 +42,7 @@ run: all
 runtests: all
 	@echo "\n\n\n\nCompiling 1.cb (should work)..."
 	./cflatc < testFiles/1.cb
-
-	@echo "\n\n\n\nCompiling 2.cb (shouldn't work)..."
-	-./cflatc < testFiles/2.cb
-
-	@echo "\n\n\n\nCompiling 3.cb (shouldn't work)..."
-	-./cflatc < testFiles/3.cb
-
-	@echo "\n\n\n\nCompiling 4.cb (shouldn't work)..."
-	-./cflatc < testFiles/4.cb
-
-	@echo "\n\n\n\nCompiling 5.cb (shouldn't work)..."
-	-./cflatc < testFiles/5.cb
+	spim -file output.asm
 
 graph: all
 	-rm -f graph.txt graph.png
