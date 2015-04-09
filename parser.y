@@ -201,7 +201,7 @@ expr_or_empty: expr
 
 iter_stmt: WHILE BRACKET_OPEN expr BRACKET_CLOSE stmt
 			{
-				$$ = create_iter_stmt($3, NULL, NULL, $5);
+				$$ = create_iter_stmt(NULL, $3, NULL, $5);
 			}
 			|
 			FOR BRACKET_OPEN expr_or_empty SEMICOLON expr_or_empty SEMICOLON expr_or_empty BRACKET_CLOSE stmt

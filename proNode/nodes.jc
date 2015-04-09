@@ -473,8 +473,26 @@ evaluatedNode * trav_node(Node * node){
 					append_assembler("%s: ", labelEnd);
 				<% }; %>
 				
+				<% if (key == nodeTypes.iter_stmt.name) {%>
+					char *labelStart = genBranchLabel();
+					char *labelEnd = genBranchLabel();
+
+					evaluatedNode * exp1_node = trav_node(node->children.iter_stmt.exp1);
+					append_assembler("%s: ", labelStart);
+
+					evaluatedNode * exp2_node = trav_node(node->children.iter_stmt.exp2);
+
+					//TODO FLOAT
+					load_arguments(exp2_node->strVal, NULL, INTVAL);
+					append_assembler("beq	$zero, $a0, %s", labelEnd);					
+					evaluatedNode * stmt_node = trav_node(node->children.iter_stmt.stmt);
+					evaluatedNode * exp3_node = trav_node(node->children.iter_stmt.exp3);
+					append_assembler("j %s ", labelStart);
+					append_assembler("%s: ", labelEnd);
+				<% }; %>
+
 				<% for (var child in nodeTypes[key].children) { var cEvNode = nodeTypes[key].children[child]+"_node" %>
-					<% if(key != nodeTypes.function_def.name && key != nodeTypes.select_stmt.name){ %>
+					<% if(key != nodeTypes.function_def.name && key != nodeTypes.select_stmt.name && key != nodeTypes.iter_stmt.name){ %>
 						evaluatedNode * <%- cEvNode %> = trav_node(node->children.<%- nodeTypes[key].name %>.<%- nodeTypes[key].children[child] %>);
 					<% } %>
 				<% }; %>
