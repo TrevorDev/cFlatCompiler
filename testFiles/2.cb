@@ -1,15 +1,10 @@
-/* typedefs */
-typedef int km_per_hour;
-typedef int points[3];
-
-/* global variables */
-int z = 2, a[3] = {1, 2, 3}, b[5] = {0};
-char c, d = 'A';
-float e = 3.0, f = 3.0e6, g = -0.5;
-
-/* functions - Oh no, this comment doesn't terminate! What will happen?
-
-void unused_function()
+int main()
 {
-	return;
+	putc('\n');
+	putc('\n');
+	putc('\n');
+	putc('\n');
+
+	
+    return 1;
 }

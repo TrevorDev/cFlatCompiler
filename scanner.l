@@ -13,7 +13,7 @@ NZDIGIT	[1-9]
 LETTER	[a-zA-Z_]
 INT		(0|([1-9][0-9]*))
 FLOAT	[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
-CHARACTER ['].[']
+CHARACTER (['].['])|([']\\n['])
 
 %%
 
@@ -272,6 +272,12 @@ CHARACTER ['].[']
 	tokenlen = yyleng;
 	tokenpos += yyleng;
 	yylval.cval = yytext[1];
+	if(strcmp(yytext, "'\\n'")==0){
+		//printf("<<<<<<<<<< %s\n'n", yytext);
+		char* ret = calloc(sizeof(*ret), 3);
+		ret[0] = '\n';
+		yylval.cval = ret[0];
+	}
 	return CHAR;
 }
 

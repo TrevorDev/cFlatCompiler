@@ -14,6 +14,14 @@ HashTable *local_struct_iden_table;
 extern HashTable *global_iden_table;
 extern HashTable *local_iden_table;
 extern char * codeOutput;
+
+
+//FLAGS
+extern int syntaxAnalysisOutput;
+extern int symbolTableOutput;
+extern int intermediateOutput;
+extern int asmOutput;
+
 char * cur_assign_var_decl_type = NULL;
 char * functionType = NULL;
 int setFunctionType = 0;
@@ -334,7 +342,7 @@ char *genBranchLabel()
 	char buf[20];
 	sprintf(buf, "___label%d", labelCount++);
 	char *name = strdup(buf);
-	printf("GENERATED LABEL (%s) (%d)\n", name, labelCount);
+	//printf("GENERATED LABEL (%s) (%d)\n", name, labelCount);
 	return name;
 }
 
@@ -557,7 +565,7 @@ evaluatedNode * trav_node(Node * node){
 							setIdenValue(name, left_expr_node->intVal, left_expr_node->floatVal);
 						}
 						else{
-							printf("<<<<<<<<< %s %d\n", left_expr_node->strVal, node->children.expr.left_expr->nodeType);
+							//printf("<<<<<<<<< %s %d\n", left_expr_node->strVal, node->children.expr.left_expr->nodeType);
 							ret->strVal = left_expr_node->strVal;
 						}
 
@@ -1015,8 +1023,10 @@ evaluatedNode * trav_node(Node * node){
 					ret->strVal = iden_node->strVal;
 				<% } %>
 				<% if (key == nodeTypes.function_def.name) {%>
-					printf("Function %s\n\n", iden_node->strVal);
-					printSymbolTable(local_iden_table);
+					if(symbolTableOutput){
+						printf("Function %s\n\n", iden_node->strVal);
+						printSymbolTable(local_iden_table);
+					}
 					hash_table_destroy(local_iden_table);
 					local_iden_table = NULL;
 				<% } %>
@@ -1132,7 +1142,7 @@ evaluatedNode * trav_node(Node * node){
 						givenParamIter = expr_list_node->params;
 						while (givenParamIter) {
 							int argSize;
-							printf("%p, %p\n", givenParamIter, givenParamIter->iden);
+							//printf("%p, %p\n", givenParamIter, givenParamIter->iden);
 							argSize = givenParamIter->iden->type->size;
 
 							if (givenParamIter->iden->arraySize != 0) {

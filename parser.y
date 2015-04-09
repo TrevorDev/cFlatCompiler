@@ -697,7 +697,7 @@ int main(int argc, char *argv[]) {
 	int x;
 
 	syntaxAnalysisOutput = 1;
-	symbolTableOutput = 1;
+	symbolTableOutput = 0;
 	intermediateOutput = 0;
 	asmOutput = 0;
 
@@ -770,6 +770,11 @@ int main(int argc, char *argv[]) {
 	}
 	
 	trav_node(rootNode);
+
+	if(hash_table_retrieve(global_iden_table, "main") == NULL){
+		printf("Main function not found\n");
+		exit(0);
+	}
 
 	if (symbolTableOutput) {
 		printf("GLOBAL TYPE TABLE:\n");

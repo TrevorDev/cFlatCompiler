@@ -41,7 +41,7 @@ int fibonacci(int n)
 int main()
 {
 	integer i;
-	for (i = 0; i < 30; i++) {
+	for (i = 0; i < 5; i++) {
 		puti(fibonacci(i));
 		putc(' ');
 	}
