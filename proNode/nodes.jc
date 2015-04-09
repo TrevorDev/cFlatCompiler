@@ -24,6 +24,14 @@ int localFpOffset = localFpOffsetStart;
 int globalFpOffset = 4;
 int VAR_SIZE = 4;
 
+void appendReturnFromFunction(){
+	append_assembler("#reset sp and fp and return");
+	append_assembler("move    $sp,$fp");
+	append_assembler("lw      $ra, 0($fp)");
+	append_assembler("lw      $fp, 4($fp)");
+	append_assembler("jr      $ra");
+}
+
 
 void insert_to_type_table(char * newTypeName, int array_size, char * refTypeName){
 	if(hash_table_retrieve(global_type_table, newTypeName)){
@@ -445,11 +453,7 @@ evaluatedNode * trav_node(Node * node){
 				    
 
 				    
-					append_assembler("#reset sp and fp and return");
-					append_assembler("move    $sp,$fp");
-					append_assembler("lw      $ra, 0($fp)");
-					append_assembler("lw      $fp, 4($fp)");
-					append_assembler("jr      $ra");
+					appendReturnFromFunction();
 				<% }; %>
 
 				<% if (key == nodeTypes.assign_var_decl.name) {%>
@@ -1187,6 +1191,7 @@ evaluatedNode * trav_node(Node * node){
 					}
 					//TODO FLOAT
 					load_arguments(expr_node->strVal, NULL, INTVAL);
+					appendReturnFromFunction();
 				<% }; %>
 				<% if (key == nodeTypes.function_body.name) {%>
 				<% }; %>
