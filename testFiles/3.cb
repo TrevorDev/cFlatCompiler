@@ -1,9 +1,15 @@
-typedef int km_per_hour;
-typedef float km_per_hour;
+int main()
+{
+	float pi = 1.0;
+	float i;
+	for (i = 3.0; i < 100000.0; i = i + 4.0) {
+		pi = pi - 1.0/i;
+	}
+	for (i = 5.0; i < 100000.0; i = i + 4.0) {
+		pi = pi + 1.0/i;
+	}
 
-int x;
-km_per_hour speed[2];
-
-void main() {
-	return;
+	pi = pi * 4.0;
+	putf(pi);
+	putc('\n');
 }
