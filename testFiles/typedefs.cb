@@ -1,86 +1,16 @@
-/* Recursively determine then return the factorial of n */
-int factorial(int n)
-{
-	int ret;
 
-	if (n > 0) {
-		ret = factorial(n - 1) * n;
-	}
-	else {
-		ret = 1;
-	}
-	return ret;
+float multiply(int a)
+{
+	return 0.3;
 }
 
-/* The super computer sciencey recurive Ackermann function */
-int ackermann(int m, int n)
-{
-	int ret;
-    if (m == 0) {
-    	ret = n + 1;
-    }
-    else if (n == 0) {
-    	ret = ackermann(m - 1, 1);
-    }
-    else {
-    	ret = ackermann(m - 1, ackermann(m, n - 1));
-    }
-    return ret;
-}
-
-/* Recursively generate the nth Fibonacci number */
-int fibonacci(int n)
-{
-	int ret;
-
-	if (n == 0)			ret = 0;
-	else if (n == 1)	ret = 1;
-	else 				ret = fibonacci(n - 1) + fibonacci(n - 2);
-
-	return ret;
-} 
-
-int multiply(int a, int b, int c, int d, int e)
-{
-	return a * b * c * d * e;
-}
 
 int main()
 {
-	int a;
-
-	a = 0;
-	puti(a);
-	putc('!');
-	putc(' ');
-	putc('=');
-	puti(factorial(5));
-
-	putc(' ');
-	putc(' ');
-	putc(' ');
-	puti(multiply(1, 2, 3, 4, 5));
-
-	putc(' ');
-	putc(' ');
-	putc(' ');
-
-	puti(ackermann(3, 2));
-
-	putc(' ');
-	putc(' ');
-	putc(' ');
-	puti(fibonacci(8));
-
-
-	putc(' ');
-	putc(' ');
-	putc(' ');
-	if (!a && !0 && !(0 != 0)){
-		putc('W');
-		putc('O');
-		putc('W');
-	}
-
+	float a; 
+	a = 0.2;
+	
+	a = multiply(5);
+	putf(a);
     return 1;
 }

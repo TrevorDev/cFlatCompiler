@@ -1151,7 +1151,7 @@ evaluatedNode * trav_node(Node * node){
 						//TODO FLOAT
 						append_assembler("#storing return val in temp");
 						char * tempVar = new_iden(ret->type);
-						setIdenFromReg(tempVar, "$a0", ret->type);
+						setIdenFromReg(tempVar, ret->type == FLOATVAL ? "$f0" :"$a0", ret->type);
 						ret->strVal = tempVar;
 					}					
 
