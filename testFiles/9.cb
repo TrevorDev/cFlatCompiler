@@ -1,3 +1,7 @@
+/*
+	This C Flat file fails to compile because of a syntax error
+*/
+
 int main()
 {
 	int a = 1

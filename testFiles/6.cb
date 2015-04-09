@@ -1,3 +1,6 @@
+/*
+	This C Flat file fails to compile because of an unterminated comment
+*/
 /* typedefs */
 typedef int km_per_hour;
 typedef int points[3];

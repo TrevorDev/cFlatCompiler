@@ -1,3 +1,7 @@
+/*
+	This C Flat file fails to compile because of a type mismatch
+*/
+
 int main()
 {
 	int a = 1.0;

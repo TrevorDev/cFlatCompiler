@@ -1,3 +1,7 @@
+/*
+	This C Flat file fails to compile because of a symol table issue
+*/
+
 int main()
 {
 	a = 1;

@@ -1,3 +1,8 @@
+/*
+	This C flat file shows off 3 recursive algorithms - factorial, Ackermann
+	and Fibonacci
+*/
+	
 typedef int integer;
 
 /* Recursively determine then return the factorial of n */

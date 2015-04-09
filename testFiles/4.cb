@@ -1,3 +1,8 @@
+/*
+	This C Flat program shows off various arithmetic operators,
+	their prececence and associativity
+*/
+
 typedef int x;
 typedef x otherint;
 

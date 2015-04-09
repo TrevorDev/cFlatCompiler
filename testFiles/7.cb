@@ -1,4 +1,6 @@
-/* there's no main in this file! */
+/*
+	This C Flat file fails to compile because main() does not exist
+*/
 int foo() {
 	return 1;
 }

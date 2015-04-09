@@ -1,3 +1,7 @@
+/*
+	This C flat program shows an interative factorial implementation
+*/
+	
 int factorial(int n)
 {
 	int i, ret = 1;
