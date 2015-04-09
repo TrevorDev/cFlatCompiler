@@ -1072,7 +1072,7 @@ evaluatedNode * trav_node(Node * node){
 
 					
 
-					if (strcmp(iden_node->strVal, "sizeof") == 0 || strcmp(iden_node->strVal, "putc") == 0 || strcmp(iden_node->strVal, "puti") == 0 || strcmp(iden_node->strVal, "putf") == 0){
+					if (strcmp(iden_node->strVal, "sizeof") == 0 || strcmp(iden_node->strVal, "putc") == 0 || strcmp(iden_node->strVal, "puti") == 0 || strcmp(iden_node->strVal, "putf") == 0 || strcmp(iden_node->strVal, "sizeof") == 0){
 						functionArgs * givenParamIter = expr_list_node->params;
 						if ((!givenParamIter) || givenParamIter->next){
 							printf("Invalid use of %s() operator\n", iden_node->strVal);
@@ -1096,6 +1096,11 @@ evaluatedNode * trav_node(Node * node){
 							}
 						}else if(strcmp(iden_node->strVal, "sizeof") == 0){
 							ret->type = INTVAL;
+							append_assembler("#storing return val in temp");
+							char * tempVar = new_iden(ret->type);
+							append_assembler("li $a0, 4");
+							setIdenFromReg(tempVar, "$a0", ret->type);
+							ret->strVal = tempVar;
 						}
 
 						//TODO inlice putc etc
