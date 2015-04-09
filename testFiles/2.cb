@@ -26,11 +26,12 @@ int main()
 		puti(x);
 		putc(' ');
 		putc('|');
-		for(j = 1;j <= size;j++){
-			
+		j = 1;
+		while(j <= size){
 			puti(j*x);
 			putc(' ');
-			putc(' ');			
+			putc(' ');
+			j++;
 		}
 		putc('\n');
 	}	
