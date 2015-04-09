@@ -52,6 +52,10 @@ runtests: all
 	./cflatc < testFiles/3.cb
 	spim -file output.asm
 
+	@echo "\n\n\n\nCompiling 4.cb (should work)..."
+	./cflatc < testFiles/4.cb
+	spim -file output.asm
+
 
 graph: all
 	-rm -f graph.txt graph.png
