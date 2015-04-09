@@ -604,7 +604,8 @@ evaluatedNode * trav_node(Node * node){
 									}
 
 
-								}else if(strcmp(operator_node->strVal, "--") == 0){
+								}
+								else if(strcmp(operator_node->strVal, "--") == 0){
 									if(!right_expr_node->isVar){
 										printf("Cannot use ++/-- on non-variable\n");
 										exit(0);
@@ -624,6 +625,18 @@ evaluatedNode * trav_node(Node * node){
 										append_assembler("add.s $f0, $f0, $f1");
 										setIdenFromReg(right_expr_node->strVal, "$f0", FLOATVAL);
 										ret->strVal = right_expr_node->strVal;
+									}
+								}
+								else if(strcmp(operator_node->strVal, "!") == 0){
+									ret->intVal = !ret->intVal;
+									if (ret->type == INTVAL || ret->type == CHARVAL){
+										load_arguments(NULL, right_expr_node->strVal, INTVAL);
+										append_assembler("andi $a0, $a1, 1");
+										append_assembler("xori $a0, $a0, 1");
+										setIdenFromReg(tempVar, "$a0", INTVAL);
+									}
+									else if (ret->type == FLOATVAL){
+										printf("Cannot use '!' operator on floating point value\n");
 									}
 								}
 							}

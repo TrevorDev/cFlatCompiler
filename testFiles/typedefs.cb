@@ -49,7 +49,7 @@ int main()
 {
 	int a;
 
-	a = 5;
+	a = 0;
 	puti(a);
 	putc('!');
 	putc(' ');
@@ -71,6 +71,16 @@ int main()
 	putc(' ');
 	putc(' ');
 	puti(fibonacci(8));
+
+
+	putc(' ');
+	putc(' ');
+	putc(' ');
+	if (!a && !0 && !(0 != 0)){
+		putc('W');
+		putc('O');
+		putc('W');
+	}
 
     return 1;
 }

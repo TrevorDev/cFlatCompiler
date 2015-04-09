@@ -377,59 +377,63 @@ sub     $sp,$sp,4
 sw      $ra,4($sp)
 #push stack pointer forward for var a
 #push stack pointer forward for var ___temp40
-li	$a0,5
+li	$a0,0
 sw	$a0, -8($fp)
 lw	$a0,-8($fp)	#load local variable ___temp40 to register $a0
 sw	$a0, -4($fp)	#store variable ___temp40 in local variable a
-#push stack pointer forward for var ___temp41
-li	$a0,5
-sw	$a0, -12($fp)
 #Inline puti
-lw      $a0,-12($fp)
+lw      $a0,-4($fp)
 li      $v0, 1
 syscall
-#push stack pointer forward for var ___temp42
+#push stack pointer forward for var ___temp41
 li	$a0,33
+sw	$a0, -12($fp)
+#Inline putf
+lw      $a0,-12($fp)
+li      $v0, 11
+syscall
+#push stack pointer forward for var ___temp42
+li	$a0,32
 sw	$a0, -16($fp)
 #Inline putf
 lw      $a0,-16($fp)
 li      $v0, 11
 syscall
 #push stack pointer forward for var ___temp43
-li	$a0,32
+li	$a0,61
 sw	$a0, -20($fp)
 #Inline putf
 lw      $a0,-20($fp)
 li      $v0, 11
 syscall
 #push stack pointer forward for var ___temp44
-li	$a0,61
-sw	$a0, -24($fp)
-#Inline putf
-lw      $a0,-24($fp)
-li      $v0, 11
-syscall
-#push stack pointer forward for var ___temp45
 li	$a0,5
-sw	$a0, -28($fp)
+sw	$a0, -24($fp)
 #frame pointer push for func call
-addi     $sp,$fp,-32
+addi     $sp,$fp,-28
 sub     $sp,$sp,4
 sw      $fp,4($sp)
 #store the stack pointer as it is now
 move $k0,$sp
 sub     $sp,$sp,4
 sub     $sp,$sp,4
-lw	$a0,-28($fp)
+lw	$a0,-24($fp)
 sw 	$a0,4($sp)
 move $sp,$k0 #restore stack pointer
 jal		factorial
 #storing return val in temp
-#push stack pointer forward for var ___temp46
-sw	$a0, -32($fp)	#store variable ___temp46 in local variable ___temp46
+#push stack pointer forward for var ___temp45
+sw	$a0, -28($fp)	#store variable ___temp45 in local variable ___temp45
 #Inline puti
-lw      $a0,-32($fp)
+lw      $a0,-28($fp)
 li      $v0, 1
+syscall
+#push stack pointer forward for var ___temp46
+li	$a0,32
+sw	$a0, -32($fp)
+#Inline putf
+lw      $a0,-32($fp)
+li      $v0, 11
 syscall
 #push stack pointer forward for var ___temp47
 li	$a0,32
@@ -446,34 +450,30 @@ lw      $a0,-40($fp)
 li      $v0, 11
 syscall
 #push stack pointer forward for var ___temp49
-li	$a0,32
-sw	$a0, -44($fp)
-#Inline putf
-lw      $a0,-44($fp)
-li      $v0, 11
-syscall
-#push stack pointer forward for var ___temp50
 li	$a0,1
+sw	$a0, -44($fp)
+#push stack pointer forward for var ___temp50
+li	$a0,2
 sw	$a0, -48($fp)
 #push stack pointer forward for var ___temp51
-li	$a0,2
+li	$a0,3
 sw	$a0, -52($fp)
 #push stack pointer forward for var ___temp52
-li	$a0,3
+li	$a0,4
 sw	$a0, -56($fp)
 #push stack pointer forward for var ___temp53
-li	$a0,4
-sw	$a0, -60($fp)
-#push stack pointer forward for var ___temp54
 li	$a0,5
-sw	$a0, -64($fp)
+sw	$a0, -60($fp)
 #frame pointer push for func call
-addi     $sp,$fp,-68
+addi     $sp,$fp,-64
 sub     $sp,$sp,4
 sw      $fp,4($sp)
 #store the stack pointer as it is now
 move $k0,$sp
 sub     $sp,$sp,4
+sub     $sp,$sp,4
+lw	$a0,-44($fp)
+sw 	$a0,4($sp)
 sub     $sp,$sp,4
 lw	$a0,-48($fp)
 sw 	$a0,4($sp)
@@ -486,17 +486,21 @@ sw 	$a0,4($sp)
 sub     $sp,$sp,4
 lw	$a0,-60($fp)
 sw 	$a0,4($sp)
-sub     $sp,$sp,4
-lw	$a0,-64($fp)
-sw 	$a0,4($sp)
 move $sp,$k0 #restore stack pointer
 jal		multiply
 #storing return val in temp
-#push stack pointer forward for var ___temp55
-sw	$a0, -68($fp)	#store variable ___temp55 in local variable ___temp55
+#push stack pointer forward for var ___temp54
+sw	$a0, -64($fp)	#store variable ___temp54 in local variable ___temp54
 #Inline puti
-lw      $a0,-68($fp)
+lw      $a0,-64($fp)
 li      $v0, 1
+syscall
+#push stack pointer forward for var ___temp55
+li	$a0,32
+sw	$a0, -68($fp)
+#Inline putf
+lw      $a0,-68($fp)
+li      $v0, 11
 syscall
 #push stack pointer forward for var ___temp56
 li	$a0,32
@@ -513,39 +517,39 @@ lw      $a0,-76($fp)
 li      $v0, 11
 syscall
 #push stack pointer forward for var ___temp58
-li	$a0,32
-sw	$a0, -80($fp)
-#Inline putf
-lw      $a0,-80($fp)
-li      $v0, 11
-syscall
-#push stack pointer forward for var ___temp59
 li	$a0,3
-sw	$a0, -84($fp)
-#push stack pointer forward for var ___temp60
+sw	$a0, -80($fp)
+#push stack pointer forward for var ___temp59
 li	$a0,2
-sw	$a0, -88($fp)
+sw	$a0, -84($fp)
 #frame pointer push for func call
-addi     $sp,$fp,-92
+addi     $sp,$fp,-88
 sub     $sp,$sp,4
 sw      $fp,4($sp)
 #store the stack pointer as it is now
 move $k0,$sp
 sub     $sp,$sp,4
 sub     $sp,$sp,4
-lw	$a0,-84($fp)
+lw	$a0,-80($fp)
 sw 	$a0,4($sp)
 sub     $sp,$sp,4
-lw	$a0,-88($fp)
+lw	$a0,-84($fp)
 sw 	$a0,4($sp)
 move $sp,$k0 #restore stack pointer
 jal		ackermann
 #storing return val in temp
-#push stack pointer forward for var ___temp61
-sw	$a0, -92($fp)	#store variable ___temp61 in local variable ___temp61
+#push stack pointer forward for var ___temp60
+sw	$a0, -88($fp)	#store variable ___temp60 in local variable ___temp60
 #Inline puti
-lw      $a0,-92($fp)
+lw      $a0,-88($fp)
 li      $v0, 1
+syscall
+#push stack pointer forward for var ___temp61
+li	$a0,32
+sw	$a0, -92($fp)
+#Inline putf
+lw      $a0,-92($fp)
+li      $v0, 11
 syscall
 #push stack pointer forward for var ___temp62
 li	$a0,32
@@ -562,38 +566,118 @@ lw      $a0,-100($fp)
 li      $v0, 11
 syscall
 #push stack pointer forward for var ___temp64
-li	$a0,32
-sw	$a0, -104($fp)
-#Inline putf
-lw      $a0,-104($fp)
-li      $v0, 11
-syscall
-#push stack pointer forward for var ___temp65
 li	$a0,8
-sw	$a0, -108($fp)
+sw	$a0, -104($fp)
 #frame pointer push for func call
-addi     $sp,$fp,-112
+addi     $sp,$fp,-108
 sub     $sp,$sp,4
 sw      $fp,4($sp)
 #store the stack pointer as it is now
 move $k0,$sp
 sub     $sp,$sp,4
 sub     $sp,$sp,4
-lw	$a0,-108($fp)
+lw	$a0,-104($fp)
 sw 	$a0,4($sp)
 move $sp,$k0 #restore stack pointer
 jal		fibonacci
 #storing return val in temp
-#push stack pointer forward for var ___temp66
-sw	$a0, -112($fp)	#store variable ___temp66 in local variable ___temp66
+#push stack pointer forward for var ___temp65
+sw	$a0, -108($fp)	#store variable ___temp65 in local variable ___temp65
 #Inline puti
-lw      $a0,-112($fp)
+lw      $a0,-108($fp)
 li      $v0, 1
 syscall
+#push stack pointer forward for var ___temp66
+li	$a0,32
+sw	$a0, -112($fp)
+#Inline putf
+lw      $a0,-112($fp)
+li      $v0, 11
+syscall
 #push stack pointer forward for var ___temp67
-li	$a0,1
+li	$a0,32
 sw	$a0, -116($fp)
-lw	$a0,-116($fp)	#load global variable ___temp67 to register $a0
+#Inline putf
+lw      $a0,-116($fp)
+li      $v0, 11
+syscall
+#push stack pointer forward for var ___temp68
+li	$a0,32
+sw	$a0, -120($fp)
+#Inline putf
+lw      $a0,-120($fp)
+li      $v0, 11
+syscall
+#push stack pointer forward for var ___temp69
+lw	$a1,-4($fp)	#load global variable a to register $a1
+andi $a0, $a1, 1
+xori $a0, $a0, 1
+sw	$a0, -124($fp)	#store variable ___temp69 in local variable ___temp69
+#push stack pointer forward for var ___temp70
+li	$a0,0
+sw	$a0, -128($fp)
+#push stack pointer forward for var ___temp71
+lw	$a1,-128($fp)	#load global variable ___temp70 to register $a1
+andi $a0, $a1, 1
+xori $a0, $a0, 1
+sw	$a0, -132($fp)	#store variable ___temp71 in local variable ___temp71
+#push stack pointer forward for var ___temp72
+lw	$a0,-124($fp)	#load global variable ___temp69 to register $a0
+lw	$a1,-132($fp)	#load global variable ___temp71 to register $a1
+and 	$a0,$a0,$a1
+sw	$a0, -136($fp)	#store variable ___temp72 in local variable ___temp72
+#push stack pointer forward for var ___temp73
+li	$a0,0
+sw	$a0, -140($fp)
+#push stack pointer forward for var ___temp74
+li	$a0,0
+sw	$a0, -144($fp)
+#push stack pointer forward for var ___temp75
+lw	$a0,-140($fp)	#load global variable ___temp73 to register $a0
+lw	$a1,-144($fp)	#load global variable ___temp74 to register $a1
+subu $t2,$a0,$a1
+sltu $t2,$zero,$t2
+sw	$t2, -148($fp)	#store variable ___temp75 in local variable ___temp75
+#push stack pointer forward for var ___temp76
+lw	$a1,-148($fp)	#load global variable ___temp75 to register $a1
+andi $a0, $a1, 1
+xori $a0, $a0, 1
+sw	$a0, -152($fp)	#store variable ___temp76 in local variable ___temp76
+#push stack pointer forward for var ___temp77
+lw	$a0,-136($fp)	#load global variable ___temp72 to register $a0
+lw	$a1,-152($fp)	#load global variable ___temp76 to register $a1
+and 	$a0,$a0,$a1
+sw	$a0, -156($fp)	#store variable ___temp77 in local variable ___temp77
+lw	$a0,-156($fp)	#load global variable ___temp77 to register $a0
+beq	$zero, $a0, ___label10
+#push stack pointer forward for var ___temp78
+li	$a0,87
+sw	$a0, -160($fp)
+#Inline putf
+lw      $a0,-160($fp)
+li      $v0, 11
+syscall
+#push stack pointer forward for var ___temp79
+li	$a0,79
+sw	$a0, -164($fp)
+#Inline putf
+lw      $a0,-164($fp)
+li      $v0, 11
+syscall
+#push stack pointer forward for var ___temp80
+li	$a0,87
+sw	$a0, -168($fp)
+#Inline putf
+lw      $a0,-168($fp)
+li      $v0, 11
+syscall
+j ___label11 
+___label10: 
+___label11: 
+#push stack pointer forward for var ___temp81
+li	$a0,1
+sw	$a0, -172($fp)
+lw	$a0,-172($fp)	#load global variable ___temp81 to register $a0
 #reset sp and fp and return
 move    $sp,$fp
 lw      $ra, 0($fp)
