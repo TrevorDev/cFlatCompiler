@@ -40,27 +40,45 @@ run: all
 	./cflatc < testFiles/ints.txt
 
 runtests: all
-	@echo "\n\n\n\nCompiling 1.cb (should work)..."
+	@echo "\n\n\n\nCompiling and running 1.cb (should work)..."
 	./cflatc < testFiles/1.cb
-	spim -file output.asm
-
-	@echo "\n\n\n\nCompiling 2.cb (should work)..."
-	./cflatc < testFiles/2.cb
-	spim -file output.asm
-
-	@echo "\n\n\n\nCompiling 3.cb (should work)..."
-	./cflatc < testFiles/3.cb
-	spim -file output.asm
-
-	@echo "\n\n\n\nCompiling 4.cb (should work)..."
-	./cflatc < testFiles/4.cb
-	spim -file output.asm
-
-
-graph: all
-	-rm -f graph.txt graph.png
-	-./cflatc -a < testFiles/typedefs.cb
 	dot -Tpng graph.txt -o graph.png
+	spim -file output.asm
+
+	@echo "\n\n\n\nCompiling and running 2.cb (should work)..."
+	./cflatc < testFiles/2.cb
+	dot -Tpng graph.txt -o graph.png
+	spim -file output.asm
+
+	@echo "\n\n\n\nCompiling and running 3.cb (should work)..."
+	./cflatc < testFiles/3.cb
+	dot -Tpng graph.txt -o graph.png
+	spim -file output.asm
+
+	@echo "\n\n\n\nCompiling and running 4.cb (should work)..."
+	./cflatc < testFiles/4.cb
+	dot -Tpng graph.txt -o graph.png
+	spim -file output.asm
+
+	@echo "\n\n\n\nCompiling and running 5.cb (should work)..."
+	-./cflatc < testFiles/5.cb
+	dot -Tpng graph.txt -o graph.png
+	spim -file output.asm
+
+	@echo "\n\n\n\nCompiling and running 6.cb (should not work)..."
+	-./cflatc < testFiles/6.cb
+
+	@echo "\n\n\n\nCompiling and running 7.cb (should not work)..."
+	-./cflatc < testFiles/7.cb
+
+	@echo "\n\n\n\nCompiling and running 8.cb (should not work)..."
+	-./cflatc < testFiles/6.cb
+	
+	@echo "\n\n\n\nCompiling and running 9.cb (should not work)..."
+	-./cflatc < testFiles/6.cb
+
+	@echo "\n\n\n\nCompiling and running 10.cb (should not work)..."
+	-./cflatc < testFiles/6.cb
 
 clean: 
 	rm -f *.o
