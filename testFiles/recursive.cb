@@ -31,11 +31,7 @@ int ackermann(int m, int n)
 /* Recursively generate the nth Fibonacci number */
 int fibonacci(int n)
 {
-	int ret;
-
-	if (n == 0)			ret = 0;
-	else if (n == 1)	ret = 1;
-	else 				ret = fibonacci(n - 1) + fibonacci(n - 2);
-
-	return ret;
+	if (n == 0)         return 0;
+	else if (n == 1)    return 1;
+	else                return fibonacci(n - 1) + fibonacci(n - 2);
 } 
